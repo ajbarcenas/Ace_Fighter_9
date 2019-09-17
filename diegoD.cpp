@@ -1,3 +1,3 @@
-// Name: Alexisis Barcenas
+// Name: Diego Diaz
 // Date: 9/17/2019
 #include <stdio.h>

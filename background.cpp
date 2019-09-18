@@ -70,10 +70,25 @@ public:
 	float xc[2];
 	float yc[2];
 };
+struct Vec {
+	float x,y,z;
+};
+
+struct Shape {
+	float width = 100, height = 13;
+	float radius; 
+	Vec center;
+};
+
+struct Particle {
+	Shape s;
+	Vec Velocity;
+};
 
 class Global {
 public:
 	int xres, yres;
+	Shape player;
 	Texture tex;
 	Global() {
 		xres=700, yres=400;
@@ -276,6 +291,24 @@ void render()
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
+
+	//creating player
+	Shape *p = &g.player;
+	glColor3ub(190,140,10);
+	glPushMatrix();
+	p->center.x = 200;
+	p->center.y = 180;
+	float w = p->width;
+	float h = p->height;
+	glTranslatef(p->center.x, p->center.y, p->center.z);
+	glBegin(GL_QUADS);
+		glVertex2i(-w,-h);
+		glVertex2i(-w, h);
+		glVertex2i( w, h);
+		glVertex2i( w,-h);
+	glEnd();
+	glPopMatrix();
+	
 }
 
 

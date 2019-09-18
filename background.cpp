@@ -259,13 +259,10 @@ void check_mouse(XEvent *e)
 		return;
 	}
 	if (e->type == ButtonPress) {
+	    cout << e->xbutton.button << endl;
 		if (e->xbutton.button== 1) {
-			p->velocity.x = 10;
-			p->center.x += p->velocity.x;
 		}
 		if (e->xbutton.button== 3) {
-			p->velocity.x = -10;
-			p->center.x += p->velocity.x;
 		}
 	}
 	if (savex != e->xbutton.x || savey != e->xbutton.y) {
@@ -278,11 +275,33 @@ void check_mouse(XEvent *e)
 int check_keys(XEvent *e)
 {
 	//Was there input from the keyboard?
+	Shape *p = &g.player;
 	if (e->type == KeyPress) {
 		int key = XLookupKeysym(&e->xkey, 0);
-		if (key == XK_Escape) {
-			return 1;
-		}
+			switch(key){
+			    	case XK_Left:
+					p->velocity.x = -10;
+					p->center.x += p->velocity.x;
+					break;
+				case XK_Right:
+					p->velocity.x = 10;
+					p->center.x += p->velocity.x;
+					break;
+				case XK_Up:
+					p->velocity.y = 10;
+					p->center.y += p->velocity.y;
+					break;
+				case XK_Down:
+					p->velocity.y = -10;
+					p->center.y += p->velocity.y;
+					break;
+				case XK_Escape:
+				    return 1;
+			}
+		
+		//if (key == XK_Escape) {
+		//	return 1;
+		//}
 	}
 	return 0;
 }

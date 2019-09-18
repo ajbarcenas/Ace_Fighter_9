@@ -81,6 +81,7 @@ struct Shape {
 	float radius; 
 	Vec center;
 	Vec velocity;
+	bool playerExists = false;
 };
 
 struct Particle {
@@ -206,6 +207,13 @@ int main()
 	return 0;
 }
 
+void spawnPlayer(){
+	Shape *p = &g.player;
+	p->center.x = 200;
+	p->center.y = 180;
+	
+}
+
 void init_opengl(void)
 {
 	//OpenGL initialization
@@ -245,16 +253,19 @@ void check_mouse(XEvent *e)
 	//Was a mouse button clicked?
 	static int savex = 0;
 	static int savey = 0;
+	Shape *p = &g.player;
 	//
 	if (e->type == ButtonRelease) {
 		return;
 	}
 	if (e->type == ButtonPress) {
-		if (e->xbutton.button==1) {
-			cout << "Button was clicked" << endl;
+		if (e->xbutton.button== 1) {
+			p->velocity.x = 10;
+			p->center.x += p->velocity.x;
 		}
-		if (e->xbutton.button==3) {
-			//Right button is down
+		if (e->xbutton.button== 3) {
+			p->velocity.x = -10;
+			p->center.x += p->velocity.x;
 		}
 	}
 	if (savex != e->xbutton.x || savey != e->xbutton.y) {
@@ -281,10 +292,10 @@ void physics()
 	//move the background
 	g.tex.xc[0] += 0.001;
 	g.tex.xc[1] += 0.001;
-	Shape *p = &g.player;
-	p->velocity.x = 50;
-	p->center.x += p->velocity.x;
-	cout << p->center.x << endl;
+//	Shape *p = &g.player;
+//	p->velocity.x = 0.5;
+//	p->center.x += p->velocity.x;
+//	cout << p->center.x << endl;
 
 
 }
@@ -303,10 +314,12 @@ void render()
 
 	//creating player
 	Shape *p = &g.player;
+	if(!p->playerExists){
+		spawnPlayer();
+		p->playerExists = true;
+	}
 	glColor3ub(190,140,10);
 	glPushMatrix();
-	p->center.x = 200;
-	p->center.y = 180;
 	float w = p->width;
 	float h = p->height;
 	glTranslatef(p->center.x, p->center.y, p->center.z);
@@ -317,7 +330,6 @@ void render()
 		glVertex2i( w,-h);
 	glEnd();
 	glPopMatrix();
-	
 }
 
 

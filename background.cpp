@@ -7,6 +7,8 @@
 //Just the texture coordinates change.
 //In this example, only the x coordinates change.
 //
+#include <iostream>
+using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,9 +77,10 @@ struct Vec {
 };
 
 struct Shape {
-	float width = 100, height = 13;
+	float width = 20, height = 20;
 	float radius; 
 	Vec center;
+	Vec velocity;
 };
 
 struct Particle {
@@ -248,7 +251,7 @@ void check_mouse(XEvent *e)
 	}
 	if (e->type == ButtonPress) {
 		if (e->xbutton.button==1) {
-			//Left button is down
+			cout << "Button was clicked" << endl;
 		}
 		if (e->xbutton.button==3) {
 			//Right button is down
@@ -278,6 +281,12 @@ void physics()
 	//move the background
 	g.tex.xc[0] += 0.001;
 	g.tex.xc[1] += 0.001;
+	Shape *p = &g.player;
+	p->velocity.x = 50;
+	p->center.x += p->velocity.x;
+	cout << p->center.x << endl;
+
+
 }
 
 void render()

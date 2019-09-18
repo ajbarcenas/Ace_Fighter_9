@@ -77,7 +77,7 @@ struct Vec {
 };
 
 struct Shape {
-	float width = 20, height = 20;
+	float width, height;
 	float radius; 
 	Vec center;
 	Vec velocity;
@@ -94,6 +94,8 @@ public:
 	int xres, yres;
 	Shape player;
 	Texture tex;
+	int n;
+	Shape enemy[5];
 	Global() {
 		xres=700, yres=400;
 	}
@@ -193,6 +195,8 @@ int main()
 {
 	init_opengl();
 	int done=0;
+	g.n = 0;
+	cout << g.n << endl;
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -209,9 +213,19 @@ int main()
 
 void spawnPlayer(){
 	Shape *p = &g.player;
+	p->width = 15;
+	p->height = 15;
 	p->center.x = 200;
 	p->center.y = 180;
 	
+}
+
+void spawnEnemy(int i){
+	Shape *e = &g.enemy[i];
+	e->width = 12;
+	e->height = 12;
+	e->center.x = ((i+1) * 20) + 400;
+	e->center.y = 600 - ((i+1) * 50); 
 }
 
 void init_opengl(void)
@@ -280,19 +294,19 @@ int check_keys(XEvent *e)
 		int key = XLookupKeysym(&e->xkey, 0);
 			switch(key){
 			    	case XK_Left:
-					p->velocity.x = -10;
+					p->velocity.x = -15;
 					p->center.x += p->velocity.x;
 					break;
 				case XK_Right:
-					p->velocity.x = 10;
+					p->velocity.x = 15;
 					p->center.x += p->velocity.x;
 					break;
 				case XK_Up:
-					p->velocity.y = 10;
+					p->velocity.y = 15;
 					p->center.y += p->velocity.y;
 					break;
 				case XK_Down:
-					p->velocity.y = -10;
+					p->velocity.y = -15;
 					p->center.y += p->velocity.y;
 					break;
 				case XK_Escape:
@@ -349,6 +363,25 @@ void render()
 		glVertex2i( w,-h);
 	glEnd();
 	glPopMatrix();
+	int n = g.n;
+	//creating enemies
+	while(n < 5){
+		Shape *e = &g.enemy[n];
+		spawnEnemy(n);
+		glColor3ub(100,150,180);
+		float w = e->width;
+		float h = e->height;
+		glTranslatef(e->center.x, e->center.y, e->center.z);
+	        glBegin(GL_QUADS);
+        	        glVertex2i(-w,-h);
+               		glVertex2i(-w, h);
+               	 	glVertex2i( w, h);
+                	glVertex2i( w,-h);
+        	glEnd();
+        	glPopMatrix();
+		n++;
+		//cout << n << endl;
+	}
 }
 
 

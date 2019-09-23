@@ -215,7 +215,8 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
 							GL_RGB, GL_UNSIGNED_BYTE, g.tex.backImage->data);
-	g.tex.xc[0] = 0.0;
+	//Change view area of image
+    g.tex.xc[0] = 0.0;
 	g.tex.xc[1] = 0.25;
 	g.tex.yc[0] = 0.0;
 	g.tex.yc[1] = 1.0;

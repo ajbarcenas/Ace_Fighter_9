@@ -224,8 +224,8 @@ void spawnEnemy(int i){
 	Shape *e = &g.enemy[i];
 	e->width = 12;
 	e->height = 12;
-	e->center.x = ((i+1) * 20) + 400;
-	e->center.y = 600 - ((i+1) * 50); 
+	e->center.x = ((i+1) * 20) + 200;
+	e->center.y = 400 - ((i+1) * 50); 
 }
 
 void init_opengl(void)
@@ -267,7 +267,6 @@ void check_mouse(XEvent *e)
 	//Was a mouse button clicked?
 	static int savex = 0;
 	static int savey = 0;
-	Shape *p = &g.player;
 	//
 	if (e->type == ButtonRelease) {
 		return;
@@ -363,12 +362,12 @@ void render()
 		glVertex2i( w,-h);
 	glEnd();
 	glPopMatrix();
-	int n = g.n;
 	//creating enemies
-	while(n < 5){
-		Shape *e = &g.enemy[n];
-		spawnEnemy(n);
-		glColor3ub(100,150,180);
+	while(g.n < 4){
+		Shape *e = &g.enemy[g.n];
+		spawnEnemy(g.n);
+		glColor3ub(190,150,10);
+		glPushMatrix();
 		float w = e->width;
 		float h = e->height;
 		glTranslatef(e->center.x, e->center.y, e->center.z);
@@ -379,8 +378,10 @@ void render()
                 	glVertex2i( w,-h);
         	glEnd();
         	glPopMatrix();
-		n++;
-		//cout << n << endl;
+		g.n++;
+		cout << g.n << endl;
+		cout << e->center.x << endl;
+		cout << e->center.y << endl;
 	}
 }
 

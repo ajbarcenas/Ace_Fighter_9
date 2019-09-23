@@ -365,9 +365,9 @@ void render()
 	//creating enemies
 	while(g.n < 4){
 		Shape *e = &g.enemy[g.n];
-		spawnEnemy(g.n);
 		glColor3ub(190,150,10);
 		glPushMatrix();
+		spawnEnemy(g.n);
 		float w = e->width;
 		float h = e->height;
 		glTranslatef(e->center.x, e->center.y, e->center.z);

@@ -187,6 +187,7 @@ void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics(void);
 void render(void);
+extern void spawnPlayer(Shape *p);
 
 //===========================================================================
 //===========================================================================
@@ -330,7 +331,7 @@ void render()
 	//creating player
 	Shape *p = &g.player;
 	if(!p->playerExists){
-		spawnPlayer();
+		spawnPlayer(p);
 		p->playerExists = true;
 	}
 	glColor3ub(190,140,10);

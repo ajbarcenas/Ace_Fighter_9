@@ -7,8 +7,6 @@
 //Just the texture coordinates change.
 //In this example, only the x coordinates change.
 //
-#include <iostream>
-using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,31 +70,11 @@ public:
 	float xc[2];
 	float yc[2];
 };
-struct Vec {
-	float x,y,z;
-};
-
-struct Shape {
-	float width, height;
-	float radius; 
-	Vec center;
-	Vec velocity;
-	bool playerExists = false;
-};
-
-struct Particle {
-	Shape s;
-	Vec Velocity;
-};
 
 class Global {
 public:
 	int xres, yres;
-    GLuint texid;
-    Shape player;
 	Texture tex;
-    int n;
-	Shape enemy[5];
 	Global() {
 		xres=700, yres=400;
 	}
@@ -188,7 +166,7 @@ void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics(void);
 void render(void);
-void ajPic();
+
 
 //===========================================================================
 //===========================================================================
@@ -196,8 +174,6 @@ int main()
 {
 	init_opengl();
 	int done=0;
-	g.n = 0;
-	cout << g.n << endl;
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -210,23 +186,6 @@ int main()
 		x11.swapBuffers();
 	}
 	return 0;
-}
-
-void spawnPlayer(){
-	Shape *p = &g.player;
-	p->width = 15;
-	p->height = 15;
-	p->center.x = 200;
-	p->center.y = 180;
-	
-}
-
-void spawnEnemy(int i){
-	Shape *e = &g.enemy[i];
-	e->width = 12;
-	e->height = 12;
-	e->center.x = ((i+1) * 20) + 200;
-	e->center.y = 400 - ((i+1) * 50); 
 }
 
 void init_opengl(void)
@@ -256,8 +215,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
 							GL_RGB, GL_UNSIGNED_BYTE, g.tex.backImage->data);
-	//Change view area of image
-    g.tex.xc[0] = 0.0;
+	g.tex.xc[0] = 0.0;
 	g.tex.xc[1] = 0.25;
 	g.tex.yc[0] = 0.0;
 	g.tex.yc[1] = 1.0;
@@ -274,10 +232,11 @@ void check_mouse(XEvent *e)
 		return;
 	}
 	if (e->type == ButtonPress) {
-	    cout << e->xbutton.button << endl;
-		if (e->xbutton.button== 1) {
+		if (e->xbutton.button==1) {
+			//Left button is down
 		}
-		if (e->xbutton.button== 3) {
+		if (e->xbutton.button==3) {
+			//Right button is down
 		}
 	}
 	if (savex != e->xbutton.x || savey != e->xbutton.y) {
@@ -290,33 +249,11 @@ void check_mouse(XEvent *e)
 int check_keys(XEvent *e)
 {
 	//Was there input from the keyboard?
-	Shape *p = &g.player;
 	if (e->type == KeyPress) {
 		int key = XLookupKeysym(&e->xkey, 0);
-			switch(key){
-			    	case XK_Left:
-					p->velocity.x = -15;
-					p->center.x += p->velocity.x;
-					break;
-				case XK_Right:
-					p->velocity.x = 15;
-					p->center.x += p->velocity.x;
-					break;
-				case XK_Up:
-					p->velocity.y = 15;
-					p->center.y += p->velocity.y;
-					break;
-				case XK_Down:
-					p->velocity.y = -15;
-					p->center.y += p->velocity.y;
-					break;
-				case XK_Escape:
-				    return 1;
-			}
-		
-		//if (key == XK_Escape) {
-		//	return 1;
-		//}
+		if (key == XK_Escape) {
+			return 1;
+		}
 	}
 	return 0;
 }
@@ -326,12 +263,6 @@ void physics()
 	//move the background
 	g.tex.xc[0] += 0.001;
 	g.tex.xc[1] += 0.001;
-//	Shape *p = &g.player;
-//	p->velocity.x = 0.5;
-//	p->center.x += p->velocity.x;
-//	cout << p->center.x << endl;
-
-
 }
 
 void render()
@@ -345,46 +276,6 @@ void render()
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
-
-	//creating player
-	Shape *p = &g.player;
-	if(!p->playerExists){
-		spawnPlayer();
-		p->playerExists = true;
-	}
-	glColor3ub(190,140,10);
-	glPushMatrix();
-	float w = p->width;
-	float h = p->height;
-	glTranslatef(p->center.x, p->center.y, p->center.z);
-	glBegin(GL_QUADS);
-		glVertex2i(-w,-h);
-		glVertex2i(-w, h);
-		glVertex2i( w, h);
-		glVertex2i( w,-h);
-	glEnd();
-	glPopMatrix();
-	//creating enemies
-	while(g.n < 4){
-		Shape *e = &g.enemy[g.n];
-		glColor3ub(190,150,10);
-		glPushMatrix();
-		spawnEnemy(g.n);
-		float w = e->width;
-		float h = e->height;
-		glTranslatef(e->center.x, e->center.y, e->center.z);
-	        glBegin(GL_QUADS);
-        	        glVertex2i(-w,-h);
-               		glVertex2i(-w, h);
-               	 	glVertex2i( w, h);
-                	glVertex2i( w,-h);
-        	glEnd();
-        	glPopMatrix();
-		g.n++;
-		cout << g.n << endl;
-		cout << e->center.x << endl;
-		cout << e->center.y << endl;
-	}
 }
 
 

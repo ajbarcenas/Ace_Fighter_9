@@ -31,7 +31,7 @@
 }
 */
 
-void ajPic(int x, int y, GLuint textid){
+/*void ajPic(int x, int y, GLuint textid){
     Rect r;
     r.bot = 380;
     r.left = 250;
@@ -39,4 +39,5 @@ void ajPic(int x, int y, GLuint textid){
     ggprint16(&r, 16, 0x0084ff, "ANDREW OLIVEROS - TESTING");
 
 }
+*/
 

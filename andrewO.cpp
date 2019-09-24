@@ -39,3 +39,4 @@ void ajPic(int x, int y, GLuint textid){
     ggprint16(&r, 16, 0x0084ff, "ANDREW OLIVEROS - TESTING");
 
 }
+

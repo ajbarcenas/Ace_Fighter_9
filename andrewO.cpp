@@ -21,10 +21,10 @@ void ajPic(int x, int y, GLuint textid)
     glTranslate(fx,fy,0);
     glBindTexture(GL_TEXTURE_2D, texid);
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertext2i(-width, -width);
-        glTexCoord2f(0.0f, 1.0f); glVertext2i(-width,  width);
-        glTexCoord2f(0.0f, 1.0f); glVertext2i( width,  width);
-        glTexCoord2f(0.0f, 1.0f); glVertext2i( width, -width);
+    glTexCoord2f(0.0f, 1.0f); glVertext2i(-width, -width);
+    glTexCoord2f(0.0f, 1.0f); glVertext2i(-width,  width);
+    glTexCoord2f(0.0f, 1.0f); glVertext2i( width,  width);
+    glTexCoord2f(0.0f, 1.0f); glVertext2i( width, -width);
     glEnd();
     glPopMatrix();
 }

@@ -4,7 +4,8 @@
 #include <GL/glx.h>
 #include <math.h>
 #include <X11/keysym.h>
-void ajPic(int x, int y, GLuint textid)
+/*
+ void ajPic(int x, int y, GLuint textid)
 {
     //show pic
     static float angle = 0.0f;
@@ -27,4 +28,14 @@ void ajPic(int x, int y, GLuint textid)
     glTexCoord2f(0.0f, 1.0f); glVertext2i( width, -width);
     glEnd();
     glPopMatrix();
+}
+*/
+
+void ajPic(int x, int y, GLuint textid){
+    Rect r;
+    r.bot = 380;
+    r.left = 250;
+    r.center = 0;
+    ggprint16(&r, 16, 0x0084ff, "ANDREW OLIVEROS - TESTING");
+
 }

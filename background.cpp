@@ -17,6 +17,7 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include "fonts.h"
 
 class Image {
 public:
@@ -94,10 +95,14 @@ public:
 	int xres, yres;
 	Shape player;
 	Texture tex;
+	Shape box;
 	int n;
+	GLuint texid;
+	int showCredits;
 	Shape enemy[5];
 	Global() {
 		xres=1920, yres=1080;
+		showCredits = 0;
 	}
 } g;
 
@@ -188,7 +193,9 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Shape *p);
-
+extern void showCreditScreen();
+extern void showPicture(int x, int y, GLuint texid);
+void show();
 //===========================================================================
 //===========================================================================
 int main()
@@ -225,6 +232,7 @@ void init_opengl(void)
 	//glClear(GL_COLOR_BUFFER_BIT);
 	//Do this to allow texture maps
 	glEnable(GL_TEXTURE_2D);
+	initialize_fonts();
 	//
 	//load the images file into a ppm structure.
 	//
@@ -292,6 +300,10 @@ int check_keys(XEvent *e)
 					p->velocity.y = -15;
 					p->center.y += p->velocity.y;
 					break;
+				case XK_c:
+					printf("test");
+					g.showCredits ^= 1;
+					break;
 				case XK_Escape:
 				    return 1;
 			}
@@ -301,6 +313,27 @@ int check_keys(XEvent *e)
 		//}
 	}
 	return 0;
+}
+void show()
+{
+    g.box.width = 1920;
+    g.box.height = 1080;
+    g.box.center.x = 960;
+    g.box.center.y = 540;
+    float h, w;
+        glColor3ub(255, 143, 143);
+        glPushMatrix();
+        glTranslatef(g.box.center.x, g.box.center.y, 0);
+        w = g.box.width;
+        h = g.box.height;
+        glBegin(GL_QUADS);
+        glVertex2i(-w, -h);
+        glVertex2i(-w, h);
+        glVertex2i(w, h);
+        glVertex2i(w, -h);
+        glEnd();
+        glPopMatrix();
+
 }
 
 void physics()
@@ -318,6 +351,7 @@ void physics()
 
 void render()
 {
+	Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
@@ -367,7 +401,7 @@ void render()
                      g.enemy[i].center.y, g.enemy[i].center.z);
 	    glBegin(GL_QUADS);
                 glVertex2i(-we[i],-he[i]);
-           		glVertex2i(-we[i], he[i]);
+			glVertex2i(-we[i], he[i]);
            	 	glVertex2i( we[i], he[i]);
                	glVertex2i( we[i],-he[i]);
         glEnd();
@@ -377,7 +411,13 @@ void render()
 		cout << g.enemy[i].center.x << endl;
 		cout << g.enemy[i].center.y << endl;
 	}
+	if (g.showCredits) {
+		show();    	   
+	}
+	//unsigned int c = 0x00ffff44;
+    	r.bot = 500;
+    	r.left = 500;
+    	r.center = 0;
+    	ggprint8b(&r, 16, 0x00ffff44, "Press C to go to credits");
 }
-
-
 

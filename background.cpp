@@ -97,7 +97,7 @@ public:
 	int n;
 	Shape enemy[5];
 	Global() {
-		xres=700, yres=400;
+		xres=1920, yres=1080;
 	}
 } g;
 
@@ -110,7 +110,7 @@ public:
 	X11_wrapper() {
 		GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 		//GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
-		setup_screen_res(700, 400);
+		setup_screen_res(1920, 1080);
 		dpy = XOpenDisplay(NULL);
 		if(dpy == NULL) {
 			printf("\n\tcannot connect to X server\n\n");
@@ -188,7 +188,6 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 
-
 //===========================================================================
 //===========================================================================
 int main()
@@ -209,23 +208,6 @@ int main()
 		x11.swapBuffers();
 	}
 	return 0;
-}
-
-void spawnPlayer(){
-	Shape *p = &g.player;
-	p->width = 15;
-	p->height = 15;
-	p->center.x = 200;
-	p->center.y = 180;
-	
-}
-
-void spawnEnemy(int i){
-	Shape *e = &g.enemy[i];
-	e->width = 12;
-	e->height = 12;
-	e->center.x = ((i+1) * 20) + 200;
-	e->center.y = 400 - ((i+1) * 50); 
 }
 
 void init_opengl(void)
@@ -254,7 +236,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-							GL_RGB, GL_UNSIGNED_BYTE, g.tex.backImage->data);
+				 GL_RGB, GL_UNSIGNED_BYTE, g.tex.backImage->data);
 	//Change view area of image
     g.tex.xc[0] = 0.0;
 	g.tex.xc[1] = 0.25;
@@ -364,38 +346,37 @@ void render()
 	glEnd();
 	glPopMatrix();
 	//creating enemies
-	while(g.n < 4){
-		Shape *e = &g.enemy[g.n];
-		glColor3ub(190,150,10);
+	//Shape *e = &g.enemy[4];
+    
+    for (int i = 0; i < 5; i++) {
+        g.enemy[i].width = 12;
+	    g.enemy[i].height = 12;
+	    g.enemy[i].center.x = ((i+1) * 20) + 200;
+	    g.enemy[i].center.y = 400 - ((i+1) * 50);
+    }
+    float we[5];
+    float he[5];
+    for (int i = 0; i < 5; i++) {
 		glPushMatrix();
-		spawnEnemy(g.n);
-		float w = e->width;
-		float h = e->height;
-		glTranslatef(e->center.x, e->center.y, e->center.z);
-	        glBegin(GL_QUADS);
-        	        glVertex2i(-w,-h);
-               		glVertex2i(-w, h);
-               	 	glVertex2i( w, h);
-                	glVertex2i( w,-h);
-        	glEnd();
-        	glPopMatrix();
-		g.n++;
-		cout << g.n << endl;
-		cout << e->center.x << endl;
-		cout << e->center.y << endl;
+        glColor3ub(190,150,10);
+		//spawnEnemy(g.n);
+        we[i] = g.enemy[i].width;
+        he[i] = g.enemy[i].height;
+        glTranslatef(g.enemy[i].center.x, 
+                     g.enemy[i].center.y, g.enemy[i].center.z);
+	    glBegin(GL_QUADS);
+                glVertex2i(-we[i],-he[i]);
+           		glVertex2i(-we[i], he[i]);
+           	 	glVertex2i( we[i], he[i]);
+               	glVertex2i( we[i],-he[i]);
+        glEnd();
+        glPopMatrix();
+		//g.n++;
+		cout << i << endl;
+		cout << g.enemy[i].center.x << endl;
+		cout << g.enemy[i].center.y << endl;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

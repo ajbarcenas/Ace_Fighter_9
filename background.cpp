@@ -92,9 +92,10 @@ struct Particle {
 class Global {
 public:
 	int xres, yres;
-	Shape player;
+    GLuint texid;
+    Shape player;
 	Texture tex;
-	int n;
+    int n;
 	Shape enemy[5];
 	Global() {
 		xres=700, yres=400;
@@ -187,7 +188,7 @@ void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics(void);
 void render(void);
-
+void ajPic();
 
 //===========================================================================
 //===========================================================================

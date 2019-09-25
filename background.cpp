@@ -64,7 +64,7 @@ public:
         unlink(ppmname);
     }
 };
-Image img[1] = {"PixelBackground.jpeg"};
+Image img[1] = {"MountainLayer.png"};
 
 class Texture {
 public:
@@ -248,7 +248,7 @@ void init_opengl(void)
                  GL_RGB, GL_UNSIGNED_BYTE, g.tex.backImage->data);
     //Change view area of image
     g.tex.xc[0] = 0.0;
-    g.tex.xc[1] = 0.25;
+    g.tex.xc[1] = 1.0;
     g.tex.yc[0] = 0.0;
     g.tex.yc[1] = 1.0;
 }
@@ -337,8 +337,8 @@ void show()
 void physics()
 {
     //move the background
-    g.tex.xc[0] += 0.001;
-    g.tex.xc[1] += 0.001;
+    g.tex.xc[0] += 0.02;
+    g.tex.xc[1] += 0.02;
 //	Shape *p = &g.player;
 //	p->velocity.x = 0.5;
 //	p->center.x += p->velocity.x;

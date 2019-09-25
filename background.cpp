@@ -196,6 +196,7 @@ extern void spawnPlayer(Shape *p);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void show();
+void printAlexisB(Rect r);
 //===========================================================================
 //===========================================================================
 int main()
@@ -410,7 +411,8 @@ void render()
         cout << g.enemy[i].center.y << endl;
     }
     if (g.showCredits) {
-        show();    	   
+        show();
+	printAlexisB(r);	
     }
     //unsigned int c = 0x00ffff44;
         r.bot = 500;

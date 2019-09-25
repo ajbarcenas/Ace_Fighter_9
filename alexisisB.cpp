@@ -12,5 +12,5 @@ void printAlexisB(Rect r)
 	r.left = 40;
 	r.bot = 50;
 	r.center = 0;
-	ggprint8b(&r, 16, 0xfffff, "Alexisis Barcenas-Hitbox Specialist");    
+	ggprint16(&r, 16, 0xfffff, "Alexisis Barcenas - Hitbox Specialist");    
 }

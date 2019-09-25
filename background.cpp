@@ -197,6 +197,8 @@ extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void show();
 void printAlexisB(Rect r);
+void showAlonsoText(Rect r);
+
 //===========================================================================
 //===========================================================================
 int main()
@@ -412,7 +414,8 @@ void render()
     }
     if (g.showCredits) {
         show();
-	printAlexisB(r);	
+        printAlexisB(r);
+        showAlonsoText(r);
     }
     //unsigned int c = 0x00ffff44;
         r.bot = 500;

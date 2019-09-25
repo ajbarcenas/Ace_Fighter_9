@@ -418,9 +418,9 @@ void render()
         showAlonsoText(r);
     }
     //unsigned int c = 0x00ffff44;
-        r.bot = 500;
-        r.left = 500;
+        r.bot = 100;
+        r.left = 40;
         r.center = 0;
-        ggprint8b(&r, 16, 0x00ffff44, "Press C to go to credits");
+        ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 }
 

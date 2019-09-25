@@ -28,20 +28,20 @@ void printAceFighter9(Rect r)
 		ggprint16(&r, 100, 0xfffff, tmp.c_str());
 	}
 	int x_scale = 100;
-	r.left = 300;
+	r.left = 485;
 	r.bot = 550;
 	for (int i = 0; i < 11; ++i) {
 		string tmp = aceLetters[i];
 		
-		if (i <= 5){
-			r.left = 300  + i * x_scale;
+		if (i <= 4){
+			r.left = 485  + i * x_scale;
 			ggprint16(&r, 0, 0xfffff, tmp.c_str());
 		}
-		if (aceLetters[i] == "G") {
-		    continue;
+		else if (i == 5) {
+		    r.center = 0;
 		}
 		else {
-		    r.left = 900 + i * x_scale;
+		    r.left = 530 + (i-1) * x_scale;
 		    ggprint16(&r, 0, 0xfffff, tmp.c_str());
 		}
 	}

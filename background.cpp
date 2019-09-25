@@ -198,7 +198,7 @@ extern void showPicture(int x, int y, GLuint texid);
 void show();
 void printAlexisB(Rect r);
 void showAlonsoText(Rect r);
-
+void printAceFighter9(Rect r);
 //===========================================================================
 //===========================================================================
 int main()
@@ -416,6 +416,7 @@ void render()
         show();
         printAlexisB(r);
         showAlonsoText(r);
+	printAceFighter9(r);
     }
     //unsigned int c = 0x00ffff44;
         r.bot = 100;

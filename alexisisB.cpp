@@ -8,7 +8,9 @@
 #include "fonts.h"
 #include <string.h>
 #include <iostream>
+#include <GL/glx.h>
 using namespace std;
+//Prints out my name on the credits Screen
 void printAlexisB(Rect r) 
 {
 	r.left = 40;
@@ -20,7 +22,7 @@ void printAlexisB(Rect r)
 void printAceFighter9(Rect r)
 {
 	string aceLetters[11] = {"A", "C", "E", "F","I","G", "H", "T", "E",
-	    "R", "9"};
+		"R", "9"};
 	r.left = 960;
 	r.bot = 1050;
 	for (int i = 0; i < 11; ++i) {
@@ -38,11 +40,29 @@ void printAceFighter9(Rect r)
 			ggprint16(&r, 0, 0xfffff, tmp.c_str());
 		}
 		else if (i == 5) {
-		    r.center = 0;
+			r.center = 0;
 		}
 		else {
-		    r.left = 530 + (i-1) * x_scale;
-		    ggprint16(&r, 0, 0xfffff, tmp.c_str());
+			r.left = 530 + (i-1) * x_scale;
+			ggprint16(&r, 0, 0xfffff, tmp.c_str());
 		}
 	}
+}
+
+// This code prints out the logo on our credits screen
+void printLogo(double x, double y, double z, GLuint texturecode) 
+{
+	glColor3f(1.0, 1.0, 1.0);
+	float wid = 120.0f;
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glBindTexture(GL_TEXTURE_2D, texturecode);
+	glBegin(GL_QUADS);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid * 2.0, -wid * 2.0);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid * 2.0, wid * 2.0);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(wid * 2.0, wid * 2.0);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(wid * 2.0, -wid * 2.0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEnd();
+	glPopMatrix();
 }

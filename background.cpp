@@ -19,6 +19,8 @@ using namespace std;
 #include <GL/glx.h>
 #include "fonts.h"
 
+typedef double Vect[3];
+
 class Image {
     public:
 	int width, height;
@@ -64,7 +66,7 @@ class Image {
 	    unlink(ppmname);
 	}
 };
-Image img[1] = {"MountainLayer.png"};
+Image img[2] = {"MountainLayer.png", "AceFighter9.png"};
 
 class Texture {
     public:
@@ -90,12 +92,21 @@ struct Particle {
     Vec Velocity;
 };
 
+class Logo {
+public:
+	Vect pos;
+	Vect vel;
+} logo;
+
+
 class Global {
     public:
 	int xres, yres;
 	Shape player;
 	Texture tex;
 	Shape box;
+	GLuint logoTexture;
+	int showLogo;
 	int n = 0;
 	GLuint texid;
 	int showCredits;
@@ -103,8 +114,12 @@ class Global {
 	Global() {
 	    xres=1920, yres=1080;
 	    showCredits = 0;
+		showLogo = 0;
+		logo.pos[0] = 400;
+		logo.pos[1] = 850;
 	}
 } g;
+
 
 class X11_wrapper {
     private:
@@ -201,6 +216,7 @@ void show();
 void printAlexisB(Rect r);
 void showAlonsoText(Rect r);
 void printAceFighter9(Rect r);
+void printLogo(double x, double y, double z, GLuint texturecode);
 //===========================================================================
 //===========================================================================
 int main()
@@ -256,6 +272,21 @@ void init_opengl(void)
     g.tex.xc[1] = 1.0;
     g.tex.yc[0] = 0.0;
     g.tex.yc[1] = 1.0;
+
+	glGenTextures(1, &g.logoTexture);
+	//-------------------------------------------------------------------------
+	//Logo
+	//
+	w = img[1].width;
+	h = img[1].height;
+	//
+	glBindTexture(GL_TEXTURE_2D, g.logoTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+
 }
 
 void check_mouse(XEvent *e)
@@ -297,17 +328,18 @@ int check_keys(XEvent *e)
 		p->velocity.x = 15;
 		p->center.x += p->velocity.x;
 		break;
-	    case XK_Up:
+		case XK_Up:
 		p->velocity.y = 15;
 		p->center.y += p->velocity.y;
 		break;
-	    case XK_Down:
+		case XK_Down:
 		p->velocity.y = -15;
 		p->center.y += p->velocity.y;
 		break;
-	    case XK_c:
+		case XK_c:
 		printf("test");
 		g.showCredits ^= 1;
+		g.showLogo ^= 1;
 		break;
 	    case XK_Escape:
 		return 1;
@@ -315,28 +347,28 @@ int check_keys(XEvent *e)
 	if (key == XK_Escape) {
 		return 1;
 	}
-    }
-    return 0;
+	}
+	return 0;
 }
 void show()
 {
-    g.box.width = 1920;
-    g.box.height = 1080;
-    g.box.center.x = 960;
-    g.box.center.y = 540;
-    float h, w;
-    glColor3ub(255, 143, 143);
-    glPushMatrix();
-    glTranslatef(g.box.center.x, g.box.center.y, 0);
-    w = g.box.width;
-    h = g.box.height;
-    glBegin(GL_QUADS);
-    glVertex2i(-w, -h);
-    glVertex2i(-w, h);
-    glVertex2i(w, h);
-    glVertex2i(w, -h);
-    glEnd();
-    glPopMatrix();
+	g.box.width = 1920;
+	g.box.height = 1080;
+	g.box.center.x = 960;
+	g.box.center.y = 540;
+	float h, w;
+	glColor3ub(255, 143, 143);
+	glPushMatrix();
+	glTranslatef(g.box.center.x, g.box.center.y, 0);
+	w = g.box.width;
+	h = g.box.height;
+	glBegin(GL_QUADS);
+	glVertex2i(-w, -h);
+	glVertex2i(-w, h);
+	glVertex2i(w, h);
+	glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
 }
 
 void physics()
@@ -386,12 +418,12 @@ void render()
     while( g.n < 5) {
 	spawnEnemy(g.n, &g.enemy[g.n]);
 	g.n++;
-    }
-    float we[5];
-    float he[5];
-    for (int i = 0; i < 5; i++) {
+	}
+	float we[5];
+	float he[5];
+	for (int i = 0; i < 5; i++) {
 	glPushMatrix();
-	glColor3ub(190,150,10);
+	glColor3ub(190, 150, 10);
 	we[i] = g.enemy[i].width;
 	he[i] = g.enemy[i].height;
 	glTranslatef(g.enemy[i].center.x, 
@@ -408,17 +440,22 @@ void render()
 	//cout << i << endl;
 	//cout << g.enemy[i].center.x << endl;
 	//cout << g.enemy[i].center.y << endl;
-    }
-    if (g.showCredits) {
+	}
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
+	if (g.showCredits) {
 	show();
 	printAlexisB(r);
 	showAlonsoText(r);
 	printAceFighter9(r);
-    }
-    //unsigned int c = 0x00ffff44;
-    r.bot = 100;
-    r.left = 40;
-    r.center = 0;
-    ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
+	printLogo(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
+	}
+	//unsigned int c = 0x00ffff44;
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
+	r.bot = 100;
+	r.left = 40;
+	r.center = 0;
+	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 }
 

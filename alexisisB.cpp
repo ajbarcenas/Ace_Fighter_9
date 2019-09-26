@@ -4,14 +4,14 @@
 // Goals: Have hitboxes work correctly for player and enemy models
 //
 //
-#include <stdio.h>
-#include "fonts.h"
-#include <string.h>
-#include <iostream>
-#include <GL/glx.h>
+#ifndef ALEXISIS_B_CPP
+#define ALEXISIS_B_CPP
+#include "alexisisB.h"
 using namespace std;
+
+
 //Prints out my name on the credits Screen
-void printAlexisB(Rect r) 
+void ABarGlobal::printAlexisB(Rect r) 
 {
 	r.left = 40;
 	r.bot = 50;
@@ -19,7 +19,7 @@ void printAlexisB(Rect r)
 	ggprint16(&r, 16, 0xfffff, "Alexisis Barcenas - Hitbox Specialist");    
 }
 
-void printAceFighter9(Rect r)
+void ABarGlobal::printAceFighter9(Rect r)
 {
 	string aceLetters[11] = {"A", "C", "E", "F","I","G", "H", "T", "E",
 		"R", "9"};
@@ -54,14 +54,15 @@ void printLogo(double x, double y, double z, GLuint texturecode)
 {
 	glColor3f(1.0, 1.0, 1.0);
 	float wid = 120.0f;
+	float image_scale = 1.75;
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glBindTexture(GL_TEXTURE_2D, texturecode);
 	glBegin(GL_QUADS);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid * 2.0, -wid * 2.0);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid * 2.0, wid * 2.0);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(wid * 2.0, wid * 2.0);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(wid * 2.0, -wid * 2.0);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid * image_scale, -wid * image_scale);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid * image_scale, wid * image_scale);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(wid * image_scale, wid * image_scale);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(wid * image_scale, -wid * image_scale);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnd();
 	glPopMatrix();

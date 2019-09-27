@@ -1,17 +1,17 @@
-// Name: Alexisis Barcenas
+// Author: Alexisis Barcenas
 // Date: 9/17/2019
 // Game: Ace Fighter 9
+// Program: alexisisB.cpp
 // Goals: Have hitboxes work correctly for player and enemy models
-//
 //
 #ifndef ALEXISIS_B_CPP
 #define ALEXISIS_B_CPP
 #include "alexisisB.h"
 using namespace std;
-
+ABarGlobal abG;
 
 //Prints out my name on the credits Screen
-void ABarGlobal::printAlexisB(Rect r) 
+void printAlexisB(Rect r) 
 {
 	r.left = 40;
 	r.bot = 50;
@@ -50,7 +50,7 @@ void ABarGlobal::printAceFighter9(Rect r)
 }
 
 // This code prints out the logo on our credits screen
-void printLogo(double x, double y, double z, GLuint texturecode) 
+void ABarGlobal::printLogo(double x, double y, double z, GLuint texturecode) 
 {
 	glColor3f(1.0, 1.0, 1.0);
 	float wid = 120.0f;
@@ -67,3 +67,27 @@ void printLogo(double x, double y, double z, GLuint texturecode)
 	glEnd();
 	glPopMatrix();
 }
+
+// Prints out the background for the credits screen
+void show()
+{
+	Box box;
+	box.width = 1920;
+	box.height = 1080;
+	box.center.x = 960;
+	box.center.y = 540;
+	float h, w;
+	glColor3ub(255, 143, 143);
+	glPushMatrix();
+	glTranslatef(box.center.x, box.center.y, 0);
+	w = box.width;
+	h = box.height;
+	glBegin(GL_QUADS);
+	glVertex2i(-w, -h);
+	glVertex2i(-w, h);
+	glVertex2i(w, h);
+	glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
+}
+#endif

@@ -453,7 +453,7 @@ void render()
         glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
         glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
     glEnd();
-
+    glBindTexture(GL_TEXTURE_2D, 0);
    //Cloud Layer 
    //
 
@@ -469,7 +469,7 @@ void render()
         glTexCoord2f(g.tex.xc[3], g.tex.yc[3]); glVertex2i(g.xres, 0);
     glEnd();
     glDisable(GL_ALPHA_TEST);
-    
+    glBindTexture(GL_TEXTURE_2D, 0); 
     //--------------------------------------------------------------------------
 
     //creating player

@@ -3,7 +3,17 @@
 // Game: Ace Fighter 9
 // Program: alexisisB.cpp
 // Goals: Have hitboxes work correctly for player and enemy models
-//
+/*=============[Notes]=================
+Current class in my source file is ABarGlobal
+which currently holds general functions that
+print out basic information. Current functions are being used to create
+the features of the credits page.
+Credits page is still a WIP and will continually
+be receiving updates.
+===============[End]===================
+*/
+
+
 #ifndef ALEXISIS_B_CPP
 #define ALEXISIS_B_CPP
 #include "alexisisB.h"
@@ -19,7 +29,9 @@ void printAlexisB(Rect r)
 	r.center = 0;
 	ggprint16(&r, 16, 0xcf13ac, "Alexisis Barcenas - Hitbox Specialist");    
 }
-
+/*Prints out "Ace Fighter 9" in a cross format across the screen
+Not sure whether I like it, so might be commented out for progress report
+*/
 void ABarGlobal::printAceFighter9(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
@@ -37,15 +49,13 @@ void ABarGlobal::printAceFighter9(Rect r)
 	for (int i = 0; i < 11; ++i) {
 		string tmp = aceLetters[i];
 		
-		if (i <= 4){
+		if (i <= 4) {
 			glColor3f(1.0, 1.0, 1.0);
 			r.left = 485  + i * x_scale;
 			ggprint16(&r, 0, 0xfffff, tmp.c_str());
-		}
-		else if (i == 5) {
+		} else if (i == 5) {
 			r.center = 0;
-		}
-		else {
+		} else {
 			glColor3f(1.0, 1.0, 1.0);
 			r.left = 530 + (i-1) * x_scale;
 			ggprint16(&r, 0, 0xfffff, tmp.c_str());
@@ -72,7 +82,9 @@ void ABarGlobal::printPicture(double x, double y, double z, GLuint texturecode)
 	glPopMatrix();
 }
 
-
+/* This functions prints out the box that the pictures will be placed on.
+I used vertex-color blending to give the box that gradient look to it.
+ */
 void ABarGlobal::printCredBoxes(int x_pos, int y_pos)
 {
 	Box box;
@@ -100,17 +112,48 @@ void ABarGlobal::printCredBoxes(int x_pos, int y_pos)
 }
 
 
-// Prints out the grey background for the credits screen
-void showCreditsBorder()
+/* Prints out the grey background for the credits screen and picture frames
+still working on the outermost border because the window size is too large to
+view from my local machine. Will need to continue working on this at school
+machines because of their higher resolution/dimensions.
+*/
+void showCreditsBorder(int width, int height, int x_pos, int y_pos)
 {
 	glColor3f(1.0, 1.0, 1.0);
 	Box box;
-	box.width = 1920;
-	box.height = 1080;
-	box.center.x = 960;
-	box.center.y = 540;
+	box.width = width;
+	box.height = height;
+	box.center.x = x_pos;
+	box.center.y = y_pos;
 	float h, w;
 	glColor3ub(148, 139, 139);
+	glPushMatrix();
+	glTranslatef(box.center.x, box.center.y, 0);
+	w = box.width;
+	h = box.height;
+	glBegin(GL_QUADS);
+	glVertex2i(-w, -h);
+	glVertex2i(-w, h);
+	glVertex2i(w, h);
+	glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
+}
+// Overloading the function so different colors can be assigned to the border
+void showCreditsBorder(int width, int height, int x_pos, int y_pos,
+	int r_color, int g_color, int b_color) 
+{
+	glColor3f(1.0, 1.0, 1.0);
+	Box box;
+	box.width = width;
+	box.height = height;
+	box.center.x = x_pos;
+	box.center.y = y_pos;
+	float h, w;
+	box.color.r = r_color;
+	box.color.g = g_color;
+	box.color.b = b_color;
+	glColor3ub(box.color.r, box.color.g, box.color.b);
 	glPushMatrix();
 	glTranslatef(box.center.x, box.center.y, 0);
 	w = box.width;

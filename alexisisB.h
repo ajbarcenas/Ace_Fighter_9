@@ -1,6 +1,6 @@
+// Author: Alexisis Barcenas
 // Game: Ace Fighter 9
 // Program: alexisisB.h
-// Author: Alexisis Barcenas
 // Date Created: 9/26/19
 /*=============[Notes]=================
 Current class in my header file is ABarGlobal
@@ -8,7 +8,7 @@ which currently holds general functions that
 print out basic information.
 Current functions are being used to create
 the features of the credits page.
-Credits page is still a WIP and will continually
+Credits page is still a WIP and will periodically
 be receiving updates.
   */
 
@@ -33,6 +33,7 @@ struct Color {
 struct Box {
 	float width, height;
 	Vec1 center;
+	Color color;
 };
 
 class ABarGlobal {
@@ -44,5 +45,7 @@ class ABarGlobal {
 };
 
 void printAlexisB(Rect r);
-void showCreditsBorder();
+void showCreditsBorder(int width, int height, int x_pos, int y_pos);
+void showCreditsBorder(int width, int height, int x_pos, int y_pos,
+	int r_color, int g_color, int b_color);
 #endif

@@ -77,7 +77,7 @@ class Image {
 };
 
 Image img[5] = { "MountainLayer.png", "CloudLayer.png","AceFighter9.png",
-"Alexis.gif", "thenPerish.jpg"};
+"Alexis.jpg", "thenPerish.jpg"};
 
 class Texture {
 	public:

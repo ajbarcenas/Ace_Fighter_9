@@ -26,52 +26,59 @@ class Image {
 	~Image() { delete [] data; }
 	Image(const char *fname) {
 	    if (fname[0] == '\0')
-		return;
+		    return;
 	    //printf("fname **%s**\n", fname);
-	    char name[40];
+	    int ppmFlag = 0;
+        char name[40];
 	    strcpy(name, fname);
 	    int slen = strlen(name);
-	    name[slen-4] = '\0';
-	    //printf("name **%s**\n", name);
-	    char ppmname[80];
-	    sprintf(ppmname,"%s.ppm", name);
-	    //printf("ppmname **%s**\n", ppmname);
-	    char ts[100];
-	    //system("convert eball.jpg eball.ppm");
-	    sprintf(ts, "convert %s %s", fname, ppmname);
-	    system(ts);
+        char ppmname[80];
+        if (strncmp(name+(slen-4), ".ppm", 4) == 0)
+            ppmFlag = 1;
+        if (ppmFlag) {
+            strcpy(ppmname, name);
+        } else {
+	        name[slen-4] = '\0';
+	        //printf("name **%s**\n", name);
+	        sprintf(ppmname,"%s.ppm", name);
+	        //printf("ppmname **%s**\n", ppmname);
+	        char ts[100];
+	        //system("convert eball.jpg eball.ppm");
+	        sprintf(ts, "convert %s %s", fname, ppmname);
+	        system(ts);
+        }
 	    //sprintf(ts, "%s", name);
 	    FILE *fpi = fopen(ppmname, "r");
 	    if (fpi) {
-		char line[200];
-		fgets(line, 200, fpi);
-		fgets(line, 200, fpi);
-		//skip comments and blank lines
-		while (line[0] == '#' || strlen(line) < 2)
+		    char line[200];
 		    fgets(line, 200, fpi);
-		sscanf(line, "%i %i", &width, &height);
-		fgets(line, 200, fpi);
-		//get pixel data
-		int n = width * height * 3;			
-		data = new unsigned char[n];			
-		for (int i=0; i<n; i++)
-		    data[i] = fgetc(fpi);
-		fclose(fpi);
+		    fgets(line, 200, fpi);
+		    //skip comments and blank lines
+		    while (line[0] == '#' || strlen(line) < 2)
+		        fgets(line, 200, fpi);
+		    sscanf(line, "%i %i", &width, &height);
+		    fgets(line, 200, fpi);
+		    //get pixel data
+		    int n = width * height * 3;			
+		    data = new unsigned char[n];			
+		    for (int i=0; i<n; i++)
+		        data[i] = fgetc(fpi);
+		    fclose(fpi);
 	    } else {
-		printf("ERROR opening image: %s\n",ppmname);
-		exit(0);
+		    printf("ERROR opening image: %s\n",ppmname);
+		    exit(0);
 	    }
-	    unlink(ppmname);
+        if(!ppmFlag)
+	        unlink(ppmname);
 	}
 };
-Image img[1] = {"MountainLayer.png"};
+Image img[2] = {"MountainLayer.png", "CloudLayer2.png"};
 
 class Texture {
     public:
 	Image *backImage;
-	GLuint backTexture;
-	float xc[2];
-	float yc[2];
+	float xc[4];
+	float yc[4];
 };
 struct Vec {
     float x,y,z;
@@ -93,6 +100,9 @@ struct Particle {
 class Global {
     public:
 	int xres, yres;
+    GLuint mountainTexture;
+    GLuint cloudTexture;
+    GLuint silhouetteTexture;
 	Shape player;
 	Texture tex;
 	Shape box;
@@ -223,6 +233,31 @@ int main()
     return 0;
 }
 
+unsigned char *buildAlphaData(Image *img)
+{
+    //add 4th component to the RGB stream
+    int i;
+    int a,b,c;
+    unsigned char *newdata, *ptr;
+    unsigned char *data = (unsigned char *)img->data;
+    newdata = (unsigned char *)malloc(img->width * img->height * 4);
+    ptr = newdata;
+    for (i = 0; i < img->width * img->height * 3; i += 3) {
+        a = *(data + 0);
+        b = *(data + 1);
+        c = *(data + 2);
+        *(ptr + 0) = a;
+        *(ptr + 1) = b;
+        *(ptr + 2) = c;
+
+        *(ptr + 3) = (a|b|c);
+
+        ptr += 4;
+        data += 3;
+    }
+    return newdata;
+}
+
 void init_opengl(void)
 {
     //OpenGL initialization
@@ -241,21 +276,57 @@ void init_opengl(void)
     //
     //load the images file into a ppm structure.
     //
-    g.tex.backImage = &img[0];
+    //g.tex.backImage = &img[0];
     //create opengl texture elements
-    glGenTextures(1, &g.tex.backTexture);
-    int w = g.tex.backImage->width;
-    int h = g.tex.backImage->height;
-    glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
+    glGenTextures(1, &g.mountainTexture);
+    glGenTextures(1, &g.cloudTexture);
+    glGenTextures(1, &g.silhouetteTexture);
+    //--------------------------------------------------------------------------
+    //MountainLayer
+    //
+    int w = img[0].width;
+    int h = img[0].height;
+    
+    glBindTexture(GL_TEXTURE_2D, g.mountainTexture);
+    
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-	    GL_RGB, GL_UNSIGNED_BYTE, g.tex.backImage->data);
+	    GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+    //--------------------------------------------------------------------------
+    //CloudLayer
+    //
+    int wc = img[1].width;
+    int hc = img[1].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.cloudTexture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, wc, hc, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+    
+    //Silhouette
+
+    glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+    unsigned char *silhouetteData = buildAlphaData(&img[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wc, hc, 0,
+        GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
+    free(silhouetteData);
+
     //Change view area of image
     g.tex.xc[0] = 0.0;
     g.tex.xc[1] = 1.0;
     g.tex.yc[0] = 0.0;
     g.tex.yc[1] = 1.0;
+    //cloud image
+    g.tex.xc[2] = 0.0;
+    g.tex.xc[3] = 1.0;
+    g.tex.yc[2] = 0.0;
+    g.tex.yc[3] = 1.0;
 }
 
 void check_mouse(XEvent *e)
@@ -331,10 +402,10 @@ void show()
     w = g.box.width;
     h = g.box.height;
     glBegin(GL_QUADS);
-    glVertex2i(-w, -h);
-    glVertex2i(-w, h);
-    glVertex2i(w, h);
-    glVertex2i(w, -h);
+        glVertex2i(-w, -h);
+        glVertex2i(-w, h);
+        glVertex2i(w, h);
+        glVertex2i(w, -h);
     glEnd();
     glPopMatrix();
 }
@@ -342,31 +413,57 @@ void show()
 void physics()
 {
     //move the background
-    g.tex.xc[0] += 0.02;
-    g.tex.xc[1] += 0.02;
+    g.tex.xc[0] += 0.001;
+    g.tex.xc[1] += 0.001;
+    g.tex.xc[2] += 0.005;
+    g.tex.xc[3] += 0.005;
     for(int i = 0; i < 5; i++){
-	moveEnemy(&g.enemy[i]);
+       moveEnemy(&g.enemy[i]);
     }
 }
 
 void render()
 {
     Rect r;
+
+    //Background Layers
+    //--------------------------------------------------------------------------
+    //Mountain Layer
+    //
+
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0, 1.0, 1.0);
-    glBindTexture(GL_TEXTURE_2D, g.tex.backTexture);
+    glBindTexture(GL_TEXTURE_2D, g.mountainTexture);
     glBegin(GL_QUADS);
-    glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(0, 0);
-    glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(0, g.yres);
-    glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
-    glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
+        glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(0, 0);
+        glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(0, g.yres);
+        glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
+        glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
     glEnd();
+
+   //Cloud Layer 
+   //
+
+    glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255, 255, 255, 255);
+
+    glBegin(GL_QUADS);
+        glTexCoord2f(g.tex.xc[2], g.tex.yc[3]); glVertex2i(0, 0);
+        glTexCoord2f(g.tex.xc[2], g.tex.yc[2]); glVertex2i(0, g.yres);
+        glTexCoord2f(g.tex.xc[3], g.tex.yc[2]); glVertex2i(g.xres, g.yres);
+        glTexCoord2f(g.tex.xc[3], g.tex.yc[3]); glVertex2i(g.xres, 0);
+    glEnd();
+    glDisable(GL_ALPHA_TEST);
+    
+    //--------------------------------------------------------------------------
 
     //creating player
     Shape *p = &g.player;
     if(!p->playerExists){
-	spawnPlayer(p);
-	p->playerExists = true;
+    	spawnPlayer(p);
+	    p->playerExists = true;
     }
     glColor3ub(190,140,10);
     glPushMatrix();
@@ -374,46 +471,46 @@ void render()
     float h = p->height;
     glTranslatef(p->center.x, p->center.y, p->center.z);
     glBegin(GL_QUADS);
-    glVertex2i(-w,-h);
-    glVertex2i(-w, h);
-    glVertex2i( w, h);
-    glVertex2i( w,-h);
+        glVertex2i(-w,-h);
+        glVertex2i(-w, h);
+        glVertex2i( w, h);
+        glVertex2i( w,-h);
     glEnd();
     glPopMatrix();
     //creating enemies
 
 
     while( g.n < 5) {
-	spawnEnemy(g.n, &g.enemy[g.n]);
-	g.n++;
+        spawnEnemy(g.n, &g.enemy[g.n]);
+        g.n++;
     }
     float we[5];
     float he[5];
     for (int i = 0; i < 5; i++) {
-	glPushMatrix();
-	glColor3ub(190,150,10);
-	we[i] = g.enemy[i].width;
-	he[i] = g.enemy[i].height;
-	glTranslatef(g.enemy[i].center.x, 
-		g.enemy[i].center.y, g.enemy[i].center.z);
-	//cout << g.enemy[i].center.x << endl;
-	glBegin(GL_QUADS);
-	glVertex2i(-we[i],-he[i]);
-	glVertex2i(-we[i], he[i]);
-	glVertex2i( we[i], he[i]);
-	glVertex2i( we[i],-he[i]);
-	glEnd();
-	glPopMatrix();
-	//g.n++;
-	//cout << i << endl;
-	//cout << g.enemy[i].center.x << endl;
-	//cout << g.enemy[i].center.y << endl;
+        glPushMatrix();
+        glColor3ub(190,150,10);
+        we[i] = g.enemy[i].width;
+        he[i] = g.enemy[i].height;
+        glTranslatef(g.enemy[i].center.x, 
+        g.enemy[i].center.y, g.enemy[i].center.z);
+        //cout << g.enemy[i].center.x << endl;
+        glBegin(GL_QUADS);
+            glVertex2i(-we[i],-he[i]);
+            glVertex2i(-we[i], he[i]);
+            glVertex2i( we[i], he[i]);
+            glVertex2i( we[i],-he[i]);
+        glEnd();
+        glPopMatrix();
+        //g.n++;
+        //cout << i << endl;
+        //cout << g.enemy[i].center.x << endl;
+        //cout << g.enemy[i].center.y << endl;
     }
     if (g.showCredits) {
-	show();
-	printAlexisB(r);
-	showAlonsoText(r);
-	printAceFighter9(r);
+        show();
+        printAlexisB(r);
+        showAlonsoText(r);
+        printAceFighter9(r);
     }
     //unsigned int c = 0x00ffff44;
     r.bot = 100;

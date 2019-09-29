@@ -76,7 +76,7 @@ class Image {
 	}
 };
 
-Image img[3] = {"MountainLayer.png", "CloudLayer.png", "AceFighter9.png"};
+Image img[4] = { "MountainLayer.png", "CloudLayer.png","AceFighter9.png", "Alexis.gif" };
 
 class Texture {
 	public:
@@ -107,12 +107,19 @@ public:
 	Vect vel;
 } logo;
 
+class Pictures {
+public:
+	Vect pos;
+	Vect vel;
+} picture;
+
 
 class Global {
 	public:
 	int xres, yres;
     GLuint mountainTexture;
     GLuint cloudTexture;
+	GLuint alexisTexId;
     GLuint silhouetteTexture;
 	Shape player;
 	Texture tex;
@@ -125,6 +132,8 @@ class Global {
 	Shape enemy[5];
 	Global() {
 		xres=1920, yres=1080;
+		picture.pos[0] = 480;
+		picture.pos[1] = 800;
 		showCredits = 0;
 		showLogo = 0;
 		logo.pos[0] = 400;

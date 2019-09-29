@@ -13,8 +13,8 @@ Goals: Have multiple background layers moving at different speeds
 #include "fonts.h"
 
 void showAlonsoText(Rect r) {
-    r.left = 40;
-    r.bot = 80;
+    r.left = 1300;
+    r.bot = 645;
     r.center = 0;
     ggprint16(&r, 16, 0x069e85, "Alonso Gomez - Background design and movement");
 }

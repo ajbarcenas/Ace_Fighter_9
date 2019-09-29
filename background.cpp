@@ -76,7 +76,8 @@ class Image {
 	}
 };
 
-Image img[3] = {"MountainLayer.png", "CloudLayer.png", "AceFighter9.png"};
+Image img[5] = { "MountainLayer.png", "CloudLayer.png","AceFighter9.png",
+"Alexis.gif", "thenPerish.jpg"};
 
 class Texture {
 	public:
@@ -107,6 +108,17 @@ public:
 	Vect vel;
 } logo;
 
+class Pictures {
+public: 
+	Vect pos;
+	Vect vel;
+} picture;
+
+class Picturetwo {
+public:
+	Vect pos;
+	Vect vel;
+} picture2;
 
 class Global {
 	public:
@@ -118,17 +130,22 @@ class Global {
 	Texture tex;
 	Shape box;
 	GLuint logoTexture;
+	GLuint alexisTexId;
+	GLuint alonsoTexId;
 	int showLogo;
 	int n = 0;
 	GLuint texid;
 	int showCredits;
 	Shape enemy[5];
 	Global() {
+		//Pictures pic;
 		xres=1920, yres=1080;
+		picture.pos[0] = 480, picture.pos[1] = 800;
+		picture2.pos[0] = 1440, picture2.pos[1] = 800;
 		showCredits = 0;
 		showLogo = 0;
-		logo.pos[0] = 400;
-		logo.pos[1] = 850;
+		logo.pos[0] = 960;
+		logo.pos[1] = 540;
 	}
 } g;
 
@@ -149,6 +166,7 @@ class X11_wrapper {
 		exit(EXIT_FAILURE);
 		}
 		Window root = DefaultRootWindow(dpy);
+
 		XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
 		if(vi == NULL) {
 		printf("\n\tno appropriate visual found\n\n");
@@ -225,8 +243,6 @@ extern void moveEnemy(Shape *e);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
-//void printAceFighter9(Rect r);
-//void printLogo(double x, double y, double z, GLuint texturecode);
 extern ABarGlobal abG;
 //===========================================================================
 //===========================================================================
@@ -299,6 +315,8 @@ void init_opengl(void)
     glGenTextures(1, &g.cloudTexture);
     glGenTextures(1, &g.silhouetteTexture);
     glGenTextures(1, &g.logoTexture);
+	glGenTextures(1, &g.alexisTexId);
+	glGenTextures(1, &g.alonsoTexId);
     //--------------------------------------------------------------------------
     //MountainLayer
     //
@@ -334,20 +352,6 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wc, hc, 0,
         GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
     free(silhouetteData);
-
-	  //-------------------------------------------------------------------------
-	  //Logo
-	  //
-	  w = img[2].width;
-	  h = img[2].height;
-	  //
-	  glBindTexture(GL_TEXTURE_2D, g.logoTexture);
-	  //
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	  glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		  GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
-
     //Change view area of image
     g.tex.xc[0] = 0.0;
     g.tex.xc[1] = 1.0;
@@ -358,6 +362,32 @@ void init_opengl(void)
     g.tex.xc[3] = 1.0;
     g.tex.yc[2] = 0.0;
     g.tex.yc[3] = 1.0;
+	// Logo Picture
+	w = img[2].width;
+	h = img[2].height;
+	glBindTexture(GL_TEXTURE_2D, g.logoTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+
+	// Alexis picture
+	w = img[3].width;
+	h = img[3].height;
+	glBindTexture(GL_TEXTURE_2D, g.alexisTexId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
+
+	// Alonso picture
+	w = img[4].width;
+	h = img[4].height;
+	glBindTexture(GL_TEXTURE_2D, g.alonsoTexId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[4].data);
 }
 
 void check_mouse(XEvent *e)
@@ -519,21 +549,26 @@ void render()
         //cout << g.enemy[i].center.x << endl;
         //cout << g.enemy[i].center.y << endl;
     }
-    glDisable(GL_TEXTURE_2D);
-	  glEnable(GL_TEXTURE_2D);
-    if (g.showCredits) {
-        show();
-        printAlexisB(r);
-        showAlonsoText(r);
-        abG.printAceFighter9(r);
-	      abG.printLogo(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
-    }
-    glDisable(GL_TEXTURE_2D);
-	  glEnable(GL_TEXTURE_2D);
-    //unsigned int c = 0x00ffff44;
-    r.bot = 100;
-    r.left = 40;
-    r.center = 0;
-    ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
+	if (g.showCredits) {
+		showCreditsBorder();
+		abG.printCredBoxes(960, 540);
+		abG.printPicture(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
+		abG.printPicture(picture.pos[0], picture.pos[1], 0, g.alexisTexId);
+		abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
+		printAlexisB(r);
+		glColor3f(1.0, 1.0, 1.0);
+		showAlonsoText(r);
+		glColor3f(1.0, 1.0, 1.0);
+		abG.printAceFighter9(r);
+	}
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
+	//unsigned int c = 0x00ffff44;
+	r.bot = 100;
+	r.left = 40;
+	r.center = 0;
+	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 }
 

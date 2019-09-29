@@ -34,12 +34,15 @@ struct Box {
 	float width, height;
 	Vec1 center;
 };
+
 class ABarGlobal {
 	public:
 		Rect r;
 		void printAceFighter9(Rect r);
-		void printLogo(double x, double y, double z, GLuint texturecode);
+		void printPicture(double x, double y, double z, GLuint texturecode);
+		void printCredBoxes(int x_pos, int y_pos);
 };
+
 void printAlexisB(Rect r);
-void show();
+void showCreditsBorder();
 #endif

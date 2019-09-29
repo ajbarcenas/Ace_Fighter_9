@@ -21,13 +21,13 @@ using namespace std;
 ABarGlobal abG;
 
 //Prints out my name on the credits Screen
-void printAlexisB(Rect r) 
+void printAlexisB(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
 	r.left = 340;
 	r.bot = 645;
 	r.center = 0;
-	ggprint16(&r, 16, 0xcf13ac, "Alexisis Barcenas - Hitbox Specialist");    
+	ggprint16(&r, 16, 0xcf13ac, "Alexisis Barcenas - Hitbox Specialist");
 }
 /*Prints out "Ace Fighter 9" in a cross format across the screen
 Not sure whether I like it, so might be commented out for progress report
@@ -73,8 +73,10 @@ void ABarGlobal::printPicture(double x, double y, double z, GLuint texturecode)
 	glTranslatef(x, y, z);
 	glBindTexture(GL_TEXTURE_2D, texturecode);
 	glBegin(GL_QUADS);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid * image_scale, -wid * image_scale);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid * image_scale, wid * image_scale);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid * image_scale,
+		-wid * image_scale);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid * image_scale,
+		wid * image_scale);
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(wid * image_scale, wid * image_scale);
 	glTexCoord2f(0.0f, 1.0f); glVertex2i(wid * image_scale, -wid * image_scale);
 	glBindTexture(GL_TEXTURE_2D, 0);

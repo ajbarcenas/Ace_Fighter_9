@@ -18,7 +18,7 @@ void showAlonsoText(Rect r) {
     r.center = 0;
     ggprint16(&r, 16, 0x069e85, "Alonso Gomez - Background design and movement");
 }
-
+/*
 void showBackground()
 {
     //Background Layers
@@ -52,7 +52,6 @@ void showBackground()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-/*
 void showAlonsoPicture(int x, int y, GLuint texid)
 {
     static float angle = 0.0f;

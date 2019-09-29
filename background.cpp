@@ -18,9 +18,12 @@ using namespace std;
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "fonts.h"
+#include "alexisisB.h"
+
+typedef double Vect[3];
 
 class Image {
-    public:
+	public:
 	int width, height;
 	unsigned char *data;
 	~Image() { delete [] data; }
@@ -72,33 +75,41 @@ class Image {
 	        unlink(ppmname);
 	}
 };
-Image img[2] = {"MountainLayer.png", "CloudLayer2.png"};
+Image img[3] = {"MountainLayer.png", "CloudLayer2.png", "AceFighter9"};
+
 
 class Texture {
-    public:
+	public:
 	Image *backImage;
 	float xc[4];
 	float yc[4];
 };
 struct Vec {
-    float x,y,z;
+	float x,y,z;
 };
 
 struct Shape {
-    float width, height;
-    float radius; 
-    Vec center;
-    Vec velocity;
-    bool playerExists = false;
+	float width, height;
+	float radius; 
+	Vec center;
+	Vec velocity;
+	bool playerExists = false;
 };
 
 struct Particle {
-    Shape s;
-    Vec Velocity;
+	Shape s;
+	Vec Velocity;
 };
 
+class Logo {
+public:
+	Vect pos;
+	Vect vel;
+} logo;
+
+
 class Global {
-    public:
+	public:
 	int xres, yres;
     GLuint mountainTexture;
     GLuint cloudTexture;
@@ -106,50 +117,56 @@ class Global {
 	Shape player;
 	Texture tex;
 	Shape box;
+	GLuint logoTexture;
+	int showLogo;
 	int n = 0;
 	GLuint texid;
 	int showCredits;
 	Shape enemy[5];
 	Global() {
-	    xres=1920, yres=1080;
-	    showCredits = 0;
+		xres=1920, yres=1080;
+		showCredits = 0;
+		showLogo = 0;
+		logo.pos[0] = 400;
+		logo.pos[1] = 850;
 	}
 } g;
 
+
 class X11_wrapper {
-    private:
+	private:
 	Display *dpy;
 	Window win;
 	GLXContext glc;
-    public:
+	public:
 	X11_wrapper() {
-	    GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-	    //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
-	    setup_screen_res(1920, 1080);
-	    dpy = XOpenDisplay(NULL);
-	    if(dpy == NULL) {
+		GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+		//GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
+		setup_screen_res(1920, 1080);
+		dpy = XOpenDisplay(NULL);
+		if(dpy == NULL) {
 		printf("\n\tcannot connect to X server\n\n");
 		exit(EXIT_FAILURE);
-	    }
-	    Window root = DefaultRootWindow(dpy);
-	    XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
-	    if(vi == NULL) {
+		}
+		Window root = DefaultRootWindow(dpy);
+		XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
+		if(vi == NULL) {
 		printf("\n\tno appropriate visual found\n\n");
 		exit(EXIT_FAILURE);
-	    } 
-	    Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
-	    XSetWindowAttributes swa;
-	    swa.colormap = cmap;
-	    swa.event_mask =
+		}
+		Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
+		XSetWindowAttributes swa;
+		swa.colormap = cmap;
+		swa.event_mask =
 		ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
 		ButtonPressMask | ButtonReleaseMask |
 		StructureNotifyMask | SubstructureNotifyMask;
-	    win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
-		    vi->depth, InputOutput, vi->visual,
-		    CWColormap | CWEventMask, &swa);
-	    set_title();
-	    glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
-	    glXMakeCurrent(dpy, win, glc);
+		win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
+			vi->depth, InputOutput, vi->visual,
+			CWColormap | CWEventMask, &swa);
+		set_title();
+		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
+		glXMakeCurrent(dpy, win, glc);
 	}
 	void cleanupXWindows() {
 	    XDestroyWindow(dpy, win);
@@ -185,15 +202,15 @@ class X11_wrapper {
 	    glXSwapBuffers(dpy, win);
 	}
 	void check_resize(XEvent *e) {
-	    //The ConfigureNotify is sent by the
-	    //server if the window is resized.
-	    if (e->type != ConfigureNotify)
+		//The ConfigureNotify is sent by the
+		//server if the window is resized.
+		if (e->type != ConfigureNotify)
 		return;
-	    XConfigureEvent xce = e->xconfigure;
-	    if (xce.width != g.xres || xce.height != g.yres) {
+		XConfigureEvent xce = e->xconfigure;
+		if (xce.width != g.xres || xce.height != g.yres) {
 		//Window size did change.
 		reshape_window(xce.width, xce.height);
-	    }
+		}
 	}
 } x11;
 
@@ -207,30 +224,30 @@ extern void spawnEnemy(int i, Shape *e);
 extern void moveEnemy(Shape *e);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
-void show();
-void printAlexisB(Rect r);
 void showAlonsoText(Rect r);
-void printAceFighter9(Rect r);
+//void printAceFighter9(Rect r);
+//void printLogo(double x, double y, double z, GLuint texturecode);
+extern ABarGlobal abG;
 //===========================================================================
 //===========================================================================
 int main()
 {
-    init_opengl();
-    int done=0;
-    g.n = 0;
-    cout << g.n << endl;
-    while (!done) {
+	init_opengl();
+	int done=0;
+	g.n = 0;
+	cout << g.n << endl;
+	while (!done) {
 	while (x11.getXPending()) {
-	    XEvent e = x11.getXNextEvent();
-	    x11.check_resize(&e);
-	    check_mouse(&e);
-	    done = check_keys(&e);
+		XEvent e = x11.getXNextEvent();
+		x11.check_resize(&e);
+		check_mouse(&e);
+		done = check_keys(&e);
 	}
 	physics();
 	render();
 	x11.swapBuffers();
-    }
-    return 0;
+	}
+	return 0;
 }
 
 unsigned char *buildAlphaData(Image *img)
@@ -281,6 +298,7 @@ void init_opengl(void)
     glGenTextures(1, &g.mountainTexture);
     glGenTextures(1, &g.cloudTexture);
     glGenTextures(1, &g.silhouetteTexture);
+    glGenTextures(1, &g.logoTexture);
     //--------------------------------------------------------------------------
     //MountainLayer
     //
@@ -317,6 +335,19 @@ void init_opengl(void)
         GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
     free(silhouetteData);
 
+	  //-------------------------------------------------------------------------
+	  //Logo
+	  //
+	  w = img[2].width;
+	  h = img[2].height;
+	  //
+	  glBindTexture(GL_TEXTURE_2D, g.logoTexture);
+	  //
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	  glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		  GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+
     //Change view area of image
     g.tex.xc[0] = 0.0;
     g.tex.xc[1] = 1.0;
@@ -331,83 +362,64 @@ void init_opengl(void)
 
 void check_mouse(XEvent *e)
 {
-    //Did the mouse move?
-    //Was a mouse button clicked?
-    static int savex = 0;
-    static int savey = 0;
-    //
-    if (e->type == ButtonRelease) {
-	return;
-    }
-    if (e->type == ButtonPress) {
+	//Did the mouse move?
+	//Was a mouse button clicked?
+	static int savex = 0;
+	static int savey = 0;
+	//
+	if (e->type == ButtonRelease) {
+		return;
+	}
+	if (e->type == ButtonPress) {
 	cout << e->xbutton.button << endl;
 	if (e->xbutton.button== 1) {
 	}
 	if (e->xbutton.button== 3) {
 	}
-    }
-    if (savex != e->xbutton.x || savey != e->xbutton.y) {
+	}
+	if (savex != e->xbutton.x || savey != e->xbutton.y) {
 	//Mouse moved
-	savex = e->xbutton.x;
-	savey = e->xbutton.y;
-    }
+		savex = e->xbutton.x;
+		savey = e->xbutton.y;
+	}
 }
 
 int check_keys(XEvent *e)
 {
-    //Was there input from the keyboard?
-    Shape *p = &g.player;
-    if (e->type == KeyPress) {
-	int key = XLookupKeysym(&e->xkey, 0);
-	switch(key){
-	    case XK_Left:
-		p->velocity.x = -15;
-		p->center.x += p->velocity.x;
-		break;
-	    case XK_Right:
-		p->velocity.x = 15;
-		p->center.x += p->velocity.x;
-		break;
-	    case XK_Up:
-		p->velocity.y = 15;
-		p->center.y += p->velocity.y;
-		break;
-	    case XK_Down:
-		p->velocity.y = -15;
-		p->center.y += p->velocity.y;
-		break;
-	    case XK_c:
-		printf("test");
-		g.showCredits ^= 1;
-		break;
+	//Was there input from the keyboard?
+	Shape *p = &g.player;
+	if (e->type == KeyPress) {
+	  int key = XLookupKeysym(&e->xkey, 0);
+	  switch(key){
+		  case XK_Left:
+		    p->velocity.x = -15;
+		    p->center.x += p->velocity.x;
+		    break;
+		  case XK_Right:
+		    p->velocity.x = 15;
+		    p->center.x += p->velocity.x;
+		    break;
+		  case XK_Up:
+		    p->velocity.y = 15;
+		    p->center.y += p->velocity.y;
+		    break;
+		  case XK_Down:
+		    p->velocity.y = -15;
+		    p->center.y += p->velocity.y;
+		    break;
+		  case XK_c:
+		    printf("test");
+		    g.showCredits ^= 1;
+		    g.showLogo ^= 1;
+		    break;
 	    case XK_Escape:
-		return 1;
+		    return 1;
 	}
 	if (key == XK_Escape) {
 		return 1;
 	}
-    }
-    return 0;
 }
-void show()
-{
-    g.box.width = 1920;
-    g.box.height = 1080;
-    g.box.center.x = 960;
-    g.box.center.y = 540;
-    float h, w;
-    glColor3ub(255, 143, 143);
-    glPushMatrix();
-    glTranslatef(g.box.center.x, g.box.center.y, 0);
-    w = g.box.width;
-    h = g.box.height;
-    glBegin(GL_QUADS);
-        glVertex2i(-w, -h);
-        glVertex2i(-w, h);
-        glVertex2i(w, h);
-        glVertex2i(w, -h);
-    glEnd();
-    glPopMatrix();
+    return 0;
 }
 
 void physics()
@@ -424,6 +436,7 @@ void physics()
 
 void render()
 {
+    extern ABarGlobal abG;
     Rect r;
 
     //Background Layers
@@ -506,12 +519,17 @@ void render()
         //cout << g.enemy[i].center.x << endl;
         //cout << g.enemy[i].center.y << endl;
     }
+    glDisable(GL_TEXTURE_2D);
+	  glEnable(GL_TEXTURE_2D);
     if (g.showCredits) {
         show();
         printAlexisB(r);
         showAlonsoText(r);
-        printAceFighter9(r);
+        abG.printAceFighter9(r);
+	      abG.printLogo(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
     }
+    glDisable(GL_TEXTURE_2D);
+	  glEnable(GL_TEXTURE_2D);
     //unsigned int c = 0x00ffff44;
     r.bot = 100;
     r.left = 40;

@@ -67,7 +67,7 @@ class Image {
 		unlink(ppmname);
 	}
 };
-Image img[2] = {"MountainLayer.png", "AceFighter9.png"};
+Image img[6] = {"MountainLayer.png", "CloudLayer.png" "AceFighter9.png"};
 
 class Texture {
 	public:
@@ -277,15 +277,15 @@ void init_opengl(void)
 	//-------------------------------------------------------------------------
 	//Logo
 	//
-	w = img[1].width;
-	h = img[1].height;
+	w = img[2].width;
+	h = img[2].height;
 	//
 	glBindTexture(GL_TEXTURE_2D, g.logoTexture);
 	//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
 
 }
 
@@ -373,6 +373,7 @@ void render()
 	glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
 	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//creating player
 	Shape *p = &g.player;

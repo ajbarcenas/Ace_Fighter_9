@@ -119,7 +119,6 @@ public:
 	Vect pos;
 	Vect vel;
 } picture2;
-
 class Global {
 	public:
 	int xres, yres;
@@ -552,8 +551,16 @@ void render()
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
 	if (g.showCredits) {
-		showCreditsBorder();
+		showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
+		showCreditsBorder(180, 180, 960, 540,14,14,138 );
+		showCreditsBorder(170, 170, 960, 540, 21, 21, 237);
+		showCreditsBorder(160, 160, 960, 540, 47,47,237);
+		showCreditsBorder(150, 150, 960, 540, 69,80,237);
+		showCreditsBorder(140, 140, 960, 540,39,123,232);
+		showCreditsBorder(130, 130, 960, 540);
+		showCreditsBorder(130, 130, 480, 800);
+		showCreditsBorder(130, 130, 1440, 800);
 		abG.printPicture(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
 		abG.printPicture(picture.pos[0], picture.pos[1], 0, g.alexisTexId);
 		abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);

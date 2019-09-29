@@ -51,7 +51,7 @@ void ABarGlobal::printAceFighter9(Rect r)
 		
 		if (i <= 4) {
 			glColor3f(1.0, 1.0, 1.0);
-			r.left = 485  + i * x_scale;
+			r.left = 485 + i * x_scale;
 			ggprint16(&r, 0, 0xfffff, tmp.c_str());
 		} else if (i == 5) {
 			r.center = 0;
@@ -90,8 +90,8 @@ void ABarGlobal::printCredBoxes(int x_pos, int y_pos)
 	Box box;
 	float h, w;
 		glColor3f(1.0, 1.0, 1.0);
-		box.width = 1920*.48;
-		box.height = 1080*.44;
+		box.width = 1920 * .48;
+		box.height = 1080 * .44;
 		box.center.x = x_pos;
 		box.center.y = y_pos;
 		glPushMatrix();
@@ -102,11 +102,11 @@ void ABarGlobal::printCredBoxes(int x_pos, int y_pos)
 		glColor3f(0.79f, 1.0f, 0.90f);
 		glVertex2i(-w, -h);
 		glColor3f(0.31f, 0.26f, 1.0f);
-		glVertex2i(-w, h );
+		glVertex2i(-w, h);
 		glColor3f(0.35f, 0.80f, 1.0f);
-		glVertex2i(w, h );
+		glVertex2i(w, h);
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glVertex2i(w, -h );
+		glVertex2i(w, -h);
 		glEnd();
 		glPopMatrix();
 }

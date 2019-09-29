@@ -75,8 +75,8 @@ class Image {
 	        unlink(ppmname);
 	}
 };
-Image img[3] = {"MountainLayer.png", "CloudLayer2.png", "AceFighter9"};
 
+Image img[6] = {"MountainLayer.png", "CloudLayer.png" "AceFighter9.png"};
 
 class Texture {
 	public:

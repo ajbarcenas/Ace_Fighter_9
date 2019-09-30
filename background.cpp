@@ -257,8 +257,8 @@ void render(void);
 extern void spawnPlayer(Shape *p);
 extern void spawnEnemy(int i, Shape *e);
 extern void moveEnemy(Shape *e);
-extern void checkEnemyLocation(Shape *e, int i);
-extern void removeEnemy(Shape *e, int i);
+extern void checkEnemyLocation(Shape *e, int *i);
+extern void removeEnemy(Shape *e, int *i);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -533,12 +533,12 @@ void physics()
 	g.tex.xc[2] += 0.005;
 	g.tex.xc[3] += 0.005;
     //pine tree layer
-    g.tex.xc[4] += 0.008;
-    g.tex.xc[5] += 0.008;
-    	int* n = g.n;
+   	 g.tex.xc[4] += 0.008;
+    	g.tex.xc[5] += 0.008;
+    	int *n = &g.n;
 	for(int i = 0; i < 5; i++){
 		moveEnemy(&g.enemy[i]);
-		checkEnemyLocation(&g.enemy[i], &n);
+		checkEnemyLocation(&g.enemy[i], n);
 	}
 }
 

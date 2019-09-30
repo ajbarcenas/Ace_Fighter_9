@@ -15,34 +15,35 @@ struct Shape {
         bool playerExists = false;
 };
 
-void removeEnemy(Shape *e, int i){
+void removeEnemy(Shape *e, int *i){
         //g->enemy[i] = g->enemy[i-1];
-        &e = &(e--);
+        *e = *(e--);
         --i;
 }
 
-void checkEnemyLocation(Shape *e, int i){
-		removeEnemy(&e, i);
+void checkEnemyLocation(Shape *e, int *i){
+	if(e->center.x < 0.0){
+	    removeEnemy(e, i);
 	}
 }
 
 void spawnEnemy(int i, Shape *e){
-        e->width = 12;
-        e->height = 12;
-        e->center.x = ((i+1) * 50) + 1300;
-        e->center.y = 800 - ((i+1) * 80);
+        e->width = 18;
+        e->height = 18;
+        e->center.x = ((i+1) * 50) + 2000;
+        e->center.y = 900 - ((i+1) * 90);
 }
 
 void spawnPlayer(Shape *p)
 {
-        p->width = 15;
-        p->height = 15;
+        p->width = 25;
+        p->height = 25;
         p->center.x = 200;
         p->center.y = 570;
 }
 
 void moveEnemy(Shape *e){
-       	e->velocity.x = -2.0;
+       	e->velocity.x = -3.0;
         e->center.x += e->velocity.x;
 }
 

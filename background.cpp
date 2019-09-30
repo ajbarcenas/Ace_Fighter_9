@@ -618,6 +618,7 @@ void render()
 		spawnEnemy(g.n, &g.enemy[g.n]);
 		g.n++;
 	}
+	checkEnemy(g.n, &g);
 	float we[5];
 	float he[5];
 	for (int i = 0; i < 5; i++) {

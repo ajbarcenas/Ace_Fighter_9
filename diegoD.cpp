@@ -15,6 +15,12 @@ struct Shape {
         bool playerExists = false;
 };
 
+void checkEnemy(int i; Shape *g){
+	if(e->s.center.x < 0.0){
+		g.enemy[i] = g.enemy[i-1];
+		--i;
+	}
+}
 
 void spawnEnemy(int i, Shape *e){
         e->width = 12;
@@ -32,7 +38,7 @@ void spawnPlayer(Shape *p)
 }
 
 void moveEnemy(Shape *e){
-       	e->velocity.x = -0.5;
+       	e->velocity.x = -2.0;
         e->center.x += e->velocity.x;
 }
 

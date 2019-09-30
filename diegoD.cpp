@@ -15,10 +15,14 @@ struct Shape {
         bool playerExists = false;
 };
 
-void checkEnemy(int i; Shape *g){
-	if(e->s.center.x < 0.0){
-		g.enemy[i] = g.enemy[i-1];
-		--i;
+void removeEnemy(Shape *e, int i){
+        //g->enemy[i] = g->enemy[i-1];
+        &e = &(e--);
+        --i;
+}
+
+void checkEnemyLocation(Shape *e, int i){
+		removeEnemy(&e, i);
 	}
 }
 

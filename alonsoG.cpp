@@ -19,6 +19,39 @@ void showAlonsoText(Rect r) {
     ggprint16(&r, 16, 0x069e85, "Alonso Gomez - Background design and movement");
 }
 /*
+void showBackground()
+{
+    //Background Layers
+    //--------------------------------------------------------------------------
+    //Mountain Layer
+    //
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 1.0);
+    glBindTexture(GL_TEXTURE_2D, g.mountainTexture);
+    glBegin(GL_QUADS);
+        glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(0, 0);
+        glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(0, g.yres);
+        glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
+        glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    //Cloud Layer
+    //
+    glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glColor4ub(255, 255, 255, 255);
+    glBegin(GL_QUADS);
+        glTexCoord2f(g.tex.xc[2], g.tex.yc[3]); glVertex2i(0, 0);
+        glTexCoord2f(g.tex.xc[2], g.tex.yc[2]); glVertex2i(0, g.yres);
+        glTexCoord2f(g.tex.xc[3], g.tex.yc[2]); glVertex2i(g.xres, g.yres);
+        glTexCoord2f(g.tex.xc[3], g.tex.yc[3]); glVertex2i(g.xres, 0);
+    glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void showAlonsoPicture(int x, int y, GLuint texid)
 {
     static float angle = 0.0f;

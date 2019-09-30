@@ -75,14 +75,14 @@ class Image {
 	}
 };
 
-Image img[7] = { "MountainLayer.png", "CloudLayer.png","AceFighter9.png",
-"Alexis.jpg", "thenPerish.jpg", "DiegoPic.jpg", "andrew.jpg"};
+Image img[8] = { "MountainLayer.png", "CloudLayer.png","AceFighter9.png",
+"Alexis.jpg", "thenPerish.jpg", "DiegoPic.jpg", "andrew.jpg", "PineTreeLayer.png"};
 
 class Texture {
 	public:
 	Image *backImage;
-	float xc[4];
-	float yc[4];
+	float xc[6];
+	float yc[6];
 };
 struct Vec {
 	float x,y,z;
@@ -136,7 +136,9 @@ class Global {
 	int xres, yres;
 	GLuint mountainTexture;
 	GLuint cloudTexture;
-	GLuint silhouetteTexture;
+    GLuint cSilhouetteTexture;
+    GLuint pineTreeTexture;
+	GLuint pSilhouetteTexture;
 	Shape player;
 	Texture tex;
 	Shape box;
@@ -328,7 +330,9 @@ void init_opengl(void)
 	//create opengl texture elements
 	glGenTextures(1, &g.mountainTexture);
 	glGenTextures(1, &g.cloudTexture);
-	glGenTextures(1, &g.silhouetteTexture);
+    glGenTextures(1, &g.cSilhouetteTexture);
+    glGenTextures(1, &g.pineTreeTexture);
+	glGenTextures(1, &g.pSilhouetteTexture);
 	glGenTextures(1, &g.logoTexture);
 	glGenTextures(1, &g.alexisTexId);
 	glGenTextures(1, &g.alonsoTexId);
@@ -361,16 +365,41 @@ void init_opengl(void)
 
 	//Silhouette
 
-	glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+	glBindTexture(GL_TEXTURE_2D, g.cSilhouetteTexture);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 
-	unsigned char *silhouetteData = buildAlphaData(&img[1]);
+	unsigned char *cSilhouetteData = buildAlphaData(&img[1]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wc, hc, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-	free(silhouetteData);
+		GL_RGBA, GL_UNSIGNED_BYTE, cSilhouetteData);
+	free(cSilhouetteData);
+    //--------------------------------------------------------------------------
+    //PineTreeLayer
+    //
+    int wp = img[7].width;
+    int hp = img[7].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.pineTreeTexture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, wp, hp, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
+
+    //Silhouette
+
+    glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *pSilhouetteData = buildAlphaData(&img[7]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wp, hp, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
+    free(pSilhouetteData);
+
 	//Change view area of image
-	g.tex.xc[0] = 0.0;
+	//mountain imgae
+    g.tex.xc[0] = 0.0;
 	g.tex.xc[1] = 1.0;
 	g.tex.yc[0] = 0.0;
 	g.tex.yc[1] = 1.0;
@@ -379,6 +408,12 @@ void init_opengl(void)
 	g.tex.xc[3] = 1.0;
 	g.tex.yc[2] = 0.0;
 	g.tex.yc[3] = 1.0;
+    //pine tree image
+    g.tex.xc[4] = 0.0;
+    g.tex.xc[5] = 1.0;
+    g.tex.yc[4] = 0.0;
+    g.tex.yc[5] = 1.0;
+
 	// Logo Picture
 	w = img[2].width;
 	h = img[2].height;
@@ -489,10 +524,15 @@ int check_keys(XEvent *e)
 void physics()
 {
 	//move the background
+    //mountain layer
 	g.tex.xc[0] += 0.001;
 	g.tex.xc[1] += 0.001;
+    //cloud layer
 	g.tex.xc[2] += 0.005;
 	g.tex.xc[3] += 0.005;
+    //pine tree layer
+    g.tex.xc[4] += 0.008;
+    g.tex.xc[5] += 0.008;
 	for(int i = 0; i < 5; i++){
 		moveEnemy(&g.enemy[i]);
 	}
@@ -519,10 +559,11 @@ void render()
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//Cloud Layer 
+	
+    //Cloud Layer 
 	// Done by Alonso Gomez
 
-	glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+	glBindTexture(GL_TEXTURE_2D, g.cSilhouetteTexture);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255, 255, 255, 255);
@@ -535,7 +576,22 @@ void render()
 	glEnd();
 	glDisable(GL_ALPHA_TEST);
 	glBindTexture(GL_TEXTURE_2D, 0); 
-	//-------------------------------------------------------------------------
+	
+    //Pine Tree Layer
+    //Done by Alonso Gomez
+
+    glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+    glBegin(GL_QUADS);
+        glTexCoord2f(g.tex.xc[4], g.tex.yc[5]); glVertex2i(0, 0);
+        glTexCoord2f(g.tex.xc[4], g.tex.yc[4]); glVertex2i(0, g.yres);
+        glTexCoord2f(g.tex.xc[5], g.tex.yc[4]); glVertex2i(g.xres, g.yres);
+        glTexCoord2f(g.tex.xc[5], g.tex.yc[5]); glVertex2i(g.xres, 0);
+    glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    //-------------------------------------------------------------------------
 
 	//creating player
 	Shape *p = &g.player;

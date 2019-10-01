@@ -215,6 +215,8 @@ extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
 void ajPrint(Rect r);
+void initButtons(void);
+void buttonDraw(Rect r);
 //void printAceFighter9(Rect r);
 //void printLogo(double x, double y, double z, GLuint texturecode);
 extern ABarGlobal abG;
@@ -375,6 +377,10 @@ void render()
 	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
 
+
+//
+//
+
 	//creating player
 	Shape *p = &g.player;
 	if(!p->playerExists){
@@ -424,11 +430,15 @@ void render()
 	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	if (g.showCredits) {
+	void initButtons(void);
+	//void buttonDraw(Rect r);
+    if (g.showCredits) {
 	show();
 	printAlexisB(r);
 	ajPrint(r);
 	showAlonsoText(r);
+	//void initButtons(void);
+	//void buttonDraw(Rect r);
 	abG.printAceFighter9(r);
 	abG.printLogo(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
 	}

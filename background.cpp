@@ -78,7 +78,7 @@ Image img[8] = { "./Images/MountainLayer.png",
     "./Images/CloudLayer.png",
     "./Images/AceFighter9.png",
 "./Images/Alexis.jpg",
-"./Images/thenPerish.jpg",
+"./Images/freeRealEstate.jpg",
 "./Images/DiegoPic.jpg",
 "./Images/andrew.jpg",
 "./Images/PineTreeLayer.png"};
@@ -269,6 +269,12 @@ extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
 extern ABarGlobal abG;
+extern void makeSmoke(int x, int y);
+extern void printSmoke();
+extern void smokeMovement();
+extern void makeBullet(int x, int y);
+extern void printBullet();
+extern void bulletMovement();
 //===========================================================================
 //===========================================================================
 int main()
@@ -285,7 +291,9 @@ int main()
 		done = check_keys(&e);
 	}
 	physics();
-	render();
+    smokeMovement();
+	bulletMovement();
+    render();
 	x11.swapBuffers();
 	}
 	return 0;
@@ -519,6 +527,9 @@ int check_keys(XEvent *e)
 			g.showCredits ^= 1;
 			g.showLogo ^= 1;
 			break;
+        case XK_space:
+            makeBullet(p->center.x, p->center.y);
+            break;
 		case XK_Escape:
 			return 1;
 	}
@@ -609,12 +620,19 @@ void render()
 		spawnPlayer(p);
 		p->playerExists = true;
 	}
+
 	checkPlayerLocation(p);
 	glColor3ub(190,140,10);
+
+
 	glPushMatrix();
 	float w = p->width;
 	float h = p->height;
-	glTranslatef(p->center.x, p->center.y, p->center.z);
+	makeSmoke(p->center.x, p->center.y);
+    makeSmoke(p->center.x, p->center.y);
+    printSmoke();
+    glColor3ub(190, 140, 10);
+    glTranslatef(p->center.x, p->center.y, p->center.z);
 	glBegin(GL_QUADS);
 		glVertex2i(-w,-h);
 		glVertex2i(-w, h);
@@ -622,6 +640,9 @@ void render()
 		glVertex2i( w,-h);
 	glEnd();
 	glPopMatrix();
+  printBullet();
+
+	//creating enemies
 
 	//creating enemies
 	while( g.n < 5) {
@@ -645,6 +666,17 @@ void render()
 		glEnd();
 		glPopMatrix();
 	}
+    
+    //--------------------------------------------------------------------------
+    //Smoke Particles
+    //
+
+    //printSmoke();
+
+    //--------------------------------------------------------------------------
+    //Credits Screen
+    //
+
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
 	if (g.showCredits) {

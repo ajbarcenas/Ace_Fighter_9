@@ -288,12 +288,19 @@ extern void makeBullet(int x, int y);
 extern void printBullet();
 extern void bulletMovement();
 <<<<<<< HEAD
+<<<<<<< HEAD
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
 =======
 extern int authScores();
 >>>>>>> eacfabe8d655f5741bbdd8fbe3d2ab7a2f7aa691
+=======
+extern void makeConfetti();
+extern void printConfetti();
+extern void confettiMovement();
+extern int authScores();
+>>>>>>> 392637871974c3b6da84c98ee3a316c6db1f6ecb
 //===========================================================================
 //===========================================================================
 int main()
@@ -579,6 +586,9 @@ void physics()
 	g.tex.xc[3] += 0.005;
     //pine tree layer
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 392637871974c3b6da84c98ee3a316c6db1f6ecb
    	g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
     /*
@@ -588,6 +598,7 @@ void physics()
 		moveEnemy(&g.enemy[i]);
 	}
     */
+<<<<<<< HEAD
 =======
    	 g.tex.xc[4] += 0.008;
     	g.tex.xc[5] += 0.008;
@@ -597,6 +608,8 @@ void physics()
 //		moveEnemy(&g.enemy[i]);
 //	}
 >>>>>>> eacfabe8d655f5741bbdd8fbe3d2ab7a2f7aa691
+=======
+>>>>>>> 392637871974c3b6da84c98ee3a316c6db1f6ecb
 }
 
 void render()
@@ -758,9 +771,13 @@ void render()
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
 >>>>>>> eacfabe8d655f5741bbdd8fbe3d2ab7a2f7aa691
+=======
+	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
+>>>>>>> 392637871974c3b6da84c98ee3a316c6db1f6ecb
 }
 

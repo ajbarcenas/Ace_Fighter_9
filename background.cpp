@@ -155,8 +155,9 @@ class Global {
 	int showLogo;
 	int n = 0;
 	GLuint texid;
-	int showCredits;
+	int showCredits, showHighScores;
 	Shape enemy[5];
+	int HighScore;
 	Global() {
 		//Pictures pic;
 		xres=1920, yres=1080;
@@ -166,8 +167,10 @@ class Global {
 		picture4.pos[0] = 1440, picture4.pos[1] = 300;
 		showCredits = 0;
 		showLogo = 0;
+		showHighScores = 0;
 		logo.pos[0] = 960;
 		logo.pos[1] = 540;
+		HighScore = 0;
 	}
 } g;
 
@@ -512,6 +515,12 @@ int check_keys(XEvent *e)
 			p->velocity.y = -15;
 			p->center.y += p->velocity.y;
 			break;
+		case XK_p:
+			g.HighScore++;
+			cout << g.HighScore << endl;
+		case XK_h:
+			g.showHighScores ^= 1;
+
 		case XK_c:
 			g.showCredits ^= 1;
 			g.showLogo ^= 1;
@@ -676,6 +685,11 @@ void render()
 		ggprint16(&r, 16, 0xcf13ac,
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
 	}
+	if (g.showHighScores) {
+		abG.printCredBoxes(960, 540);
+		r.bot = 540, r.left = 960;
+		ggprint16(&r, 16, 0xcf13ac, "HIGH SCORES");
+	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
 	//unsigned int c = 0x00ffff44;
@@ -683,5 +697,6 @@ void render()
 	r.left = 40;
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
+	ggprint16(&r, 16, 0x00ffff44, "Press H to go credits");
 }
 

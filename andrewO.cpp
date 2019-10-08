@@ -25,7 +25,8 @@ Button;
 Button button[MAXBUTTONS];
 int nbuttons=0;
 
-/*void ajPic(int x, int y, GLuint textid){
+/*
+void ajPic(int x, int y, GLuint textid){
     Rect r;
     r.bot = 380;
     r.left = 250;
@@ -33,7 +34,6 @@ int nbuttons=0;
     ggprint16(&r, 16, 0x0084ff, "ANDREW OLIVEROS - TESTING");
 
 }
-
 void initButtons(void) { 
 
     nbuttons=0;
@@ -130,6 +130,8 @@ void initButtons(void) {
 */
 void buttonDraw(Rect r)
 {
+    //glDisable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     void initButtons();
     for (int i=0; i<nbuttons; i++) {
         if (button[i].over) {

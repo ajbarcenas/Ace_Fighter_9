@@ -32,6 +32,7 @@ void checkPlayerLocation(Shape *p)
 }
 
 // =========================Enemy Functions =================================
+/*
 void removeEnemy(Shape *e, int *i)
 {
         *e = *(e--);
@@ -58,7 +59,7 @@ void moveEnemy(Shape *e)
        	e->velocity.x = -3.0;
         e->center.x += e->velocity.x;
 }
-
+*/
 
 void ShowDiegosPicture(int x, int y, GLuint textid)
 {

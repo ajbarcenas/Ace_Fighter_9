@@ -275,6 +275,9 @@ extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet();
 extern void bulletMovement();
+extern void makeConfetti();
+extern void printConfetti();
+extern void confettiMovement();
 //===========================================================================
 //===========================================================================
 int main()
@@ -290,7 +293,9 @@ int main()
 		check_mouse(&e);
 		done = check_keys(&e);
 	}
+    makeConfetti();
 	physics();
+    confettiMovement();
     smokeMovement();
 	bulletMovement();
     render();
@@ -550,19 +555,22 @@ void physics()
 	g.tex.xc[2] += 0.005;
 	g.tex.xc[3] += 0.005;
     //pine tree layer
-   	 g.tex.xc[4] += 0.008;
-    	g.tex.xc[5] += 0.008;
-    	int *n = &g.n;
+   	g.tex.xc[4] += 0.008;
+    g.tex.xc[5] += 0.008;
+    /*
+    int *n = &g.n;
 	for(int i = 0; i < 5; i++) {
 		checkEnemyLocation(&g.enemy[i], n);	
 		moveEnemy(&g.enemy[i]);
 	}
+    */
 }
 
 void render()
 {
 	extern ABarGlobal abG;
 	Rect r;
+
 	//All of these scrolling background layers were done by Alonso Gomez
 	// 
 	//Background Layers
@@ -622,7 +630,7 @@ void render()
 	}
 
 	checkPlayerLocation(p);
-	glColor3ub(190,140,10);
+	//glColor3ub(190,140,10);
 
 
 	glPushMatrix();
@@ -642,9 +650,9 @@ void render()
 	glPopMatrix();
   printBullet();
 
-	//creating enemies
 
 	//creating enemies
+    /*
 	while( g.n < 5) {
 		spawnEnemy(g.n, &g.enemy[g.n]);
 		g.n++;
@@ -666,13 +674,7 @@ void render()
 		glEnd();
 		glPopMatrix();
 	}
-    
-    //--------------------------------------------------------------------------
-    //Smoke Particles
-    //
-
-    //printSmoke();
-
+    */
     //--------------------------------------------------------------------------
     //Credits Screen
     //
@@ -707,6 +709,7 @@ void render()
 		r.bot = 145, r.left = 1500;
 		ggprint16(&r, 16, 0xcf13ac,
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
+        printConfetti();
 	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
@@ -715,5 +718,6 @@ void render()
 	r.left = 40;
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
+
 }
 

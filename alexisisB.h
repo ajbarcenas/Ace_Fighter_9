@@ -39,9 +39,12 @@ struct Box {
 class ABarGlobal {
 	public:
 		Rect r;
+		int highscore;
 		void printAceFighter9(Rect r);
 		void printPicture(double x, double y, double z, GLuint texturecode);
 		void printCredBoxes(int x_pos, int y_pos);
+		void printHighScore(Rect r);
+		void incrementScore();
 };
 
 void printAlexisB(Rect r);

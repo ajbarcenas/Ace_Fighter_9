@@ -729,11 +729,11 @@ void render()
 		r.bot = 145, r.left = 1500;
 		ggprint16(&r, 16, 0xcf13ac,
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
-        printConfetti();
 	}
 	if (g.showHighScores) {
 		abG.printCredBoxes(960, 540);
 		abG.printHighScore(r);
+        printConfetti();
 	//	authScores();
 
 	}

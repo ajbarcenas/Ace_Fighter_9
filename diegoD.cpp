@@ -32,19 +32,19 @@ void checkPlayerLocation(Shape *p)
 }
 
 // =========================Enemy Functions =================================
-void removeEnemy(Shape *e, int *i)
+/*void removeEnemy(Shape *e, int *i)
 {
         *e = *(e--);
         --i;
 }
-
-void checkEnemyLocation(Shape *e, int *i)
+*/
+/*void checkEnemyLocation(Shape *e, int *i)
 {
 	if(e->center.x < 0.0){
 	    removeEnemy(e, i);
 	}
 }
-
+*/
 void spawnEnemy(int i, Shape *e)
 {
         e->width = 18;

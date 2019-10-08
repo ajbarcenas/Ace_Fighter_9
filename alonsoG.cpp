@@ -1,16 +1,23 @@
 /*
 Name: Alonso Gomez
 Game: Ace Fighter 9
-Goals: Have multiple background layers moving at different speeds
-       to give a more depth visual to our game.
+Goals: 
+1.Have multiple background layers moving at different speeds
+  to give a more depth visual to our game.
+2.Add smoke particles to follow the player
+
 */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include <math.h>
 #include "fonts.h"
+
+const int MAX_PARTICLES = 3000;
+const float GRAVITY = 0;
 
 void showAlonsoText(Rect r) {
     r.left = 1300;
@@ -18,6 +25,155 @@ void showAlonsoText(Rect r) {
     r.center = 0;
     ggprint16(&r, 16, 0x069e85, "Alonso Gomez - Background design and movement");
 }
+
+struct Vec {
+    float x, y, z;
+};
+
+struct Shape {
+    float width;
+    float height;
+    float radius;
+    Vec center;
+};
+
+struct Particle {
+    int r, g, b;
+    Shape s;
+    Vec velocity;
+};
+
+class AlonsoGlobal {
+public:
+    int xres, yres;
+    Particle smoke[MAX_PARTICLES];
+    Particle bullet[MAX_PARTICLES];
+    int n = 0;
+    //AlonsoGlobal();
+}ag;
+
+void makeSmoke(int x, int y)
+{
+    if (ag.n >= MAX_PARTICLES)
+        return;
+    //cout << "makeSmoke() " << x << " " << y << endl;
+    Particle *p = &ag.smoke[ag.n];
+
+    p->s.center.x = x;
+    
+    if (rand() % 16 > 8)
+        p->s.center.y = y + (rand() % 8);
+    else
+        p->s.center.y = y - (rand() % 8);
+
+    p->velocity.y = 0;
+    p->velocity.x = - ((double)rand() / (double)RAND_MAX) - 5;
+    ++ag.n;
+}
+
+void smokeMovement()
+{
+    if (ag.n <= 0)
+        return;
+    
+    for (int i = 0; i < ag.n; i++) {
+        Particle *p = &ag.smoke[i];
+        p->s.center.x += p->velocity.x;
+        p->s.center.y += p->velocity.y;
+        p->velocity.y = p->velocity.y - GRAVITY;
+
+        //check for off screen
+        if (p->s.center.y < 0.0 || p->s.center.y > 1080 ||
+            p->s.center.x < 0.0 || p->s.center.x > 1920) {
+            ag.smoke[i] = ag.smoke[ag.n - 1];
+            --ag.n;
+        }
+    }    
+}
+
+void printSmoke()
+{
+    float w, h;
+
+    for (int i = 0; i < ag.n; i++) {
+        if (i % 2 == 0)
+            ag.smoke[i].r = ag.smoke[i].g = ag.smoke[i].b = 115;
+        else
+            ag.smoke[i].r = ag.smoke[i].g = ag.smoke[i].b = 220;
+        if (i % 8 == 2)
+            ag.smoke[i].r = ag.smoke[i].g = ag.smoke[i].b = 175;
+
+        glPushMatrix();
+        glColor3ub(ag.smoke[i].r, ag.smoke[i].g, ag.smoke[i].b);
+        Vec *c = &ag.smoke[i].s.center;
+        w = h = 3;
+        glBegin(GL_QUADS);
+            glVertex2i(c->x-w, c->y-h);
+            glVertex2i(c->x-w, c->y+h);
+            glVertex2i(c->x+w, c->y+h);
+            glVertex2i(c->x+w, c->y-h);
+        glEnd();
+        glPopMatrix();
+    }
+}
+
+void makeBullet(int x, int y)
+{
+    if (ag.n >= MAX_PARTICLES)
+        return;
+
+    Particle *b = &ag.bullet[ag.n];
+
+    b->s.center.x = x;
+    b->s.center.y = y;
+    b->velocity.y = 0;
+    b->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
+    ++ag.n;
+}
+
+void bulletMovement()
+{
+    if (ag.n <= 0)
+        return;
+
+    for (int i = 0; i < ag.n; i++) {
+        Particle *b = &ag.bullet[i];
+        b->s.center.x += b->velocity.x;
+        b->s.center.y += b->velocity.y;
+        //b->s.velocity.y = b->velocity.y - GRAVITY;
+
+        //check for off screen
+        if (b->s.center.y < 0.0 || b->s.center.y > 1080 ||
+            b->s.center.x < 0.0 || b->s.center.x > 1920) {
+            ag.bullet[i] = ag.bullet[ag.n - 1];
+            --ag.n;
+        }
+    }
+}
+
+void printBullet()
+{
+    float w, h;
+
+    for (int i = 0; i < ag.n; i++) {
+        ag.bullet[i].r = 255;
+        ag.bullet[i].g = 0;
+        ag.bullet[i].b = 0;
+
+        glPushMatrix();
+        glColor3ub(ag.bullet[i].r, ag.bullet[i].g, ag.bullet[i].b);
+        Vec *c = &ag.bullet[i].s.center;
+        w = h = 2;
+        glBegin(GL_QUADS);
+            glVertex2i(c->x-w, c->y-h);
+            glVertex2i(c->x-w, c->y+h);
+            glVertex2i(c->x+w, c->y+h);
+            glVertex2i(c->x+w, c->y-h);
+        glEnd();
+        glPopMatrix();
+    }
+}
+
 /*
 void showBackground()
 {

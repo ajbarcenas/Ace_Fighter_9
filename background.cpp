@@ -19,6 +19,15 @@ using namespace std;
 #include <GL/glx.h>
 #include "fonts.h"
 #include "alexisisB.h"
+#include <openssl/crypto.h>
+#include <openssl/x509.h>
+#include <openssl/pem.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
 
 typedef double Vect[3];
 
@@ -155,8 +164,9 @@ class Global {
 	int showLogo;
 	int n = 0;
 	GLuint texid;
-	int showCredits;
+	int showCredits, showHighScores;
 	Shape enemy[5];
+	int HighScore;
 	Global() {
 		//Pictures pic;
 		xres=1920, yres=1080;
@@ -166,8 +176,10 @@ class Global {
 		picture4.pos[0] = 1440, picture4.pos[1] = 300;
 		showCredits = 0;
 		showLogo = 0;
+		showHighScores = 0;
 		logo.pos[0] = 960;
 		logo.pos[1] = 540;
+		HighScore = 0;
 	}
 } g;
 
@@ -275,9 +287,13 @@ extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet();
 extern void bulletMovement();
+<<<<<<< HEAD
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
+=======
+extern int authScores();
+>>>>>>> eacfabe8d655f5741bbdd8fbe3d2ab7a2f7aa691
 //===========================================================================
 //===========================================================================
 int main()
@@ -307,7 +323,7 @@ int main()
 unsigned char *buildAlphaData(Image *img)
 {
 	//add 4th component to the RGB stream
-	int i;
+	int i; 
 	int a,b,c;
 	unsigned char *newdata, *ptr;
 	unsigned char *data = (unsigned char *)img->data;
@@ -528,6 +544,13 @@ int check_keys(XEvent *e)
 			p->velocity.y = -15;
 			p->center.y += p->velocity.y;
 			break;
+		case XK_t:
+			abG.incrementScore();
+			authScores();
+			break;
+		case XK_h:
+			g.showHighScores ^= 1;
+			break;
 		case XK_c:
 			g.showCredits ^= 1;
 			g.showLogo ^= 1;
@@ -555,6 +578,7 @@ void physics()
 	g.tex.xc[2] += 0.005;
 	g.tex.xc[3] += 0.005;
     //pine tree layer
+<<<<<<< HEAD
    	g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
     /*
@@ -564,6 +588,15 @@ void physics()
 		moveEnemy(&g.enemy[i]);
 	}
     */
+=======
+   	 g.tex.xc[4] += 0.008;
+    	g.tex.xc[5] += 0.008;
+    	//int *n = &g.n;
+//	for(int i = 0; i < 5; i++) {
+//		checkEnemyLocation(&g.enemy[i], n);	
+//		moveEnemy(&g.enemy[i]);
+//	}
+>>>>>>> eacfabe8d655f5741bbdd8fbe3d2ab7a2f7aa691
 }
 
 void render()
@@ -711,6 +744,12 @@ void render()
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
         printConfetti();
 	}
+	if (g.showHighScores) {
+		abG.printCredBoxes(960, 540);
+		abG.printHighScore(r);
+	//	authScores();
+
+	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
 	//unsigned int c = 0x00ffff44;
@@ -718,6 +757,10 @@ void render()
 	r.left = 40;
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
+<<<<<<< HEAD
 
+=======
+	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
+>>>>>>> eacfabe8d655f5741bbdd8fbe3d2ab7a2f7aa691
 }
 

@@ -19,6 +19,15 @@ using namespace std;
 #include <GL/glx.h>
 #include "fonts.h"
 #include "alexisisB.h"
+#include <openssl/crypto.h>
+#include <openssl/x509.h>
+#include <openssl/pem.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+
 
 typedef double Vect[3];
 
@@ -278,6 +287,7 @@ extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet();
 extern void bulletMovement();
+extern int authScores();
 //===========================================================================
 //===========================================================================
 int main()
@@ -305,7 +315,7 @@ int main()
 unsigned char *buildAlphaData(Image *img)
 {
 	//add 4th component to the RGB stream
-	int i;
+	int i; 
 	int a,b,c;
 	unsigned char *newdata, *ptr;
 	unsigned char *data = (unsigned char *)img->data;
@@ -526,12 +536,13 @@ int check_keys(XEvent *e)
 			p->velocity.y = -15;
 			p->center.y += p->velocity.y;
 			break;
-		case XK_p:
-			g.HighScore++;
-			cout << g.HighScore << endl;
+		case XK_t:
+			abG.incrementScore();
+			authScores();
+			break;
 		case XK_h:
 			g.showHighScores ^= 1;
-
+			break;
 		case XK_c:
 			g.showCredits ^= 1;
 			g.showLogo ^= 1;
@@ -561,11 +572,11 @@ void physics()
     //pine tree layer
    	 g.tex.xc[4] += 0.008;
     	g.tex.xc[5] += 0.008;
-    	int *n = &g.n;
-	for(int i = 0; i < 5; i++) {
-		checkEnemyLocation(&g.enemy[i], n);	
-		moveEnemy(&g.enemy[i]);
-	}
+    	//int *n = &g.n;
+//	for(int i = 0; i < 5; i++) {
+//		checkEnemyLocation(&g.enemy[i], n);	
+//		moveEnemy(&g.enemy[i]);
+//	}
 }
 
 void render()
@@ -719,8 +730,9 @@ void render()
 	}
 	if (g.showHighScores) {
 		abG.printCredBoxes(960, 540);
-		r.bot = 540, r.left = 960;
-		ggprint16(&r, 16, 0xcf13ac, "HIGH SCORES");
+		abG.printHighScore(r);
+	//	authScores();
+
 	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
@@ -729,6 +741,6 @@ void render()
 	r.left = 40;
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
-	ggprint16(&r, 16, 0x00ffff44, "Press H to go credits");
+	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
 }
 

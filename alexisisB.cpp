@@ -29,6 +29,15 @@ void printAlexisB(Rect r)
 	r.center = 0;
 	ggprint16(&r, 16, 0xcf13ac, "Alexisis Barcenas - Hitbox Specialist");
 }
+
+void ABarGlobal::printHighScore(Rect r)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	r.left = 980;
+	r.bot = 650;
+	ggprint16(&r, 16, 0xcf13ac, "HIGH SCORES");
+	ggprint16(&r, 16, 0xcf13ac, " Press T to increment scores");
+}
 /*Prints out "Ace Fighter 9" in a cross format across the screen
 Not sure whether I like it, so might be commented out for progress report
 */
@@ -167,5 +176,10 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 	glVertex2i(w, -h);
 	glEnd();
 	glPopMatrix();
+}
+
+void ABarGlobal::incrementScore() {
+    highscore++;
+    cout << "Score: " << highscore << endl;
 }
 #endif

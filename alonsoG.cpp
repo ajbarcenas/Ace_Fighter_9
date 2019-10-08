@@ -16,8 +16,8 @@ Goals:
 #include <math.h>
 #include "fonts.h"
 
-const int MAX_PARTICLES = 3000;
-const float GRAVITY = 0;
+const int MAX_PARTICLES = 8000;
+const float GRAVITY = .05;
 
 void showAlonsoText(Rect r) {
     r.left = 1300;
@@ -48,9 +48,102 @@ public:
     int xres, yres;
     Particle smoke[MAX_PARTICLES];
     Particle bullet[MAX_PARTICLES];
+    Particle confetti[MAX_PARTICLES];
     int n = 0;
     //AlonsoGlobal();
 }ag;
+
+void makeConfetti()
+{
+    if (ag.n >= MAX_PARTICLES)
+        return;
+
+    Particle *c = &ag.confetti[ag.n];
+
+    c->s.center.x = rand() % 1921;
+    c->s.center.y = 1080;
+
+    c->velocity.y = -0.8;
+    c->velocity.x = 0;
+    ++ag.n;
+
+}
+
+void confettiMovement()
+{
+    if (ag.n <= 0)
+        return;
+
+    for (int i = 0; i < ag.n; i++) {
+        Particle *c = &ag.confetti[i];
+        c->s.center.x += c->velocity.x;
+        c->s.center.y += c->velocity.y;
+        c->velocity.y = c->velocity.y - GRAVITY;
+
+        //check for off screen
+        if (c->s.center.y < 0.0 || c->s.center.y > 1080 ||
+            c->s.center.x < 0.0 || c->s.center.y > 1920) {
+            ag.confetti[i] = ag.confetti[ag.n - 1];
+            --ag.n;
+        }
+    }
+}
+
+void printConfetti()
+{
+    float w, h;
+
+    for (int i = 0; i < ag.n; i++) {
+        if (i % 7 == 0) {
+            ag.confetti[i].r = 0;
+            ag.confetti[i].g = 128;
+            ag.confetti[i].b = 255;
+        }
+        if (i % 7 == 1) {
+            ag.confetti[i].r = 0;
+            ag.confetti[i].g = 255;
+            ag.confetti[i].b = 128;
+        }
+        if (i % 7 == 2) {
+            ag.confetti[i].r = 255;
+            ag.confetti[i].g = 247;
+            ag.confetti[i].b = 0;
+        }
+        if (i % 7 == 3) {
+            ag.confetti[i].r = 255;
+            ag.confetti[i].g = 0;
+            ag.confetti[i].b = 0;
+        }
+        if (i % 7 == 4) {
+            ag.confetti[i].r = 255;
+            ag.confetti[i].g = 0;
+            ag.confetti[i].b = 255;
+        }
+        if (i % 7 == 5) {
+            ag.confetti[i].r = 0;
+            ag.confetti[i].g = 0;
+            ag.confetti[i].b = 255;
+        }
+        if (i % 7 == 6) {
+            ag.confetti[i].r = 0;
+            ag.confetti[i].g = 255;
+            ag.confetti[i].b = 0;
+        }
+
+        glPushMatrix();
+        glColor3ub(ag.confetti[i].r, ag.confetti[i].g, ag.confetti[i].b);
+        Vec *v = &ag.confetti[i].s.center;
+        w = h = 3;
+        glBegin(GL_QUADS);
+            glVertex2i(v->x-w, v->y-h);
+            glVertex2i(v->x-w, v->y+h);
+            glVertex2i(v->x+w, v->y+h);
+            glVertex2i(v->x+w, v->y-h);
+        glEnd();
+        glPopMatrix();
+    }
+
+}
 
 void makeSmoke(int x, int y)
 {
@@ -80,7 +173,7 @@ void smokeMovement()
         Particle *p = &ag.smoke[i];
         p->s.center.x += p->velocity.x;
         p->s.center.y += p->velocity.y;
-        p->velocity.y = p->velocity.y - GRAVITY;
+       // p->velocity.y = p->velocity.y - GRAVITY;
 
         //check for off screen
         if (p->s.center.y < 0.0 || p->s.center.y > 1080 ||

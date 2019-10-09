@@ -1,3 +1,14 @@
+//Alonso Gomez
+//10/09/19
+//CMPS 3350
+//Quiz
+//Step 1: Reproduce
+//Step 2: Find
+//Step 3: Fix
+//Step 4: Test
+
+
+
 /*
 Name: Alonso Gomez
 Game: Ace Fighter 9
@@ -23,7 +34,7 @@ void showAlonsoText(Rect r) {
     r.left = 1300;
     r.bot = 645;
     r.center = 0;
-    ggprint16(&r, 16, 0x069e85, "Alonso Gomez - Background design and movement");
+    ggprint16(&r,16,0x069e85,"Alonso Gomez - Background design and movement");
 }
 
 struct Vec {
@@ -149,7 +160,6 @@ void makeSmoke(int x, int y)
 {
     if (ag.n >= MAX_PARTICLES)
         return;
-    //cout << "makeSmoke() " << x << " " << y << endl;
     Particle *p = &ag.smoke[ag.n];
 
     p->s.center.x = x;

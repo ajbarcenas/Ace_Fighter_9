@@ -546,10 +546,12 @@ int check_keys(XEvent *e)
 			authScores();
 			break;
 		case XK_h:
-			g.showHighScores ^= 1;
+			//g.showHighScores ^= 1;
+			abG.showHighScores();
 			break;
 		case XK_c:
-			g.showCredits ^= 1;
+			abG.showCredits();
+			//g.showCredits ^= 1;
 			g.showLogo ^= 1;
 			break;
         case XK_space:
@@ -701,7 +703,7 @@ void render()
 
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	if (g.showCredits) {
+	if (abG.showCreds && !abG.showHigh) {
 		showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
 		showCreditsBorder(180, 180, 960, 540, 14, 14, 138 );
@@ -730,7 +732,8 @@ void render()
 		ggprint16(&r, 16, 0xcf13ac,
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
 	}
-	if (g.showHighScores) {
+	if (abG.showHigh && !abG.showCreds) {
+	    	showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
 		abG.printHighScore(r);
         printConfetti();

@@ -180,7 +180,42 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 }
 
 void ABarGlobal::incrementScore() {
-    highscore++;
-    cout << "Score: " << highscore << endl;
+	highscore++;
+	cout << "Score: " << highscore << endl;
+}
+
+void ABarGlobal::showHighScores()
+{
+	showHigh ^= 1;
+}
+
+void ABarGlobal::showCredits()
+{
+	showCreds ^= 1;
+}
+void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
+	int rColor, int gColor, int bColor)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	Triangle triangle;
+	triangle.width = width;
+	triangle.height = height;
+	triangle.center.x = x_pos;
+	triangle.center.y = y_pos;
+	float h, w;
+	triangle.color.r = rColor;
+	triangle.color.g = gColor;
+	triangle.color.b = bColor;
+	glColor3ub(triangle.color.r, triangle.color.g, triangle.color.b);
+	glPushMatrix();
+	glTranslatef(triangle.center.x, triangle.center.y, 0);
+	w = triangle.width;
+	h = triangle.height;
+	glBegin(GL_TRIANGLES);
+		glVertex2i(-w, -h);
+		glVertex2i(-w/10, h);
+		glVertex2i(w,-h);
+	glEnd();
+	glPopMatrix();
 }
 #endif

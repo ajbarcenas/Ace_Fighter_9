@@ -703,7 +703,7 @@ void render()
 
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	if (abG.showCreds && !abG.showHigh) {
+	if (abG.showCreds) {
 		showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
 		showCreditsBorder(180, 180, 960, 540, 14, 14, 138 );
@@ -732,7 +732,7 @@ void render()
 		ggprint16(&r, 16, 0xcf13ac,
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
 	}
-	if (abG.showHigh && !abG.showCreds) {
+	if (abG.showHigh) {
 	    	showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
 		abG.printHighScore(r);

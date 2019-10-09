@@ -188,11 +188,17 @@ void ABarGlobal::incrementScore()
 void ABarGlobal::showHighScores()
 {
 	showHigh ^= 1;
+	if (showCreds == 1) {
+		showCreds = 0;
+	}
 }
 
 void ABarGlobal::showCredits()
 {
 	showCreds ^= 1;
+	if (showHigh == 1) {
+		showHigh = 0;
+	}
 }
 void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 	int rColor, int gColor, int bColor)

@@ -7,8 +7,6 @@
 //Step 3: Fix
 //Step 4: Test
 
-
-
 /*
 Name: Alonso Gomez
 Game: Ace Fighter 9

@@ -179,7 +179,8 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 	glPopMatrix();
 }
 
-void ABarGlobal::incrementScore() {
+void ABarGlobal::incrementScore() 
+{
 	highscore++;
 	cout << "Score: " << highscore << endl;
 }

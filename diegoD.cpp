@@ -61,6 +61,7 @@ void moveEnemy(Shape *e)
 }
 */
 
+
 void ShowDiegosPicture(int x, int y, GLuint textid)
 {
 	

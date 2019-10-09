@@ -1,5 +1,6 @@
 // Name: Diego Diaz
 // Date: 9/17/2019
+// The four steps of debugging are to identify the bug, isolate the source of the bug, fix the bug, and review the bug.
 #include <stdio.h>
 #include <GL/glx.h>
 

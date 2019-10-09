@@ -12,7 +12,8 @@ Credits page is still a WIP and will continually
 be receiving updates.
 ===============[End]===================
 */
-
+//The four steps to debugging are to identify it, isolate it, fix it and then to
+//review it.
 
 #ifndef ALEXISIS_B_CPP
 #define ALEXISIS_B_CPP

@@ -735,8 +735,15 @@ void render()
 	if (abG.showHigh) {
 	    	showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
+		showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
+		abG.colorBlendBorder(200, 200, 960,540,0,0,0,
+				255,255,255,
+				0,0,0,
+				255,255,255);
 		abG.printHighScore(r);
-        printConfetti();
+		abG.printTempScores(r);
+        	printConfetti();
+	//	abG.drawTriangle(20,10,600,600,255,2,2);	
 	//	authScores();
 
 	}

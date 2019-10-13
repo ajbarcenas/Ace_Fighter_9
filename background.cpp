@@ -287,6 +287,9 @@ extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet();
 extern void bulletMovement();
+extern void makeConfetti();
+extern void printConfetti();
+extern void confettiMovement();
 extern int authScores();
 //===========================================================================
 //===========================================================================
@@ -303,7 +306,9 @@ int main()
 		check_mouse(&e);
 		done = check_keys(&e);
 	}
+    makeConfetti();
 	physics();
+    confettiMovement();
     smokeMovement();
 	bulletMovement();
     render();
@@ -541,10 +546,12 @@ int check_keys(XEvent *e)
 			authScores();
 			break;
 		case XK_h:
-			g.showHighScores ^= 1;
+			//g.showHighScores ^= 1;
+			abG.showHighScores();
 			break;
 		case XK_c:
-			g.showCredits ^= 1;
+			abG.showCredits();
+			//g.showCredits ^= 1;
 			g.showLogo ^= 1;
 			break;
         case XK_space:
@@ -570,19 +577,22 @@ void physics()
 	g.tex.xc[2] += 0.005;
 	g.tex.xc[3] += 0.005;
     //pine tree layer
-   	 g.tex.xc[4] += 0.008;
-    	g.tex.xc[5] += 0.008;
-    	//int *n = &g.n;
-//	for(int i = 0; i < 5; i++) {
-//		checkEnemyLocation(&g.enemy[i], n);	
-//		moveEnemy(&g.enemy[i]);
-//	}
+   	g.tex.xc[4] += 0.008;
+    g.tex.xc[5] += 0.008;
+    /*
+    int *n = &g.n;
+	for(int i = 0; i < 5; i++) {
+		checkEnemyLocation(&g.enemy[i], n);	
+		moveEnemy(&g.enemy[i]);
+	}
+    */
 }
 
 void render()
 {
 	extern ABarGlobal abG;
 	Rect r;
+
 	//All of these scrolling background layers were done by Alonso Gomez
 	// 
 	//Background Layers
@@ -642,7 +652,7 @@ void render()
 	}
 
 	checkPlayerLocation(p);
-	glColor3ub(190,140,10);
+	//glColor3ub(190,140,10);
 
 
 	glPushMatrix();
@@ -662,9 +672,9 @@ void render()
 	glPopMatrix();
   printBullet();
 
-	//creating enemies
 
 	//creating enemies
+    /*
 	while( g.n < 5) {
 		spawnEnemy(g.n, &g.enemy[g.n]);
 		g.n++;
@@ -686,20 +696,14 @@ void render()
 		glEnd();
 		glPopMatrix();
 	}
-    
-    //--------------------------------------------------------------------------
-    //Smoke Particles
-    //
-
-    //printSmoke();
-
+    */
     //--------------------------------------------------------------------------
     //Credits Screen
     //
 
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
-	if (g.showCredits) {
+	if (abG.showCreds) {
 		showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
 		showCreditsBorder(180, 180, 960, 540, 14, 14, 138 );
@@ -728,9 +732,18 @@ void render()
 		ggprint16(&r, 16, 0xcf13ac,
 			"Andrew Oliveros- HUD Creation/Sprites/Menu");
 	}
-	if (g.showHighScores) {
+	if (abG.showHigh) {
+	    	showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
+		showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
+		abG.colorBlendBorder(200, 200, 960,540,0,0,0,
+				255,255,255,
+				0,0,0,
+				255,255,255);
 		abG.printHighScore(r);
+		abG.printTempScores(r);
+        	printConfetti();
+	//	abG.drawTriangle(20,10,600,600,255,2,2);	
 	//	authScores();
 
 	}

@@ -12,7 +12,8 @@ Credits page is still a WIP and will continually
 be receiving updates.
 ===============[End]===================
 */
-
+//The four steps to debugging are to identify it, isolate it, fix it and then to
+//review it.
 
 #ifndef ALEXISIS_B_CPP
 #define ALEXISIS_B_CPP
@@ -33,7 +34,7 @@ void printAlexisB(Rect r)
 void ABarGlobal::printHighScore(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
-	r.left = 980;
+	r.left = 960;
 	r.bot = 650;
 	ggprint16(&r, 16, 0xcf13ac, "HIGH SCORES");
 	ggprint16(&r, 16, 0xcf13ac, " Press T to increment scores");
@@ -178,8 +179,102 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 	glPopMatrix();
 }
 
-void ABarGlobal::incrementScore() {
-    highscore++;
-    cout << "Score: " << highscore << endl;
+void ABarGlobal::incrementScore() 
+{
+	highscore++;
+	cout << "Score: " << highscore << endl;
+}
+
+void ABarGlobal::showHighScores()
+{
+	showHigh ^= 1;
+	if (showCreds == 1) {
+		showCreds = 0;
+	}
+}
+
+void ABarGlobal::showCredits()
+{
+	showCreds ^= 1;
+	if (showHigh == 1) {
+		showHigh = 0;
+	}
+}
+void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
+	int rColor, int gColor, int bColor)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	Triangle triangle;
+	triangle.width = width;
+	triangle.height = height;
+	triangle.center.x = x_pos;
+	triangle.center.y = y_pos;
+	float h, w;
+	triangle.color.r = rColor;
+	triangle.color.g = gColor;
+	triangle.color.b = bColor;
+	glColor3ub(triangle.color.r, triangle.color.g, triangle.color.b);
+	glPushMatrix();
+	glTranslatef(triangle.center.x, triangle.center.y, 0);
+	w = triangle.width;
+	h = triangle.height;
+	glBegin(GL_TRIANGLES);
+		glVertex2i(-w, -h);
+		glVertex2i(-w/10, h);
+		glVertex2i(w,-h);
+	glEnd();
+	glPopMatrix();
+}
+
+void ABarGlobal::printTempScores(Rect r)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	r.left = 850;
+	r.bot = 575;
+	ggprint16(&r, 50, 0xcf13ac, "Test Person");
+	ggprint16(&r, 50, 0xcf13ac, "Test Person 2");
+	ggprint16(&r, 50, 0xcf13ac, "Test Person 3");
+	ggprint16(&r, 50, 0xcf13ac, "Test Person 4");
+}
+void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
+		int rColor, int gColor, int bColor, int rColor2, int gColor2,
+		int bColor2, int rColor3, int gColor3, int bColor3,
+		int rColor4, int gColor4, int bColor4)
+{
+	Box box;
+	float h, w;
+	glColor3f(1.0, 1.0, 1.0);
+	box.width = width;
+	box.height = height;
+	box.center.x= x_pos;
+	box.center.y = y_pos;
+	glPushMatrix();
+	glTranslatef(box.center.x, box.center.y, 0);
+	w = box.width;
+	h = box.height;
+	glBegin(GL_QUADS);
+	box.color.r = rColor;
+	box.color.g = gColor;
+	box.color.b = bColor;
+	glColor3ub(box.color.r, box.color.g, box.color.b);
+	glVertex2i(-w, -h);
+	box.color.r = rColor2;
+	box.color.g = gColor2;
+	box.color.b = bColor2;
+	glColor3ub(box.color.r, box.color.g, box.color.b);
+	glVertex2i(-w, h);
+	box.color.r = rColor3;
+	box.color.g = gColor3;
+	box.color.b = bColor3;
+	glColor3ub(box.color.r, box.color.g, box.color.b);
+	glVertex2i(w, h);
+	box.color.r = rColor4;
+	box.color.g = gColor4;
+	box.color.b = bColor4;
+	glColor3ub(box.color.r, box.color.g, box.color.b);
+	glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
+			
 }
 #endif

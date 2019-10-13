@@ -36,15 +36,34 @@ struct Box {
 	Color color;
 };
 
+struct Triangle {
+	float width, height;
+	Color color;
+	Vec1 center;	
+};
+
 class ABarGlobal {
 	public:
 		Rect r;
 		int highscore;
+		int showHigh;
+		int showCreds;
 		void printAceFighter9(Rect r);
 		void printPicture(double x, double y, double z, GLuint texturecode);
 		void printCredBoxes(int x_pos, int y_pos);
 		void printHighScore(Rect r);
 		void incrementScore();
+		void showHighScores();
+		void showCredits();
+		void drawTriangle(int width, int height, int x_pos, int y_pos,
+			int rColor, int gColor, int bColor);
+		void printTempScores(Rect r);
+		void drawCircle();
+		void colorBlendBorder(int width, int height, int x_pos,
+			       	int y_pos, int rColor, int gColor, int bColor,
+				int rColor2, int gColor2, int bColor2,
+				int rColor3, int gColor3, int bColor3,
+				int rColor4, int gColor4, int bColor4);
 };
 
 void printAlexisB(Rect r);

@@ -27,9 +27,9 @@ using namespace std;
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
-#include <AL/al.h>
-#include <AL/alut.h>
-
+#ifdef USE_OPENAL_SOUND
+#include </usr/include/AL/alut.h>
+#endif //USE_OPENAL_SOUND
 
 
 typedef double Vect[3];
@@ -294,19 +294,10 @@ extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
 extern int authScores();
-/*
-void initSound();
-void soundOneShot();
-void soundThreeShots();
-void removeSound();
-extern Sound play;
-*/
-
 //===========================================================================
 //===========================================================================
 int main()
 {
-	//alutInit(0, NULL);
 	init_opengl();
 	int done=0;
 	g.n = 0;
@@ -529,79 +520,7 @@ void check_mouse(XEvent *e)
 		savey = e->xbutton.y;
 	}
 }
-//---------------------- SOUNDS Andrew Oliveros 10/12/19 ---------------------
-class Sound
-{
-	public:
-		ALuint alBufferOneShot;
-        ALuint alBufferThreeShots;
-
-
-        ALuint alSourceOneShot;
-        ALuint alSourceThreeShots;
-
-};
-
-void initSound() 
-{
-    //alutInit(0, NULL);
-    float vec[6] = {0.0f,0.0f,1.0f, 0.0f,1.0f,0.0f};
-    alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-    alListenerfv(AL_ORIENTATION, vec);
-    alListenerf(AL_GAIN, 1.0f);
-
-}
-
-void soundOneShot() 
-{
-    Sound s;
-
-    //s.alBufferOneShot = alutCreateBufferFromFile("./sounds/1_shot.oog");
-
-    alGenSources(1, &s.alSourceOneShot);
-    alSourcei(s.alSourceOneShot, AL_BUFFER, s.alBufferOneShot);
-
-    alSourcef(s.alSourceOneShot, AL_GAIN, 1.0f);
-    alSourcef(s.alSourceOneShot, AL_PITCH, 1.0f);
-    alSourcei(s.alSourceOneShot, AL_LOOPING, AL_TRUE);
-
-    alSourcePlay(s.alSourceOneShot);
-}
-
-void soundThreeShots() 
-{
-    Sound s;
-
-    //s.alBufferThreeShots = alutCreateBufferFromFile("./sounds/3_shots.oog");
-
-    alGenSources(1, &s.alSourceThreeShots);
-    alSourcei(s.alSourceThreeShots, AL_BUFFER, s.alBufferThreeShots);
-
-    alSourcef(s.alSourceThreeShots, AL_GAIN, 1.0f);
-    alSourcef(s.alSourceThreeShots, AL_PITCH, 1.0f);
-    alSourcei(s.alSourceThreeShots, AL_LOOPING, AL_TRUE);
-
-    alSourcePlay(s.alSourceThreeShots);
-}
-
-void removeSound() 
-{
-    Sound s;
-
-    alDeleteSources(1, &s.alSourceOneShot);
-    alDeleteSources(1, &s.alSourceThreeShots);
-
-    ALCcontext *Context = alcGetCurrentContext();
-    ALCdevice *Device = alcGetContextsDevice(Context);
-    alcMakeContextCurrent(NULL);
-    alcDestroyContext(Context);
-    alcCloseDevice(Device);
-
-    //alutExit();
-}
-
-//------------------- SOUNDS END Andrew Oliveros 10/12/19 --------------------
-//initSound();
+initSound();
 int check_keys(XEvent *e)
 {
 	//Was there input from the keyboard?
@@ -640,22 +559,20 @@ int check_keys(XEvent *e)
 			break;
         case XK_space:
             makeBullet(p->center.x, p->center.y);
+            while (XK_space) {
+            	soundOneShot();
+            }
             break;
-        
 		case XK_Escape:
 			return 1;
 	}
 	if (key == XK_Escape) {
 		return 1;
 	}
-	if (key == XK_space) {
-		soundOneShot();
-		
-	}
 }
 	return 0;
 }
-//removeSound();
+
 void physics()
 {
 	//move the background

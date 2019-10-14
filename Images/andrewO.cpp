@@ -7,9 +7,9 @@
 #include <GL/glx.h>
 #include <math.h>
 #include "fonts.h"
-#include <AL/al.h>
-#include <AL/alut.h>
-
+#ifdef USE_OPENAL_SOUND
+#include </usr/include/AL/alut.h>
+#endif //USE_OPENAL_SOUND
 /*
 #define MAXBUTTONS 3
 typedef struct t_button {
@@ -26,20 +26,15 @@ Button;
 Button button[MAXBUTTONS];
 int nbuttons=0;
 */
-/*
-//---------------------- SOUNDS Andrew Oliveros 10/12/19 ---------------------
-class Sound
+class sound
 {
 	public:
-		ALuint alBufferOneShot;
-        ALuint alBufferThreeShots;
+		ALuint alBuffer1_shot;
+		ALuint alSource1_shot;
+}
 
 
-        ALuint alSourceOneShot;
-        ALuint alSourceThreeShots;
-
-};
-
+//-------------------------- SOUNDS -------------------------------------
 void initSound() 
 {
     alutInit(0, NULL);
@@ -97,9 +92,8 @@ void removeSound()
 
     alutExit();
 }
+//-------------------------- END SOUNDS -----------------------------------
 
-//------------------- SOUNDS END Andrew Oliveros 10/12/19 --------------------
-*/
 
 void ajPic(int x, int y, GLuint textid){
     Rect r;
@@ -203,9 +197,8 @@ void initButtons(void) {
         }
     }
 }
-*/
 
-/*
+
 void buttonDraw(Rect r)
 {
     //glDisable(GL_TEXTURE_2D);
@@ -250,9 +243,7 @@ void buttonDraw(Rect r)
         }
     }
 }
-*/
 
-/*
 void mouse_click(int ibutton, int action, int x, int y)
 {
     if (action == 1) {

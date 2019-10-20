@@ -58,9 +58,64 @@ public:
     Particle smoke[MAX_PARTICLES];
     Particle bullet[MAX_PARTICLES];
     Particle confetti[MAX_PARTICLES];
+    Particle rain[MAX_PARTICLES];
     int n = 0;
+    int k = 0;
     //AlonsoGlobal();
 }ag;
+
+void makeRain()
+{
+    if (ag.k >= MAX_PARTICLES)
+        return;
+
+    Particle *r = &ag.rain[ag.k];
+
+    r->s.center.x = rand() % 1921;
+    r->s.center.y = 1080;
+    r->velocity.y = -2.0;
+    r->velocity.x = -0.2;
+    ++ag.k;
+}
+
+void rainMovement()
+{
+    if (ag.k <= 0)
+        return;
+
+    for (int i = 0; i < ag.k; i++) {
+        Particle *r = &ag.rain[i];
+        r->s.center.x += r->velocity.x;
+        r->s.center.y += r->velocity.y;
+        r->velocity.y = r->velocity.y - GRAVITY;
+
+        //check for off screen
+        if (r->s.center.y < 0.0 || r->s.center.y > 1080 ||
+            r->s.center.x < 0.0 || r->s.center.y > 1920) {
+            ag.rain[i] = ag.rain[ag.k - 1];
+            --ag.k;
+        }
+    }
+}
+
+void printRain()
+{
+    float w, h;
+    
+    for(int i = 0; i < ag.k; i++) {
+        glPushMatrix();
+        glColor4ub(20,52,255,150);
+        Vec *v = &ag.rain[i].s.center;
+        w = h = 2;
+        glBegin(GL_QUADS);
+            glVertex2i(v->x-w, v->y-h);
+            glVertex2i(v->x-w, v->y+h);
+            glVertex2i(v->x+w, v->y+h);
+            glVertex2i(v->x+w, v->y-h);
+        glEnd();
+        glPopMatrix();
+    }
+}
 
 void makeConfetti()
 {

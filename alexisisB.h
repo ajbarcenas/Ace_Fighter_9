@@ -48,6 +48,7 @@ class ABarGlobal {
 		int highscore;
 		int showHigh;
 		int showCreds;
+		int showStart = 1;
 		void printAceFighter9(Rect r);
 		void printPicture(double x, double y, double z, GLuint texturecode);
 		void printCredBoxes(int x_pos, int y_pos);
@@ -55,10 +56,13 @@ class ABarGlobal {
 		void incrementScore();
 		void showHighScores();
 		void showCredits();
+		void showStartScreen();
 		void drawTriangle(int width, int height, int x_pos, int y_pos,
 			int rColor, int gColor, int bColor);
 		void printTempScores(Rect r);
 		void drawCircle();
+		void printTempScreen(Rect r);
+		void drawButton(int x_pos, int y_pos);
 		void colorBlendBorder(int width, int height, int x_pos,
 			       	int y_pos, int rColor, int gColor, int bColor,
 				int rColor2, int gColor2, int bColor2,

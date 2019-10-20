@@ -200,6 +200,43 @@ void ABarGlobal::showCredits()
 		showHigh = 0;
 	}
 }
+void ABarGlobal::showStartScreen()
+{
+	showStart ^= 1;
+}
+
+void ABarGlobal::printTempScreen(Rect r)
+{
+        glColor3f(1.0, 1.0, 1.0);
+	r.bot = 800;
+	r.left = 960;
+        ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
+	ggprint16(&r, 16, 0xff1919, "Press S to Start the game");
+}
+
+void ABarGlobal::drawButton(int x_pos, int y_pos)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	Box box;
+	box.width = 150;
+	box.height = 50;
+	box.center.x  = x_pos;
+	box.center.y = y_pos;
+	float h, w; 
+	glColor3ub(255, 255, 255);
+	glPushMatrix();
+	glTranslatef(box.center.x, box.center.y, 0);
+	w = box.width;
+	h = box.height;
+	glBegin(GL_QUADS);
+	glVertex2i(-w, -h);
+        glVertex2i(-w, h);
+        glVertex2i(w, h);
+        glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
+}
+
 void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 	int rColor, int gColor, int bColor)
 {

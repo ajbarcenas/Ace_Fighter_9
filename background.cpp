@@ -554,6 +554,9 @@ int check_keys(XEvent *e)
 			//g.showCredits ^= 1;
 			g.showLogo ^= 1;
 			break;
+		case XK_s:
+			abG.showStartScreen();
+			break;
         case XK_space:
             makeBullet(p->center.x, p->center.y);
             break;
@@ -703,6 +706,17 @@ void render()
 
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
+	if (abG.showStart) {
+		abG.colorBlendBorder(980, 1920, 960,540,230,0,0,
+			25,255,255,
+			34,204,0,
+			204,230,255);
+		abG.drawButton(960, 800);
+                abG.drawButton(960, 600);
+		abG.drawButton(960, 400);
+		abG.drawButton(960, 200);
+		abG.printTempScreen(r);	
+	}
 	if (abG.showCreds) {
 		showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);

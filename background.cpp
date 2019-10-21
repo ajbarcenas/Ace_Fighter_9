@@ -281,6 +281,7 @@ extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
 extern ABarGlobal abG;
+int rainDrops = 0;
 extern void makeSmoke(int x, int y);
 extern void printSmoke();
 extern void smokeMovement();
@@ -290,6 +291,9 @@ extern void bulletMovement();
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
+extern void makeRain();
+extern void printRain();
+extern void rainMovement();
 extern int authScores();
 //===========================================================================
 //===========================================================================
@@ -308,6 +312,7 @@ int main()
 	}
     makeConfetti();
 	physics();
+    rainMovement();
     confettiMovement();
     smokeMovement();
 	bulletMovement();
@@ -554,6 +559,9 @@ int check_keys(XEvent *e)
 			//g.showCredits ^= 1;
 			g.showLogo ^= 1;
 			break;
+        case XK_r:
+            rainDrops ^= 1;
+            break;
 		case XK_s:
 			abG.showStartScreen();
 			break;
@@ -613,7 +621,17 @@ void render()
 		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+    
+    if (rainDrops){
+        makeRain();
+        makeRain();
+        makeRain();
+        makeRain();
+        makeRain();
+        makeRain();
+        printRain();
+    }
+    
     //Cloud Layer 
 	// Done by Alonso Gomez
 
@@ -769,5 +787,6 @@ void render()
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
+    ggprint16(&r, 16, 0x00ffff44, "Press R for rain");
 }
 

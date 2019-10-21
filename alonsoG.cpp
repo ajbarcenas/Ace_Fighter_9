@@ -61,6 +61,7 @@ public:
     Particle rain[MAX_PARTICLES];
     int n = 0;
     int k = 0;
+    int q = 0;
     //AlonsoGlobal();
 }ag;
 
@@ -73,7 +74,7 @@ void makeRain()
 
     r->s.center.x = rand() % 1921;
     r->s.center.y = 1080;
-    r->velocity.y = -2.0;
+    r->velocity.y = -5.0;
     r->velocity.x = -0.2;
     ++ag.k;
 }
@@ -272,23 +273,23 @@ void printSmoke()
 
 void makeBullet(int x, int y)
 {
-    if (ag.n >= MAX_PARTICLES)
+    if (ag.q >= MAX_PARTICLES)
         return;
 
-    Particle *b = &ag.bullet[ag.n];
+    Particle *b = &ag.bullet[ag.q];
 
     b->s.center.x = x;
     b->s.center.y = y;
     b->velocity.y = 0;
     b->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
-    ++ag.n;
+    ++ag.q;
 }
 
 void bulletMovement()
 {
-    if (ag.n <= 0)
+    if (ag.q <= 0)
         return;
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.q; i++) {
         Particle *b = &ag.bullet[i];
         b->s.center.x += b->velocity.x;
         b->s.center.y += b->velocity.y;
@@ -297,8 +298,8 @@ void bulletMovement()
         //check for off screen
         if (b->s.center.y < 0.0 || b->s.center.y > 1080 ||
             b->s.center.x < 0.0 || b->s.center.x > 1920) {
-            ag.bullet[i] = ag.bullet[ag.n - 1];
-            --ag.n;
+            ag.bullet[i] = ag.bullet[ag.q - 1];
+            --ag.q;
         }
     }
 }
@@ -307,7 +308,7 @@ void printBullet()
 {
     float w, h;
 
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.q; i++) {
         ag.bullet[i].r = 255;
         ag.bullet[i].g = 0;
         ag.bullet[i].b = 0;

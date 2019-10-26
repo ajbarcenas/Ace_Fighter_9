@@ -23,6 +23,8 @@ Goals:
 #include <GL/glx.h>
 #include <math.h>
 #include "fonts.h"
+#include <iostream>
+using namespace std;
 
 const int MAX_PARTICLES = 8000;
 const float GRAVITY = .05;
@@ -60,10 +62,89 @@ public:
     Particle confetti[MAX_PARTICLES];
     Particle rain[MAX_PARTICLES];
     int n = 0;
+    int u = 0;
     int k = 0;
     int q = 0;
+    float xr = 1.0;
+    float yr = 1.0;
+    float cx = 1.0;
+    float cy = 0.0;
+    bool increasing = true;
     //AlonsoGlobal();
 }ag;
+
+void cubePower()
+{
+    //Cube rotation
+    ag.xr = ag.xr + 6;
+    ag.yr = ag.yr + 6;
+
+    //Cube goes up and down
+    if (ag.increasing){
+        ag.cy = ag.cy + 0.05;
+        if (ag.cy >= 1.0)
+            ag.increasing = false;
+    }
+    else {
+        ag.cy = ag.cy - 0.05;
+        if (ag.cy <= -1.0)
+            ag.increasing = true;
+    }
+
+    //Cube moves from right to left
+    if (ag.cx > -1.0)
+        ag.cx = ag.cx - 0.01;
+    if (ag.cx <= -1.0)
+        ag.cx = 1.0;
+
+    //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(ag.cx, ag.cy, 0.1);
+    glRotatef(ag.xr, 1.0, 0.0, 0.0);
+    glRotatef(ag.yr, 0.0, 1.0, 0.0);
+
+    //Front
+    glBegin(GL_QUADS);
+        glColor3f(0.54f, 0.00f, 0.86f);  
+        glVertex3f(-0.05f, -0.05f, 0.05f);
+        glVertex3f(-0.05f,  0.05f, 0.05f);
+        glVertex3f( 0.05f,  0.05f, 0.05f);
+        glVertex3f( 0.05f, -0.05f, 0.05f);
+    //Back
+        glColor3f(0.54f, 0.00f, 0.86f); 
+        glVertex3f(-0.05f, -0.05f, -0.05f);
+        glVertex3f(-0.05f,  0.05f, -0.05f);
+        glVertex3f( 0.05f,  0.05f, -0.05f);
+        glVertex3f( 0.05f, -0.05f, -0.05f);
+    //Right
+        glColor3f(0.51f, 0.00f, 0.80f); 
+        glVertex3f(0.05f, -0.05f,  0.05f);
+        glVertex3f(0.05f,  0.05f,  0.05f);
+        glVertex3f(0.05f,  0.05f, -0.05f);
+        glVertex3f(0.05f, -0.05f, -0.05f);
+    //Left  
+        glColor3f(0.51f, 0.00f, 0.80f); 
+        glVertex3f(-0.05f, -0.05f, -0.05f);
+        glVertex3f(-0.05f,  0.05f, -0.05f);
+        glVertex3f(-0.05f,  0.05f,  0.05f);
+        glVertex3f(-0.05f, -0.05f,  0.05f);
+    //Top
+        glColor3f(0.49f, 0.00f, 0.78f); 
+        glVertex3f(-0.05f, 0.05f, -0.05f);
+        glVertex3f(-0.05f, 0.05f,  0.05f);
+        glVertex3f( 0.05f, 0.05f,  0.05f);
+        glVertex3f( 0.05f, 0.05f, -0.05f);
+    //Bottom
+        glColor3f(0.49f, 0.00f, 0.78f); 
+        glVertex3f(-0.05f, -0.05f,  0.05f);
+        glVertex3f(-0.05f, -0.05f, -0.05f);
+        glVertex3f( 0.05f, -0.05f, -0.05f);
+        glVertex3f( 0.05f, -0.05f,  0.05f);
+    glEnd();
+
+    glFlush();
+}
 
 void makeRain()
 {
@@ -120,25 +201,25 @@ void printRain()
 
 void makeConfetti()
 {
-    if (ag.n >= MAX_PARTICLES)
+    if (ag.u >= MAX_PARTICLES)
         return;
 
-    Particle *c = &ag.confetti[ag.n];
+    Particle *c = &ag.confetti[ag.u];
 
     c->s.center.x = rand() % 1921;
     c->s.center.y = 1080;
 
     c->velocity.y = -0.8;
     c->velocity.x = 0;
-    ++ag.n;
+    ++ag.u;
 }
 
 void confettiMovement()
 {
-    if (ag.n <= 0)
+    if (ag.u <= 0)
         return;
 
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.u; i++) {
         Particle *c = &ag.confetti[i];
         c->s.center.x += c->velocity.x;
         c->s.center.y += c->velocity.y;
@@ -147,8 +228,8 @@ void confettiMovement()
         //check for off screen
         if (c->s.center.y < 0.0 || c->s.center.y > 1080 ||
             c->s.center.x < 0.0 || c->s.center.y > 1920) {
-            ag.confetti[i] = ag.confetti[ag.n - 1];
-            --ag.n;
+            ag.confetti[i] = ag.confetti[ag.u - 1];
+            --ag.u;
         }
     }
 }
@@ -157,7 +238,7 @@ void printConfetti()
 {
     float w, h;
 
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.u; i++) {
         if (i % 7 == 0) {
             ag.confetti[i].r = 0;
             ag.confetti[i].g = 128;

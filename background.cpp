@@ -17,6 +17,7 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+//#include <GL/glu.h>
 #include "fonts.h"
 #include "alexisisB.h"
 #include <openssl/crypto.h>
@@ -27,7 +28,6 @@ using namespace std;
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
-
 
 typedef double Vect[3];
 
@@ -282,6 +282,7 @@ extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
 extern ABarGlobal abG;
 int rainDrops = 0;
+int cube = 0;
 extern void makeSmoke(int x, int y);
 extern void printSmoke();
 extern void smokeMovement();
@@ -294,6 +295,7 @@ extern void confettiMovement();
 extern void makeRain();
 extern void printRain();
 extern void rainMovement();
+extern void cubePower();
 extern int authScores();
 //===========================================================================
 //===========================================================================
@@ -310,7 +312,7 @@ int main()
 		check_mouse(&e);
 		done = check_keys(&e);
 	}
-    makeConfetti();
+    //makeConfetti();
 	physics();
     rainMovement();
     confettiMovement();
@@ -358,9 +360,12 @@ void init_opengl(void)
 	glOrtho(0, g.xres, 0, g.yres, -1, 1);
 	//Clear the screen
 	glClearColor(1.0, 1.0, 1.0, 1.0);
-	//glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	//Do this to allow texture maps
 	glEnable(GL_TEXTURE_2D);
+    glClearDepth(1.0);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 	initialize_fonts();
 	//
 	//load the images file into a ppm structure.
@@ -691,10 +696,13 @@ void render()
 		glVertex2i( w,-h);
 	glEnd();
 	glPopMatrix();
-  printBullet();
-
-
-	//creating enemies
+    printBullet();
+    
+    glPushMatrix();
+    cubePower();
+    glPopMatrix();
+    
+    //creating enemies
     /*
 	while( g.n < 5) {
 		spawnEnemy(g.n, &g.enemy[g.n]);
@@ -730,7 +738,7 @@ void render()
 			34,204,0,
 			204,230,255);
 		abG.drawButton(960, 800);
-                abG.drawButton(960, 600);
+        abG.drawButton(960, 600);
 		abG.drawButton(960, 400);
 		abG.drawButton(960, 200);
 		abG.printTempScreen(r);	
@@ -749,7 +757,7 @@ void render()
 		showCreditsBorder(130, 130, 480, 300);
 		showCreditsBorder(130, 130, 1440, 300);
 		abG.printPicture(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
-		abG.printPicture(picture.pos[0], picture.pos[1], 0, g.alexisTexId);
+		abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
 		abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
 		abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
 		abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
@@ -774,10 +782,10 @@ void render()
 				255,255,255);
 		abG.printHighScore(r);
 		abG.printTempScores(r);
-        	printConfetti();
+        makeConfetti();
+        printConfetti();
 	//	abG.drawTriangle(20,10,600,600,255,2,2);	
 	//	authScores();
-
 	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);

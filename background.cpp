@@ -281,6 +281,7 @@ extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
 extern ABarGlobal abG;
+extern Enemy eLex;
 int rainDrops = 0;
 int cube = 0;
 extern void makeSmoke(int x, int y);
@@ -318,6 +319,7 @@ int main()
     confettiMovement();
     smokeMovement();
 	bulletMovement();
+	eLex.testMovement();
     render();
 	x11.swapBuffers();
 	}
@@ -607,6 +609,7 @@ void physics()
 void render()
 {
 	extern ABarGlobal abG;
+	extern Enemy eLex;
 	Rect r;
 
 	//All of these scrolling background layers were done by Alonso Gomez
@@ -687,6 +690,8 @@ void render()
 	makeSmoke(p->center.x, p->center.y);
     makeSmoke(p->center.x, p->center.y);
     printSmoke();
+    eLex.makeTest(1920, 610);
+    eLex.printTest();
     glColor3ub(190, 140, 10);
     glTranslatef(p->center.x, p->center.y, p->center.z);
 	glBegin(GL_QUADS);

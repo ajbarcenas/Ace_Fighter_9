@@ -20,7 +20,7 @@ be receiving updates.
 #include "alexisisB.h"
 using namespace std;
 ABarGlobal abG;
-
+Enemy eLex;
 //Prints out my name on the credits Screen
 void printAlexisB(Rect r)
 {
@@ -313,5 +313,48 @@ void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 	glEnd();
 	glPopMatrix();
 			
+}
+
+void Enemy::makeTest(int x, int y)
+{
+	if (n >= 5)
+		return;
+	Dot *p = &test[n];
+	p->e.center.x = x;
+	p->e.center.y = y;
+
+	p->velocity.y = rand() % 19 + (-9); 
+	p->velocity.x = ((double)rand()/ (double)RAND_MAX) - 10;
+	++n;
+}
+
+void Enemy::testMovement()
+{
+	if (n <= 0)
+		return;
+	for (int i = 0; i < n; i++) {
+		Dot *p = &test[i];
+		p->e.center.x += p->velocity.x;
+		p->e.center.y += p->velocity.y;
+
+	}
+}
+
+void Enemy::printTest()
+{
+	float w, h;
+	for (int i = 0; i < n; i++) {
+		glPushMatrix();
+		glColor3ub(100,100,100);
+		Vec1 *c = &test[i].e.center;
+		w = h = 40;
+		glBegin(GL_QUADS);
+		glVertex2i(c->x-w, c->y-h);
+		glVertex2i(c->x-w, c->y+h);
+		glVertex2i(c->x+w, c->y+h);
+		glVertex2i(c->x+w, c->y-h);
+		glEnd();
+		glPopMatrix();
+	}
 }
 #endif

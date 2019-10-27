@@ -20,6 +20,9 @@ be receiving updates.
 #include <string.h>
 #include <GL/glx.h>
 #include <stdio.h>
+#include <math.h>
+const int MAX = 3000;
+const float GF = 0.0;
 
 //New vector for hitboxes
 struct Vec1 {
@@ -40,6 +43,29 @@ struct Triangle {
 	float width, height;
 	Color color;
 	Vec1 center;	
+};
+
+struct Model {
+	float width;
+	float height;
+	float radius;
+	Vec1 center;
+};
+
+struct Dot {
+	Color c;
+	Model e;
+	Vec1 velocity;
+};
+
+class Enemy {
+	public:
+		
+		Dot test[MAX];
+		int n = 0;
+		void makeTest(int x, int y);
+		void testMovement();
+		void printTest();
 };
 
 class ABarGlobal {

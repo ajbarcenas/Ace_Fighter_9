@@ -343,6 +343,9 @@ void Enemy::testMovement()
 
 		if (p->e.center.x < 0.0)
 		    p->e.center.x = 1920;
+
+		enemyX[i] = p->e.center.x;
+		enemyY[i] = p->e.center.y;
 	}
 }
 
@@ -353,8 +356,7 @@ void Enemy::printTest()
 		glPushMatrix();
 		glColor3ub(100,100,100);
 		Vec1 *c = &test[i].e.center;
-		w = 40;
-		h = 30;
+		w = h = 30;
 		glBegin(GL_QUADS);
 		glVertex2i(c->x-w, c->y-h);
 		glVertex2i(c->x-w, c->y+h);

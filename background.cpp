@@ -240,7 +240,7 @@ class X11_wrapper {
 	void set_title() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "scrolling background (seamless)");
+		XStoreName(dpy, win, "ACE FIGHTER 9 - BY GROUP #9");
 	}
 	bool getXPending() {
 		return XPending(dpy);
@@ -508,11 +508,21 @@ void init_opengl(void)
 
 void check_mouse(XEvent *e)
 {
+        Shape *p = &g.player;
 	//Did the mouse move?
 	//Was a mouse button clicked?
 	static int savex = 0;
 	static int savey = 0;
 	//
+	//
+	//
+	//Weed out non-mouse events
+	if (e->type != ButtonRelease &&
+		e->type != ButtonPress &&
+		e->type != MotionNotify) {
+	//This is not a mouse event that we care about.
+			return;
+	}	
 	if (e->type == ButtonRelease) {
 		return;
 	}
@@ -521,12 +531,17 @@ void check_mouse(XEvent *e)
 	if (e->xbutton.button== 1) {
 	}
 	if (e->xbutton.button== 3) {
+	   }
 	}
-	}
-	if (savex != e->xbutton.x || savey != e->xbutton.y) {
-	//Mouse moved
-		savex = e->xbutton.x;
-		savey = e->xbutton.y;
+	if (e->type == MotionNotify) {
+		if (savex != e->xbutton.x || savey != e->xbutton.y) {
+		//Mouse moved
+			savex = e->xbutton.x;
+			savey = e->xbutton.y;
+			int y = g.yres - e->xbutton.y;
+			p->center.x = e->xbutton.x;
+			p->center.y = y;
+		}
 	}
 }
 

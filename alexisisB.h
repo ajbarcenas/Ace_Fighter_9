@@ -66,6 +66,9 @@ class Enemy {
 		void makeTest(int x, int y);
 		void testMovement();
 		void printTest();
+		bool increasing = true;
+		float cx = 1.0;
+		float cy = 0.0;
 };
 
 class ABarGlobal {

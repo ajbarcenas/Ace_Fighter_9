@@ -597,13 +597,16 @@ void physics()
     //pine tree layer
    	g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
-    /*
+    
     int *n = &g.n;
+    Shape *e = g.enemy;
+    
 	for(int i = 0; i < 5; i++) {
-		checkEnemyLocation(&g.enemy[i], n);	
+		checkEnemyLocation(e, n);		
 		moveEnemy(&g.enemy[i]);
+//		cout << *n << endl;
 	}
-    */
+    
 }
 
 void render()
@@ -708,7 +711,7 @@ void render()
     glPopMatrix();
     
     //creating enemies
-    /*
+    
 	while( g.n < 5) {
 		spawnEnemy(g.n, &g.enemy[g.n]);
 		g.n++;
@@ -730,7 +733,7 @@ void render()
 		glEnd();
 		glPopMatrix();
 	}
-    */
+    
     //--------------------------------------------------------------------------
     //Credits Screen
     //

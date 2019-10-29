@@ -323,8 +323,8 @@ void Enemy::makeTest(int x, int y)
 	p->e.center.x = x;
 	p->e.center.y = y;
 
-	p->velocity.y = rand() % 19 + (-9); 
-	p->velocity.x = ((double)rand()/ (double)RAND_MAX) - 10;
+	p->velocity.y = rand() % 15 + (-6); 
+	p->velocity.x = rand () % 4 + (-5);
 	++n;
 }
 
@@ -337,6 +337,15 @@ void Enemy::testMovement()
 		p->e.center.x += p->velocity.x;
 		p->e.center.y += p->velocity.y;
 
+		if (p->e.center.y < 0.0 || p->e.center.y > 1080) {
+			p->velocity.y = -(p->velocity.y); 
+		}
+
+		if (p->e.center.x < 0.0)
+		    p->e.center.x = 1920;
+
+		enemyX[i] = p->e.center.x;
+		enemyY[i] = p->e.center.y;
 	}
 }
 
@@ -347,7 +356,7 @@ void Enemy::printTest()
 		glPushMatrix();
 		glColor3ub(100,100,100);
 		Vec1 *c = &test[i].e.center;
-		w = h = 40;
+		w = h = 30;
 		glBegin(GL_QUADS);
 		glVertex2i(c->x-w, c->y-h);
 		glVertex2i(c->x-w, c->y+h);

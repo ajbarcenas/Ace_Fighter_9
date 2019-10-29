@@ -62,10 +62,15 @@ class Enemy {
 	public:
 		
 		Dot test[MAX];
+		int enemyX[5];
+		int enemyY[5];
 		int n = 0;
 		void makeTest(int x, int y);
 		void testMovement();
 		void printTest();
+		bool increasing = true;
+		float cx = 1.0;
+		float cy = 0.0;
 };
 
 class ABarGlobal {

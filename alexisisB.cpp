@@ -366,4 +366,116 @@ void Enemy::printTest()
 		glPopMatrix();
 	}
 }
+
+void Enemy::makeBoss(int x, int y)
+{
+	if (m >= 1)
+		return;
+	Dot *b = &boss[m];
+	b->e.center.x = x;
+	b        float w, h;
+403         for (int i = 0; i < m; i++) {
+404                 glPushMatrix();
+405                 glColor3ub(0, 255, 255);
+406                 Vec1 *d = &boss[i].e.center;
+407                 w = h = 200;
+408                 glBegin(GL_QUADS);
+409                 glVertex2i(d->x-w, d->y-h);
+410                 glVertex2i(d->x-w, d->y+h);
+411                 glVertex2i(d->x+w, d->y+h);
+412                 glVertex2i(d->x+w, d->y-h);
+413                 glEnd();
+414                 glPopMatrix();
+->e.center.y = y;
+
+	b->velocity.y = 2;
+	b->velocity.x = 0;
+	++m;
+}
+
+void Enemy::bossMovement()
+{
+	if (m <= 0)
+	    return;
+	for (int i = 0; i < m; i++) {
+		Dot *b = &boss[i];
+		b->e.center.x += b->velocity.x;
+		b->e.center.y += b->velocity.y;
+
+		if (b->e.center.y < 0.0 || b->e.center.y > 1080) {
+			b->velocity.y = -(b->velocity.y);
+		}
+		bossX = b->e.center.x;
+		bossY = b->e.center.y;
+	}
+}
+
+void Enemy::printBoss()
+{
+	float w, h;
+	for (int i = 0; i < m; i++) {
+		glPushMatrix();
+		glColor3ub(0, 255, 255);
+		Vec1 *d = &boss[i].e.center;
+		w = h = 200;
+		glBegin(GL_QUADS);
+	        glVertex2i(d->x-w, d->y-h);
+                glVertex2i(d->x-w, d->y+h);
+                glVertex2i(d->x+w, d->y+h);
+                glVertex2i(d->x+w, d->y-h);
+		glEnd();
+		glPopMatrix();
+	
+	}
+}
+
+
+void Enemy::makeEBullet(int x, int y)
+{
+	if (o >= 20)
+		return;
+	Dot *a = &bullets[o];
+	a->e.center.x = x;
+	a->e.center.y = y;
+
+	a->velocity.y = 0;
+	a->velocity.x = -2;
+	++o;
+}
+
+void Enemy::bulletMovement()
+{
+	if (o <= 0)
+	    return;
+	for (int i = 0; i < o; i++) {
+		Dot *a = &bullets[i];
+		a->e.center.x += a->velocity.x;
+		a->e.center.y += a->velocity.y;
+
+		if (a->e.center.x < 0.0) {
+			bullets[i] = bullets[o - 1];
+			--o;
+		}
+	}
+}
+
+void Enemy::printEBullet()
+{
+        float w, h;
+         for (int i = 0; i < o; i++) {
+                 glPushMatrix();
+                 glColor3ub(0, 0, 255);
+                 Vec1 *g = &bullets[i].e.center;
+                 w = h = 4;
+                 glBegin(GL_QUADS);
+                 glVertex2i(g->x-w, g->y-h);
+                 glVertex2i(g->x-w, g->y+h);
+                 glVertex2i(g->x+w, g->y+h);
+                 glVertex2i(g->x+w, g->y-h);
+                 glEnd();
+                 glPopMatrix();
+    
+
+	 }
+}
 #endif

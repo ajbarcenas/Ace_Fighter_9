@@ -65,6 +65,17 @@ class Enemy {
 		int enemyX[5];
 		int enemyY[5];
 		int n = 0;
+		int m = 0;
+		int o = 0;
+		Dot boss[1];
+		void makeBoss(int x, int y);
+		void bossMovement();
+		void printBoss();
+		int bossX, bossY;
+		void makeEBullet(int x, int y);
+		void bulletMovement();
+		void printEBullet();
+		Dot bullets[20];
 		void makeTest(int x, int y);
 		void testMovement();
 		void printTest();

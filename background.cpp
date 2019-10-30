@@ -320,6 +320,8 @@ int main()
     smokeMovement();
 	bulletMovement();
 	eLex.testMovement();
+	eLex.bossMovement();
+	eLex.bulletMovement();
     render();
 	x11.swapBuffers();
 	}
@@ -710,6 +712,12 @@ void render()
     printSmoke();
     eLex.makeTest(1920, 610);
     eLex.printTest();
+    
+    eLex.makeBoss(1850, 610);
+    eLex.printBoss();
+
+    eLex.makeEBullet(eLex.bossX - 100, eLex.bossY);
+    eLex.printEBullet();
     glColor3ub(190, 140, 10);
     glTranslatef(p->center.x, p->center.y, p->center.z);
 	glBegin(GL_QUADS);

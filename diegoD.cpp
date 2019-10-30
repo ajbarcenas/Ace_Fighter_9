@@ -51,7 +51,7 @@ void checkPlayerLocation(Shape *p)
 }
 
 // =========================Enemy Functions =================================
-
+/*
 void removeEnemy(Shape *e, int *i)
 {
 	for(int j = 0; j < *i; j++){
@@ -85,7 +85,37 @@ void moveEnemy(Shape *e)
 	e->center.x += e->velocity.x;
 }
 
+void subtractEnemyHealth(struct Node** head_ref, int damage){
+	enemy.health -= damage;
+	if(enemy.health <= 0){
+		removeEnemy(head_ref);
+	}
+}
 
+void subtractPlayerHealth(Shape player, int damage){
+	player.health -= damage;
+	if(player.health <= 0){
+		gameOver();
+	}
+}
+
+
+*/
+
+void spawnEnemy(struct Node** head_ref, Shape enemy){
+	Node* new_node = new Node();
+	new_node->data = enemy;
+	new_node->next = (*heard_ref);
+	(*head_ref) = new_node;
+}
+
+void removeEnemy(struct Node** head_ref){
+
+}
+
+void checkEnemyLocation(struct Node** head_ref, Shape enemy){
+
+}
 
 void ShowDiegosPicture(int x, int y, GLuint textid)
 {

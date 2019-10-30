@@ -115,6 +115,19 @@ struct Particle {
 	Vec Velocity;
 };
 
+/*struct Enemy {
+	int health;
+	int damage;
+	int n = 0;
+	Shape s;
+}*/
+
+struct Player {
+	int health; 
+	int damage;
+	Shape s;
+}
+
 class Logo {
 public:
 	Vect pos;
@@ -153,7 +166,7 @@ class Global {
     GLuint cSilhouetteTexture;
     GLuint pineTreeTexture;
 	GLuint pSilhouetteTexture;
-	Shape player;
+	Player player;
 	Texture tex;
 	Shape box;
 	GLuint logoTexture;
@@ -162,10 +175,10 @@ class Global {
 	GLuint diegoTexId;
 	GLuint andrewTexId;
 	int showLogo;
-	int n = 0;
+//	int n = 0;
 	GLuint texid;
 	int showCredits, showHighScores;
-	Shape enemy[5];
+//	Shape enemy[5];
 	int HighScore;
 	Global() {
 		//Pictures pic;
@@ -508,7 +521,6 @@ void init_opengl(void)
 
 void check_mouse(XEvent *e)
 {
-        Shape *p = &g.player;
 	//Did the mouse move?
 	//Was a mouse button clicked?
 	static int savex = 0;
@@ -548,26 +560,10 @@ void check_mouse(XEvent *e)
 int check_keys(XEvent *e)
 {
 	//Was there input from the keyboard?
-	Shape *p = &g.player;
+	Shape *p = &g.player.s;
 	if (e->type == KeyPress) {
 	int key = XLookupKeysym(&e->xkey, 0);
 	switch(key) {
-		case XK_Left:
-			p->velocity.x = -15;
-			p->center.x += p->velocity.x;
-			break;
-		case XK_Right:
-			p->velocity.x = 15;
-			p->center.x += p->velocity.x;
-			break;
-		case XK_Up:
-			p->velocity.y = 15;
-			p->center.y += p->velocity.y;
-			break;
-		case XK_Down:
-			p->velocity.y = -15;
-			p->center.y += p->velocity.y;
-			break;
 		case XK_t:
 			abG.incrementScore();
 			authScores();
@@ -613,7 +609,7 @@ void physics()
    	g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
     
-    int *n = &g.n;
+   /* int *n = &g.n;
     Shape *e = g.enemy;
     
 	for(int i = 0; i < 5; i++) {
@@ -621,7 +617,7 @@ void physics()
 		moveEnemy(&g.enemy[i]);
 //		cout << *n << endl;
 	}
-    
+*/    
 }
 
 void render()
@@ -692,7 +688,7 @@ void render()
     //-------------------------------------------------------------------------
 
 	//creating player
-	Shape *p = &g.player;
+	Shape *p = &g.player.s;
 	if(!p->playerExists) {
 		spawnPlayer(p);
 		p->playerExists = true;

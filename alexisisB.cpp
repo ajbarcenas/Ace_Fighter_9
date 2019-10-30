@@ -213,7 +213,6 @@ void ABarGlobal::printTempScreen(Rect r)
         ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
 	ggprint16(&r, 16, 0xff1919, "Press S to Start the game");
 }
-
 void ABarGlobal::drawButton(int x_pos, int y_pos)
 {
 	glColor3f(1.0, 1.0, 1.0);

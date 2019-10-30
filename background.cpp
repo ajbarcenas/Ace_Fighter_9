@@ -529,11 +529,14 @@ void check_mouse(XEvent *e)
 		return;
 	}
 	if (e->type == ButtonPress) {
-	cout << e->xbutton.button << endl;
-	if (e->xbutton.button== 1) {
-	}
-	if (e->xbutton.button== 3) {
-	   }
+		//cout << e->xbutton.button << endl;
+			if (e->xbutton.button== 1) {
+				int q = g.yres - e->xbutton.y;
+				cout << "test: " << e->xbutton.x << " " << q << endl;
+
+			}
+			if (e->xbutton.button== 3) {
+			}
 	}
 	if (e->type == MotionNotify) {
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {

@@ -126,7 +126,7 @@ struct Player {
 	int health; 
 	int damage;
 	Shape s;
-}
+};
 
 class Logo {
 public:
@@ -317,8 +317,8 @@ int main()
 {
 	init_opengl();
 	int done=0;
-	g.n = 0;
-	cout << g.n << endl;
+//	g.n = 0;
+//	cout << g.n << endl;
 	while (!done) {
 	while (x11.getXPending()) {
 		XEvent e = x11.getXNextEvent();
@@ -521,6 +521,7 @@ void init_opengl(void)
 
 void check_mouse(XEvent *e)
 {
+	Shape *p = &g.player.s;
 	//Did the mouse move?
 	//Was a mouse button clicked?
 	static int savex = 0;
@@ -722,7 +723,7 @@ void render()
     glPopMatrix();
     
     //creating enemies
-    
+   /* 
 	while( g.n < 5) {
 		spawnEnemy(g.n, &g.enemy[g.n]);
 		g.n++;
@@ -744,7 +745,7 @@ void render()
 		glEnd();
 		glPopMatrix();
 	}
-    
+    */
     //--------------------------------------------------------------------------
     //Credits Screen
     //

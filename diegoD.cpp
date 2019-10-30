@@ -100,7 +100,7 @@ void subtractPlayerHealth(Shape player, int damage){
 }
 
 
-*/
+
 
 void spawnEnemy(struct Node** head_ref, Shape enemy){
 	Node* new_node = new Node();
@@ -108,7 +108,7 @@ void spawnEnemy(struct Node** head_ref, Shape enemy){
 	new_node->next = (*heard_ref);
 	(*head_ref) = new_node;
 }
-
+*/
 void removeEnemy(struct Node** head_ref){
 
 }

@@ -21,6 +21,7 @@ be receiving updates.
 #include <GL/glx.h>
 #include <stdio.h>
 #include <math.h>
+#include <unistd.h>
 const int MAX = 3000;
 const float GF = 0.0;
 

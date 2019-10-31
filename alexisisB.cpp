@@ -179,9 +179,9 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 	glPopMatrix();
 }
 
-void ABarGlobal::incrementScore() 
+void ABarGlobal::incrementScore(int points) 
 {
-	highscore++;
+	highscore += points;
 	cout << "Score: " << highscore << endl;
 }
 
@@ -314,13 +314,13 @@ void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 			
 }
 
-void Enemy::makeTest(int x, int y)
+void Enemy::makeTest()
 {
 	if (n >= 5)
 		return;
 	Dot *p = &test[n];
-	p->e.center.x = x;
-	p->e.center.y = y;
+	p->e.center.x = 1920;
+	p->e.center.y = rand() % 1081;
 
 	p->velocity.y = rand() % 15 + (-6); 
 	p->velocity.x = rand () % 4 + (-5);
@@ -357,10 +357,10 @@ void Enemy::printTest()
 		Vec1 *c = &test[i].e.center;
 		w = h = 30;
 		glBegin(GL_QUADS);
-		glVertex2i(c->x-w, c->y-h);
-		glVertex2i(c->x-w, c->y+h);
-		glVertex2i(c->x+w, c->y+h);
-		glVertex2i(c->x+w, c->y-h);
+		    glVertex2i(c->x-w, c->y-h);
+		    glVertex2i(c->x-w, c->y+h);
+		    glVertex2i(c->x+w, c->y+h);
+		    glVertex2i(c->x+w, c->y-h);
 		glEnd();
 		glPopMatrix();
 	}

@@ -13,11 +13,12 @@ using namespace std;
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <cstring>
 #include <math.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-//#include <GL/glu.h>
+#include <GL/glu.h>
 #include "fonts.h"
 #include "alexisisB.h"
 #include <openssl/crypto.h>
@@ -284,6 +285,7 @@ extern ABarGlobal abG;
 extern Enemy eLex;
 int rainDrops = 0;
 int cube = 0;
+extern int getPower();
 extern void makeSmoke(int x, int y);
 extern void printSmoke();
 extern void smokeMovement();
@@ -313,7 +315,6 @@ int main()
 		check_mouse(&e);
 		done = check_keys(&e);
 	}
-    //makeConfetti();
 	physics();
     rainMovement();
     confettiMovement();
@@ -574,7 +575,7 @@ int check_keys(XEvent *e)
 			p->center.y += p->velocity.y;
 			break;
 		case XK_t:
-			abG.incrementScore();
+			abG.incrementScore(1);
 			authScores();
 			break;
 		case XK_h:
@@ -591,9 +592,33 @@ int check_keys(XEvent *e)
             break;
 		case XK_s:
 			abG.showStartScreen();
+            cube ^= 1;
 			break;
         case XK_space:
-            makeBullet(p->center.x, p->center.y);
+            if (getPower() == 1)
+                makeBullet(p->center.x, p->center.y);
+            else if (getPower() == 2) {
+                makeBullet(p->center.x, p->center.y + 4);
+                makeBullet(p->center.x, p->center.y - 4);
+            }
+            else if (getPower() == 3) {
+                makeBullet(p->center.x, p->center.y + 8);
+                makeBullet(p->center.x, p->center.y);
+                makeBullet(p->center.x, p->center.y - 8);
+            }
+            else if (getPower() == 4) {
+                makeBullet(p->center.x, p->center.y + 12);
+                makeBullet(p->center.x, p->center.y + 4);
+                makeBullet(p->center.x, p->center.y - 4);
+                makeBullet(p->center.x, p->center.y - 12);
+            }
+            else if (getPower() >= 5) {
+                makeBullet(p->center.x, p->center.y + 16);
+                makeBullet(p->center.x, p->center.y + 8);
+                makeBullet(p->center.x, p->center.y);
+                makeBullet(p->center.x, p->center.y - 8);
+                makeBullet(p->center.x, p->center.y - 16);
+            }
             break;
 		case XK_Escape:
 			return 1;
@@ -612,8 +637,8 @@ void physics()
 	g.tex.xc[0] += 0.001;
 	g.tex.xc[1] += 0.001;
     //cloud layer
-	g.tex.xc[2] += 0.005;
-	g.tex.xc[3] += 0.005;
+	g.tex.xc[2] += 0.002;
+	g.tex.xc[3] += 0.002;
     //pine tree layer
    	g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
@@ -626,7 +651,16 @@ void physics()
 		moveEnemy(&g.enemy[i]);
 //		cout << *n << endl;
 	}
-    
+  
+   /* 
+   if (bullet.center.x <= e[i].center.x + enemy[i].width/2 &&
+       bullet.center.x >= e[i].center.x - enemy[i].width/2 &&
+       bullet.center.y <= e[i].center.y + enemy[i].height/2 &&
+       bullet.center.y >= e[i].center.y - enemy[i].height/2 &&) {
+        cout << "collision" << endl;
+   }
+   */
+
 }
 
 void render()
@@ -713,7 +747,8 @@ void render()
 	makeSmoke(p->center.x, p->center.y);
     makeSmoke(p->center.x, p->center.y);
     printSmoke();
-    eLex.makeTest(1920, 610);
+    //enemies
+    eLex.makeTest();
     eLex.printTest();
     
     eLex.makeBoss(1850, 610);
@@ -732,9 +767,11 @@ void render()
 	glPopMatrix();
     printBullet();
     
-    glPushMatrix();
-    cubePower();
-    glPopMatrix();
+    if (cube == 1) {
+        glPushMatrix();
+        cubePower();
+        glPopMatrix();
+    }
     
     //creating enemies
     
@@ -830,5 +867,10 @@ void render()
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
     ggprint16(&r, 16, 0x00ffff44, "Press R for rain");
+    r.bot = 1050;
+    r.left = 40;
+    ggprint16(&r,  0, 0x00ffff44, "SCORE: ");
+    r.left = 120;
+    ggprint16(&r, 16, 0x00ffff44, to_string(abG.highscore).c_str());
 }
 

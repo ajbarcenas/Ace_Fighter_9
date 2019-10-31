@@ -14,6 +14,8 @@ Goals:
 1.Have multiple background layers moving at different speeds
   to give a more depth visual to our game.
 2.Add smoke particles to follow the player
+3.Rain and Confetti paricles
+4.3D cube powerup
 */
 
 #include <stdio.h>
@@ -21,10 +23,17 @@ Goals:
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include <GL/glu.h>
 #include <math.h>
 #include "fonts.h"
 #include <iostream>
+#include <iomanip>
+#include "alexisisB.h"
+
 using namespace std;
+
+extern ABarGlobal abG;
+extern void incrementScore(int points);
 
 const int MAX_PARTICLES = 8000;
 const float GRAVITY = .05;
@@ -65,42 +74,86 @@ public:
     int u = 0;
     int k = 0;
     int q = 0;
+    int power = 1;
     float xr = 1.0;
     float yr = 1.0;
     float cx = 1.0;
     float cy = 0.0;
+    float cz = 0.1;
+    double winX;
+    double winY;
+    double winZ;
     bool increasing = true;
-    //AlonsoGlobal();
 }ag;
 
 void cubePower()
 {
+    /*
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    GLdouble modelview[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    */
+
     //Cube rotation
     ag.xr = ag.xr + 6;
     ag.yr = ag.yr + 6;
 
     //Cube goes up and down
-    if (ag.increasing){
-        ag.cy = ag.cy + 0.05;
+    
+    if (ag.increasing) {
+        ag.cy = ag.cy + 0.005;
         if (ag.cy >= 1.0)
             ag.increasing = false;
     }
     else {
-        ag.cy = ag.cy - 0.05;
+        ag.cy = ag.cy - 0.005;
         if (ag.cy <= -1.0)
             ag.increasing = true;
     }
 
     //Cube moves from right to left
     if (ag.cx > -1.0)
-        ag.cx = ag.cx - 0.01;
+        ag.cx = ag.cx - 0.002;
     if (ag.cx <= -1.0)
         ag.cx = 1.0;
 
     //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    glTranslatef(ag.cx, ag.cy, 0.1);
+    glTranslatef(ag.cx, ag.cy, ag.cz);
+    
+    //convert 3D coordinates to 2D coordinates
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    //cout <<"viewport: " << viewport << endl;
+
+    GLdouble modelview[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    //cout << "modelview: " <<modelview << endl;
+
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    //cout << "projection: " << projection << endl;
+
+    //cout << fixed << setprecision(2)
+      //   << endl << "3DX: " << ag.cx << " 3DY: " << ag.cy << endl;
+    gluProject(ag.cx, ag.cy, ag.cz,
+               modelview, projection, viewport,
+               &ag.winX, &ag.winY, &ag.winZ);
+    //cout << fixed << setprecision(0)
+      //   << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
+
+    ag.winX = (ag.winX/2) + (956/2) + 2;
+    ag.winY = (ag.winY/2) + (545/2);
+
+   // cout << fixed << setprecision(0)
+     //    << "NewX: " << ag.winX << " NewY: " << ag.winY << endl;
+
     glRotatef(ag.xr, 1.0, 0.0, 0.0);
     glRotatef(ag.yr, 0.0, 1.0, 0.0);
 
@@ -144,6 +197,18 @@ void cubePower()
     glEnd();
 
     glFlush();
+
+    /*
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    gluProject(ag.cx, ag.cy, ag.cz,
+               modelview, projection, viewport,
+               &ag.winX, &ag.winY, &ag.winZ);
+    cout << fixed << setprecision(0)
+         << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
+    */
+
 }
 
 void makeRain()
@@ -358,7 +423,6 @@ void makeBullet(int x, int y)
         return;
 
     Particle *b = &ag.bullet[ag.q];
-
     b->s.center.x = x;
     b->s.center.y = y;
     b->velocity.y = 0;
@@ -374,13 +438,25 @@ void bulletMovement()
         Particle *b = &ag.bullet[i];
         b->s.center.x += b->velocity.x;
         b->s.center.y += b->velocity.y;
-        //b->s.velocity.y = b->velocity.y - GRAVITY;
 
         //check for off screen
         if (b->s.center.y < 0.0 || b->s.center.y > 1080 ||
             b->s.center.x < 0.0 || b->s.center.x > 1920) {
             ag.bullet[i] = ag.bullet[ag.q - 1];
             --ag.q;
+        }
+        
+        //check collision of bullet with cube powerup
+        if (b->s.center.y < ag.winY + 36 && b->s.center.y > ag.winY - 36 &&
+            b->s.center.x < ag.winX + 36 && b->s.center.x > ag.winX - 36) {
+            cout << endl << "COLLISON" << endl;
+            ag.cy = ((float)rand() / (float)RAND_MAX);
+            ag.cx = ((float)rand() / (float)RAND_MAX);
+            ag.bullet[i] = ag.bullet[ag.q - 1];
+            ag.power++;
+            --ag.q;
+            abG.incrementScore(100);
+            //abg.highscore += 100;
         }
     }
 }
@@ -405,4 +481,9 @@ void printBullet()
         glEnd();
         glPopMatrix();
     }
+}
+
+int getPower()
+{
+    return ag.power;
 }

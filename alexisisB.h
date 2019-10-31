@@ -65,7 +65,7 @@ class Enemy {
 		int enemyX[5];
 		int enemyY[5];
 		int n = 0;
-		void makeTest(int x, int y);
+		void makeTest();
 		void testMovement();
 		void printTest();
 		bool increasing = true;
@@ -84,7 +84,7 @@ class ABarGlobal {
 		void printPicture(double x, double y, double z, GLuint texturecode);
 		void printCredBoxes(int x_pos, int y_pos);
 		void printHighScore(Rect r);
-		void incrementScore();
+		void incrementScore(int points);
 		void showHighScores();
 		void showCredits();
 		void showStartScreen();

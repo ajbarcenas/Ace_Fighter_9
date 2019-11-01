@@ -20,8 +20,6 @@ using namespace std;
 
 const int  MAX_READ_ERRORS = 100;
 
-
-
 struct Vec {
 	float x,y,z;
 };
@@ -33,6 +31,20 @@ struct Shape {
 	Vec velocity;
 	bool playerExists = false;
 };
+
+struct Enemy1 {
+	int health;
+	int damage;
+	int n = 0;
+	Shape s;
+};
+
+struct Node
+{
+	Enemy1 data;
+	struct Node *next;
+};
+
 
 void spawnPlayer(Shape *p)
 {
@@ -52,68 +64,106 @@ void checkPlayerLocation(Shape *p)
 
 // =========================Enemy Functions =================================
 /*
-void removeEnemy(Shape *e, int *i)
-{
-	for(int j = 0; j < *i; j++){
-		cout << *i << endl;
-		e[j] = e[*i-1];
-		(*i)--;
-	}
-}
+   void removeEnemy(Shape *e, int *i)
+   {
+   for(int j = 0; j < *i; j++){
+   cout << *i << endl;
+   e[j] = e[*i-1];
+   (*i)--;
+   }
+   }
 
-void checkEnemyLocation(Shape *e, int *i)
-{	
-	for(int j = 0; j < *i; j++){
-		//cout << e[j].center.x << endl;
-		if(e[j].center.x < 0.0){
-			//cout << "true" << endl;
-			removeEnemy(e, i);
-		}
-	}
+   void checkEnemyLocation(Shape *e, int *i)
+   {	
+   for(int j = 0; j < *i; j++){
+//cout << e[j].center.x << endl;
+if(e[j].center.x < 0.0){
+//cout << "true" << endl;
+removeEnemy(e, i);
 }
-void spawnEnemy(int i, Shape *e)
-{
-	e->width = 18;
-	e->height = 18;
-	e->center.x = ((i+1) * 50) + 2000;
-	e->center.y = 900 - ((i+1) * 90);
+}
 }
 
 void moveEnemy(Shape *e)
 {
-	e->velocity.x = -3.0;
-	e->center.x += e->velocity.x;
+e->velocity.x = -3.0;
+e->center.x += e->velocity.x;
 }
 
-void subtractEnemyHealth(struct Node** head_ref, int damage){
-	enemy.health -= damage;
-	if(enemy.health <= 0){
-		removeEnemy(head_ref);
+void subtractEnemyHealth(struct Node* enemy, int damage)
+{
+enemy->data.health -= damage;
+if(enemy.health <= 0){
+removeEnemy(head_ref);
+}
+}
+
+void subtractPlayerHealth(Shape player, int damage)
+{
+player.health -= damage;
+if(player.health <= 0) {
+gameOver();
+}
+}
+
+*/
+
+void spawnEnemy(struct Node** head_ref, Enemy1 *enemy) 
+{
+	struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
+	new_node->data = *enemy;
+	if(head_ref != NULL) {
+		new_node->next = (*head_ref);
 	}
-}
-
-void subtractPlayerHealth(Shape player, int damage){
-	player.health -= damage;
-	if(player.health <= 0){
-		gameOver();
-	}
-}
-
-
-
-
-void spawnEnemy(struct Node** head_ref, Shape enemy){
-	Node* new_node = new Node();
-	new_node->data = enemy;
-	new_node->next = (*heard_ref);
 	(*head_ref) = new_node;
 }
-*/
-void removeEnemy(struct Node** head_ref){
+
+void setEnemySize(struct Node* head_ref, int i)
+{
+	head_ref->data.s.height = 18;
+	head_ref->data.s.width = 18;
+	head_ref->data.s.center.x = ((i+1) * 50) + 1500;
+	head_ref->data.s.center.y = 900 - ((i+1) * 90);
+}
+
+void printEnemy(struct Node* temp)
+{
+	float we[5];
+	float he[5];
+
+	for (int i = 0; i < 5; i++) {
+		glPushMatrix();
+		glColor3ub(190,150,10);
+		we[i] = temp->data.s.width;
+		he[i] = temp->data.s.height;
+		glTranslatef(temp->data.s.center.x,
+				temp->data.s.center.y, temp->data.s.center.z);
+		glBegin(GL_QUADS);
+		glVertex2i(-we[i],-he[i]);
+		glVertex2i(-we[i], he[i]);
+		glVertex2i( we[i], he[i]);
+		glVertex2i( we[i],-he[i]);
+		glEnd();
+		glPopMatrix();
+		temp = temp->next;
+	}
+}
+
+/*void moveEnemy(struct Node* enemy) 
+{
+	if(enemy !=  NULL){
+		//enemy->data.s.velocity.x = -3.0;
+		//enemy->data.s.center.x += enemy->data.s.velocity.x;
+	}
+}*/
+
+void removeEnemy(struct Node* enemy)
+{
 
 }
 
-void checkEnemyLocation(struct Node** head_ref, Shape enemy){
+void checkEnemyLocation(struct Node* enemy)
+{
 
 }
 
@@ -283,4 +333,3 @@ void set_to_non_blocking(const int sock)
 		exit(EXIT_FAILURE);
 	}
 }
-

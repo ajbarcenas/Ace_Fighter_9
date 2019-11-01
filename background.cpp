@@ -33,70 +33,70 @@ typedef double Vect[3];
 
 class Image {
 	public:
-	int width, height;
-	unsigned char *data;
-	~Image() { delete [] data; }
-	Image(const char *fname) {
-		if (fname[0] == '\0')
-			return;
-		//printf("fname **%s**\n", fname);
-		int ppmFlag = 0;
-		char name[40];
-		strcpy(name, fname);
-		int slen = strlen(name);
-		char ppmname[80];
-		if (strncmp(name+(slen-4), ".ppm", 4) == 0)
-			ppmFlag = 1;
-		if (ppmFlag) {
-			strcpy(ppmname, name);
-		} else {
-			name[slen-4] = '\0';
-			//printf("name **%s**\n", name);
-			sprintf(ppmname,"%s.ppm", name);
-			//printf("ppmname **%s**\n", ppmname);
-			char ts[100];
-			//system("convert eball.jpg eball.ppm");
-			sprintf(ts, "convert %s %s", fname, ppmname);
-			system(ts);
-		}
-		FILE *fpi = fopen(ppmname, "r");
-		if (fpi) {
-			char line[200];
-			fgets(line, 200, fpi);
-			fgets(line, 200, fpi);
-			//skip comments and blank lines
-			while (line[0] == '#' || strlen(line) < 2)
+		int width, height;
+		unsigned char *data;
+		~Image() { delete [] data; }
+		Image(const char *fname) {
+			if (fname[0] == '\0')
+				return;
+			//printf("fname **%s**\n", fname);
+			int ppmFlag = 0;
+			char name[40];
+			strcpy(name, fname);
+			int slen = strlen(name);
+			char ppmname[80];
+			if (strncmp(name+(slen-4), ".ppm", 4) == 0)
+				ppmFlag = 1;
+			if (ppmFlag) {
+				strcpy(ppmname, name);
+			} else {
+				name[slen-4] = '\0';
+				//printf("name **%s**\n", name);
+				sprintf(ppmname,"%s.ppm", name);
+				//printf("ppmname **%s**\n", ppmname);
+				char ts[100];
+				//system("convert eball.jpg eball.ppm");
+				sprintf(ts, "convert %s %s", fname, ppmname);
+				system(ts);
+			}
+			FILE *fpi = fopen(ppmname, "r");
+			if (fpi) {
+				char line[200];
 				fgets(line, 200, fpi);
-			sscanf(line, "%i %i", &width, &height);
-			fgets(line, 200, fpi);
-			//get pixel data
-			int n = width * height * 3;
-			data = new unsigned char[n];
-			for (int i=0; i<n; i++)
-				data[i] = fgetc(fpi);
-			fclose(fpi);
-		} else {
-		printf("ERROR opening image: %s\n",ppmname);
-			exit(0);
+				fgets(line, 200, fpi);
+				//skip comments and blank lines
+				while (line[0] == '#' || strlen(line) < 2)
+					fgets(line, 200, fpi);
+				sscanf(line, "%i %i", &width, &height);
+				fgets(line, 200, fpi);
+				//get pixel data
+				int n = width * height * 3;
+				data = new unsigned char[n];
+				for (int i=0; i<n; i++)
+					data[i] = fgetc(fpi);
+				fclose(fpi);
+			} else {
+				printf("ERROR opening image: %s\n",ppmname);
+				exit(0);
+			}
+			if(!ppmFlag)
+				unlink(ppmname);
 		}
-		if(!ppmFlag)
-			unlink(ppmname);
-	}
 };
 Image img[8] = { "./Images/MountainLayer.png",
-    "./Images/CloudLayer.png",
-    "./Images/AceFighter9.png",
-"./Images/Alexis.jpg",
-"./Images/freeRealEstate.jpg",
-"./Images/DiegoPic.jpg",
-"./Images/andrew.jpg",
-"./Images/PineTreeLayer.png"};
+	"./Images/CloudLayer.png",
+	"./Images/AceFighter9.png",
+	"./Images/Alexis.jpg",
+	"./Images/freeRealEstate.jpg",
+	"./Images/DiegoPic.jpg",
+	"./Images/andrew.jpg",
+	"./Images/PineTreeLayer.png"};
 
 class Texture {
 	public:
-	Image *backImage;
-	float xc[6];
-	float yc[6];
+		Image *backImage;
+		float xc[6];
+		float yc[6];
 };
 struct Vec {
 	float x,y,z;
@@ -115,12 +115,12 @@ struct Particle {
 	Vec Velocity;
 };
 
-/*struct Enemy {
+struct Enemy1 {
 	int health;
 	int damage;
 	int n = 0;
 	Shape s;
-}*/
+};
 
 struct Player {
 	int health; 
@@ -129,154 +129,159 @@ struct Player {
 };
 
 class Logo {
-public:
-	Vect pos;
-	Vect vel;
+	public:
+		Vect pos;
+		Vect vel;
 } logo;
 
 class Pictures {
-public: 
-	Vect pos;
-	Vect vel;
+	public: 
+		Vect pos;
+		Vect vel;
 } picture;
 
 class Picturetwo {
-public:
-	Vect pos;
-	Vect vel;
+	public:
+		Vect pos;
+		Vect vel;
 } picture2;
 
 class Picturethree {
-public:
-	Vect pos;
-	Vect vel;
+	public:
+		Vect pos;
+		Vect vel;
 } picture3;
 
 class Picturefour {
-public:
-	Vect pos;
-	Vect vel;
+	public:
+		Vect pos;
+		Vect vel;
 } picture4;
 
 class Global {
 	public:
-	int xres, yres;
-	GLuint mountainTexture;
-	GLuint cloudTexture;
-    GLuint cSilhouetteTexture;
-    GLuint pineTreeTexture;
-	GLuint pSilhouetteTexture;
-	Player player;
-	Texture tex;
-	Shape box;
-	GLuint logoTexture;
-	GLuint alexisTexId;
-	GLuint alonsoTexId;
-	GLuint diegoTexId;
-	GLuint andrewTexId;
-	int showLogo;
-//	int n = 0;
-	GLuint texid;
-	int showCredits, showHighScores;
-//	Shape enemy[5];
-	int HighScore;
-	Global() {
-		//Pictures pic;
-		xres=1920, yres=1080;
-		picture.pos[0] = 480, picture.pos[1] = 800;
-		picture2.pos[0] = 1440, picture2.pos[1] = 800;
-		picture3.pos[0] = 480, picture3.pos[1] = 300;
-		picture4.pos[0] = 1440, picture4.pos[1] = 300;
-		showCredits = 0;
-		showLogo = 0;
-		showHighScores = 0;
-		logo.pos[0] = 960;
-		logo.pos[1] = 540;
-		HighScore = 0;
-	}
+		int xres, yres;
+		GLuint mountainTexture;
+		GLuint cloudTexture;
+		GLuint cSilhouetteTexture;
+		GLuint pineTreeTexture;
+		GLuint pSilhouetteTexture;
+		Player player;
+		Texture tex;
+		Shape box;
+		GLuint logoTexture;
+		GLuint alexisTexId;
+		GLuint alonsoTexId;
+		GLuint diegoTexId;
+		GLuint andrewTexId;
+		int showLogo;
+		struct Node *head;
+		GLuint texid;
+		int showCredits, showHighScores;
+		Enemy1 enemy;
+		int HighScore;
+		Global() {
+			//Pictures pic;
+			xres=1920, yres=1080;
+			picture.pos[0] = 480, picture.pos[1] = 800;
+			picture2.pos[0] = 1440, picture2.pos[1] = 800;
+			picture3.pos[0] = 480, picture3.pos[1] = 300;
+			picture4.pos[0] = 1440, picture4.pos[1] = 300;
+			showCredits = 0;
+			showLogo = 0;
+			showHighScores = 0;
+			logo.pos[0] = 960;
+			logo.pos[1] = 540;
+			HighScore = 0;
+		}
 } g;
 
+struct Node 
+{ 
+	Enemy1 data; 
+	struct Node *next; 
+}; 
 
 class X11_wrapper {
 	private:
-	Display *dpy;
-	Window win;
-	GLXContext glc;
+		Display *dpy;
+		Window win;
+		GLXContext glc;
 	public:
-	X11_wrapper() {
-		GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-		//GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
-		setup_screen_res(1920, 1080);
-		dpy = XOpenDisplay(NULL);
-		if(dpy == NULL) {
-		printf("\n\tcannot connect to X server\n\n");
-		exit(EXIT_FAILURE);
-		}
-		Window root = DefaultRootWindow(dpy);
+		X11_wrapper() {
+			GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+			//GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
+			setup_screen_res(1920, 1080);
+			dpy = XOpenDisplay(NULL);
+			if(dpy == NULL) {
+				printf("\n\tcannot connect to X server\n\n");
+				exit(EXIT_FAILURE);
+			}
+			Window root = DefaultRootWindow(dpy);
 
-		XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
-		if(vi == NULL) {
-		printf("\n\tno appropriate visual found\n\n");
-		exit(EXIT_FAILURE);
+			XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
+			if(vi == NULL) {
+				printf("\n\tno appropriate visual found\n\n");
+				exit(EXIT_FAILURE);
+			}
+			Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
+			XSetWindowAttributes swa;
+			swa.colormap = cmap;
+			swa.event_mask =
+				ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
+				ButtonPressMask | ButtonReleaseMask |
+				StructureNotifyMask | SubstructureNotifyMask;
+			win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
+					vi->depth, InputOutput, vi->visual,
+					CWColormap | CWEventMask, &swa);
+			set_title();
+			glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
+			glXMakeCurrent(dpy, win, glc);
 		}
-		Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
-		XSetWindowAttributes swa;
-		swa.colormap = cmap;
-		swa.event_mask =
-		ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
-		ButtonPressMask | ButtonReleaseMask |
-		StructureNotifyMask | SubstructureNotifyMask;
-		win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
-			vi->depth, InputOutput, vi->visual,
-			CWColormap | CWEventMask, &swa);
-		set_title();
-		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
-		glXMakeCurrent(dpy, win, glc);
-	}
-	void cleanupXWindows() {
-		XDestroyWindow(dpy, win);
-		XCloseDisplay(dpy);
-	}
-	void setup_screen_res(const int w, const int h) {
-		g.xres = w;
-		g.yres = h;
-	}
-	void reshape_window(int width, int height) {
-		//window has been resized.
-		setup_screen_res(width, height);
-		glViewport(0, 0, (GLint)width, (GLint)height);
-		glMatrixMode(GL_PROJECTION); glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-		glOrtho(0, g.xres, 0, g.yres, -1, 1);
-		set_title();
-	}
-	void set_title() {
-		//Set the window title bar.
-		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "ACE FIGHTER 9 - BY GROUP #9");
-	}
-	bool getXPending() {
-		return XPending(dpy);
-	}
-	XEvent getXNextEvent() {
-		XEvent e;
-		XNextEvent(dpy, &e);
-		return e;
-	}
-	void swapBuffers() {
-		glXSwapBuffers(dpy, win);
-	}
-	void check_resize(XEvent *e) {
-		//The ConfigureNotify is sent by the
-		//server if the window is resized.
-		if (e->type != ConfigureNotify)
-		return;
-		XConfigureEvent xce = e->xconfigure;
-		if (xce.width != g.xres || xce.height != g.yres) {
-		//Window size did change.
-		reshape_window(xce.width, xce.height);
+		void cleanupXWindows() {
+			XDestroyWindow(dpy, win);
+			XCloseDisplay(dpy);
 		}
-	}
+		void setup_screen_res(const int w, const int h) {
+			g.xres = w;
+			g.yres = h;
+		}
+		void reshape_window(int width, int height) {
+			//window has been resized.
+			setup_screen_res(width, height);
+			glViewport(0, 0, (GLint)width, (GLint)height);
+			glMatrixMode(GL_PROJECTION); glLoadIdentity();
+			glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+			glOrtho(0, g.xres, 0, g.yres, -1, 1);
+			set_title();
+		}
+		void set_title() {
+			//Set the window title bar.
+			XMapWindow(dpy, win);
+			XStoreName(dpy, win, "ACE FIGHTER 9 - BY GROUP #9");
+		}
+		bool getXPending() {
+			return XPending(dpy);
+		}
+		XEvent getXNextEvent() {
+			XEvent e;
+			XNextEvent(dpy, &e);
+			return e;
+		}
+		void swapBuffers() {
+			glXSwapBuffers(dpy, win);
+		}
+		void check_resize(XEvent *e) {
+			//The ConfigureNotify is sent by the
+			//server if the window is resized.
+			if (e->type != ConfigureNotify)
+				return;
+			XConfigureEvent xce = e->xconfigure;
+			if (xce.width != g.xres || xce.height != g.yres) {
+				//Window size did change.
+				reshape_window(xce.width, xce.height);
+			}
+		}
 } x11;
 
 void init_opengl(void);
@@ -285,9 +290,11 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Shape *p);
-extern void spawnEnemy(int i, Shape *e);
+extern void spawnEnemy(struct Node** head_ref, Enemy1 *enemy);
+extern void setEnemySize(struct Node* head_ref, int i);
+extern void printEnemy(struct Node* temp);
 extern void checkPlayerLocation(Shape *p);
-extern void moveEnemy(Shape *e);
+extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(Shape *e, int *i);
 extern void removeEnemy(Shape *e, int *i);
 extern void showCreditScreen();
@@ -317,24 +324,24 @@ int main()
 {
 	init_opengl();
 	int done=0;
-//	g.n = 0;
-//	cout << g.n << endl;
+	g.enemy.n = 0;
+	g.head = NULL;
 	while (!done) {
-	while (x11.getXPending()) {
-		XEvent e = x11.getXNextEvent();
-		x11.check_resize(&e);
-		check_mouse(&e);
-		done = check_keys(&e);
-	}
-    //makeConfetti();
-	physics();
-    rainMovement();
-    confettiMovement();
-    smokeMovement();
-	bulletMovement();
-	eLex.testMovement();
-    render();
-	x11.swapBuffers();
+		while (x11.getXPending()) {
+			XEvent e = x11.getXNextEvent();
+			x11.check_resize(&e);
+			check_mouse(&e);
+			done = check_keys(&e);
+		}
+		//makeConfetti();
+		physics();
+		rainMovement();
+		confettiMovement();
+		smokeMovement();
+		bulletMovement();
+		eLex.testMovement();
+		render();
+		x11.swapBuffers();
 	}
 	return 0;
 }
@@ -378,9 +385,9 @@ void init_opengl(void)
 	glClear(GL_DEPTH_BUFFER_BIT);
 	//Do this to allow texture maps
 	glEnable(GL_TEXTURE_2D);
-    glClearDepth(1.0);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+	glClearDepth(1.0);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 	initialize_fonts();
 	//
 	//load the images file into a ppm structure.
@@ -389,8 +396,8 @@ void init_opengl(void)
 	//create opengl texture elements
 	glGenTextures(1, &g.mountainTexture);
 	glGenTextures(1, &g.cloudTexture);
-    glGenTextures(1, &g.cSilhouetteTexture);
-    glGenTextures(1, &g.pineTreeTexture);
+	glGenTextures(1, &g.cSilhouetteTexture);
+	glGenTextures(1, &g.pineTreeTexture);
 	glGenTextures(1, &g.pSilhouetteTexture);
 	glGenTextures(1, &g.logoTexture);
 	glGenTextures(1, &g.alexisTexId);
@@ -408,7 +415,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+			GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 	//-------------------------------------------------------------------------
 	//CloudLayer
 	//
@@ -430,35 +437,35 @@ void init_opengl(void)
 
 	unsigned char *cSilhouetteData = buildAlphaData(&img[1]);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wc, hc, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, cSilhouetteData);
+			GL_RGBA, GL_UNSIGNED_BYTE, cSilhouetteData);
 	free(cSilhouetteData);
-    //--------------------------------------------------------------------------
-    //PineTreeLayer
-    //
-    int wp = img[7].width;
-    int hp = img[7].height;
+	//--------------------------------------------------------------------------
+	//PineTreeLayer
+	//
+	int wp = img[7].width;
+	int hp = img[7].height;
 
-    glBindTexture(GL_TEXTURE_2D, g.pineTreeTexture);
+	glBindTexture(GL_TEXTURE_2D, g.pineTreeTexture);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, wp, hp, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, wp, hp, 0,
+			GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
 
-    //Silhouette
+	//Silhouette
 
-    glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *pSilhouetteData = buildAlphaData(&img[7]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wp, hp, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
-    free(pSilhouetteData);
+	unsigned char *pSilhouetteData = buildAlphaData(&img[7]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wp, hp, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
+	free(pSilhouetteData);
 
 	//Change view area of image
 	//mountain imgae
-    g.tex.xc[0] = 0.0;
+	g.tex.xc[0] = 0.0;
 	g.tex.xc[1] = 1.0;
 	g.tex.yc[0] = 0.0;
 	g.tex.yc[1] = 1.0;
@@ -467,11 +474,11 @@ void init_opengl(void)
 	g.tex.xc[3] = 1.0;
 	g.tex.yc[2] = 0.0;
 	g.tex.yc[3] = 1.0;
-    //pine tree image
-    g.tex.xc[4] = 0.0;
-    g.tex.xc[5] = 1.0;
-    g.tex.yc[4] = 0.0;
-    g.tex.yc[5] = 1.0;
+	//pine tree image
+	g.tex.xc[4] = 0.0;
+	g.tex.xc[5] = 1.0;
+	g.tex.yc[4] = 0.0;
+	g.tex.yc[5] = 1.0;
 
 	// Logo Picture
 	w = img[2].width;
@@ -480,7 +487,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+			GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
 
 	// Alexis picture
 	w = img[3].width;
@@ -489,7 +496,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
+			GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
 
 	// Alonso picture
 	w = img[4].width;
@@ -498,7 +505,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[4].data);
+			GL_RGB, GL_UNSIGNED_BYTE, img[4].data);
 
 	// Diego picture
 	w = img[5].width;
@@ -507,8 +514,8 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[5].data);
-	
+			GL_RGB, GL_UNSIGNED_BYTE, img[5].data);
+
 	// Diego picture
 	w = img[6].width;
 	h = img[6].height;
@@ -516,7 +523,7 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[6].data);
+			GL_RGB, GL_UNSIGNED_BYTE, img[6].data);
 }
 
 void check_mouse(XEvent *e)
@@ -531,24 +538,24 @@ void check_mouse(XEvent *e)
 	//
 	//Weed out non-mouse events
 	if (e->type != ButtonRelease &&
-		e->type != ButtonPress &&
-		e->type != MotionNotify) {
-	//This is not a mouse event that we care about.
-			return;
+			e->type != ButtonPress &&
+			e->type != MotionNotify) {
+		//This is not a mouse event that we care about.
+		return;
 	}	
 	if (e->type == ButtonRelease) {
 		return;
 	}
 	if (e->type == ButtonPress) {
-	cout << e->xbutton.button << endl;
-	if (e->xbutton.button== 1) {
-	}
-	if (e->xbutton.button== 3) {
-	   }
+		cout << e->xbutton.button << endl;
+		if (e->xbutton.button== 1) {
+		}
+		if (e->xbutton.button== 3) {
+		}
 	}
 	if (e->type == MotionNotify) {
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
-		//Mouse moved
+			//Mouse moved
 			savex = e->xbutton.x;
 			savey = e->xbutton.y;
 			int y = g.yres - e->xbutton.y;
@@ -563,62 +570,61 @@ int check_keys(XEvent *e)
 	//Was there input from the keyboard?
 	Shape *p = &g.player.s;
 	if (e->type == KeyPress) {
-	int key = XLookupKeysym(&e->xkey, 0);
-	switch(key) {
-		case XK_t:
-			abG.incrementScore();
-			authScores();
-			break;
-		case XK_h:
-			//g.showHighScores ^= 1;
-			abG.showHighScores();
-			break;
-		case XK_c:
-			abG.showCredits();
-			//g.showCredits ^= 1;
-			g.showLogo ^= 1;
-			break;
-        case XK_r:
-            rainDrops ^= 1;
-            break;
-		case XK_s:
-			abG.showStartScreen();
-			break;
-        case XK_space:
-            makeBullet(p->center.x, p->center.y);
-            break;
-		case XK_Escape:
+		int key = XLookupKeysym(&e->xkey, 0);
+		switch(key) {
+			case XK_t:
+				abG.incrementScore();
+				authScores();
+				break;
+			case XK_h:
+				//g.showHighScores ^= 1;
+				abG.showHighScores();
+				break;
+			case XK_c:
+				abG.showCredits();
+				//g.showCredits ^= 1;
+				g.showLogo ^= 1;
+				break;
+			case XK_r:
+				rainDrops ^= 1;
+				break;
+			case XK_s:
+				abG.showStartScreen();
+				break;
+			case XK_space:
+				makeBullet(p->center.x, p->center.y);
+				break;
+			case XK_Escape:
+				return 1;
+		}
+		if (key == XK_Escape) {
 			return 1;
+		}
 	}
-	if (key == XK_Escape) {
-		return 1;
-	}
-}
 	return 0;
 }
 
 void physics()
 {
 	//move the background
-    //mountain layer
+	//mountain layer
 	g.tex.xc[0] += 0.001;
 	g.tex.xc[1] += 0.001;
-    //cloud layer
+	//cloud layer
 	g.tex.xc[2] += 0.005;
 	g.tex.xc[3] += 0.005;
-    //pine tree layer
-   	g.tex.xc[4] += 0.008;
-    g.tex.xc[5] += 0.008;
-    
-   /* int *n = &g.n;
-    Shape *e = g.enemy;
-    
-	for(int i = 0; i < 5; i++) {
-		checkEnemyLocation(e, n);		
-		moveEnemy(&g.enemy[i]);
-//		cout << *n << endl;
-	}
-*/    
+	//pine tree layer
+	g.tex.xc[4] += 0.008;
+	g.tex.xc[5] += 0.008;
+	
+	/*
+		Enemy1 *e = &g.enemy;
+		struct Node* temp = g.head; 
+		for(int i = 0; i < 1; i++) {		
+			moveEnemy(temp);
+			temp = temp->next;
+		}
+		*/
 }
 
 void render()
@@ -638,24 +644,24 @@ void render()
 	glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, g.mountainTexture);
 	glBegin(GL_QUADS);
-		glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(0, 0);
-		glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(0, g.yres);
-		glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
-		glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
+	glTexCoord2f(g.tex.xc[0], g.tex.yc[1]); glVertex2i(0, 0);
+	glTexCoord2f(g.tex.xc[0], g.tex.yc[0]); glVertex2i(0, g.yres);
+	glTexCoord2f(g.tex.xc[1], g.tex.yc[0]); glVertex2i(g.xres, g.yres);
+	glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
-    
-    if (rainDrops){
-        makeRain();
-        makeRain();
-        makeRain();
-        makeRain();
-        makeRain();
-        makeRain();
-        printRain();
-    }
-    
-    //Cloud Layer 
+
+	if (rainDrops){
+		makeRain();
+		makeRain();
+		makeRain();
+		makeRain();
+		makeRain();
+		makeRain();
+		printRain();
+	}
+
+	//Cloud Layer 
 	// Done by Alonso Gomez
 
 	glBindTexture(GL_TEXTURE_2D, g.cSilhouetteTexture);
@@ -664,29 +670,29 @@ void render()
 	glColor4ub(255, 255, 255, 255);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(g.tex.xc[2], g.tex.yc[3]); glVertex2i(0, 0);
-		glTexCoord2f(g.tex.xc[2], g.tex.yc[2]); glVertex2i(0, g.yres);
-		glTexCoord2f(g.tex.xc[3], g.tex.yc[2]); glVertex2i(g.xres, g.yres);
-		glTexCoord2f(g.tex.xc[3], g.tex.yc[3]); glVertex2i(g.xres, 0);
+	glTexCoord2f(g.tex.xc[2], g.tex.yc[3]); glVertex2i(0, 0);
+	glTexCoord2f(g.tex.xc[2], g.tex.yc[2]); glVertex2i(0, g.yres);
+	glTexCoord2f(g.tex.xc[3], g.tex.yc[2]); glVertex2i(g.xres, g.yres);
+	glTexCoord2f(g.tex.xc[3], g.tex.yc[3]); glVertex2i(g.xres, 0);
 	glEnd();
 	glDisable(GL_ALPHA_TEST);
 	glBindTexture(GL_TEXTURE_2D, 0); 
-	
-    //Pine Tree Layer
-    //Done by Alonso Gomez
 
-    glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
-    glBegin(GL_QUADS);
-        glTexCoord2f(g.tex.xc[4], g.tex.yc[5]); glVertex2i(0, 0);
-        glTexCoord2f(g.tex.xc[4], g.tex.yc[4]); glVertex2i(0, g.yres);
-        glTexCoord2f(g.tex.xc[5], g.tex.yc[4]); glVertex2i(g.xres, g.yres);
-        glTexCoord2f(g.tex.xc[5], g.tex.yc[5]); glVertex2i(g.xres, 0);
-    glEnd();
-    glDisable(GL_ALPHA_TEST);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    //-------------------------------------------------------------------------
+	//Pine Tree Layer
+	//Done by Alonso Gomez
+
+	glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glBegin(GL_QUADS);
+	glTexCoord2f(g.tex.xc[4], g.tex.yc[5]); glVertex2i(0, 0);
+	glTexCoord2f(g.tex.xc[4], g.tex.yc[4]); glVertex2i(0, g.yres);
+	glTexCoord2f(g.tex.xc[5], g.tex.yc[4]); glVertex2i(g.xres, g.yres);
+	glTexCoord2f(g.tex.xc[5], g.tex.yc[5]); glVertex2i(g.xres, 0);
+	glEnd();
+	glDisable(GL_ALPHA_TEST);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	//-------------------------------------------------------------------------
 
 	//creating player
 	Shape *p = &g.player.s;
@@ -703,62 +709,49 @@ void render()
 	float w = p->width;
 	float h = p->height;
 	makeSmoke(p->center.x, p->center.y);
-    makeSmoke(p->center.x, p->center.y);
-    printSmoke();
-    eLex.makeTest(1920, 610);
-    eLex.printTest();
-    glColor3ub(190, 140, 10);
-    glTranslatef(p->center.x, p->center.y, p->center.z);
+	makeSmoke(p->center.x, p->center.y);
+	printSmoke();
+	eLex.makeTest(1920, 610);
+	eLex.printTest();
+	glColor3ub(190, 140, 10);
+	glTranslatef(p->center.x, p->center.y, p->center.z);
 	glBegin(GL_QUADS);
-		glVertex2i(-w,-h);
-		glVertex2i(-w, h);
-		glVertex2i( w, h);
-		glVertex2i( w,-h);
+	glVertex2i(-w,-h);
+	glVertex2i(-w, h);
+	glVertex2i( w, h);
+	glVertex2i( w,-h);
 	glEnd();
 	glPopMatrix();
-    printBullet();
-    
-    glPushMatrix();
-    cubePower();
-    glPopMatrix();
-    
-    //creating enemies
-   /* 
-	while( g.n < 5) {
-		spawnEnemy(g.n, &g.enemy[g.n]);
-		g.n++;
+	printBullet();
+
+	glPushMatrix();
+	cubePower();
+	glPopMatrix();
+
+	//creating enemies
+	Enemy1 *e = &g.enemy;
+	struct Node* temp = g.head;
+	while( e->n < 5) {
+		spawnEnemy(&g.head, e);
+		setEnemySize(g.head,e->n);
+		e->n++;
 	}
-	float we[5];
-	float he[5];
-	for (int i = 0; i < 5; i++) {
-		glPushMatrix();
-		glColor3ub(190,150,10);
-		we[i] = g.enemy[i].width;
-		he[i] = g.enemy[i].height;
-		glTranslatef(g.enemy[i].center.x, 
-		g.enemy[i].center.y, g.enemy[i].center.z);
-		glBegin(GL_QUADS);
-			glVertex2i(-we[i],-he[i]);
-			glVertex2i(-we[i], he[i]);
-			glVertex2i( we[i], he[i]);
-			glVertex2i( we[i],-he[i]);
-		glEnd();
-		glPopMatrix();
-	}
-    */
-    //--------------------------------------------------------------------------
-    //Credits Screen
-    //
+
+	printEnemy(temp);
+
+	//--------------------------------------------------------------------------
+	//Credits Screen
+	//
 
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
 	if (abG.showStart) {
 		abG.colorBlendBorder(980, 1920, 960,540,230,0,0,
-			25,255,255,
-			34,204,0,
-			204,230,255);
+				25,255,255,
+				34,204,0,
+				204,230,255);
 		abG.drawButton(960, 800);
-        abG.drawButton(960, 600);
+		abG.drawButton(960, 600);
 		abG.drawButton(960, 400);
 		abG.drawButton(960, 200);
 		abG.printTempScreen(r);	
@@ -790,10 +783,10 @@ void render()
 		ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
 		r.bot = 145, r.left = 1500;
 		ggprint16(&r, 16, 0xcf13ac,
-			"Andrew Oliveros- HUD Creation/Sprites/Menu");
+				"Andrew Oliveros- HUD Creation/Sprites/Menu");
 	}
 	if (abG.showHigh) {
-	    	showCreditsBorder(1920, 1080, 960, 540);
+		showCreditsBorder(1920, 1080, 960, 540);
 		abG.printCredBoxes(960, 540);
 		showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
 		abG.colorBlendBorder(200, 200, 960,540,0,0,0,
@@ -802,10 +795,10 @@ void render()
 				255,255,255);
 		abG.printHighScore(r);
 		abG.printTempScores(r);
-        makeConfetti();
-        printConfetti();
-	//	abG.drawTriangle(20,10,600,600,255,2,2);	
-	//	authScores();
+		makeConfetti();
+		printConfetti();
+		//	abG.drawTriangle(20,10,600,600,255,2,2);	
+		//	authScores();
 	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
@@ -815,6 +808,6 @@ void render()
 	r.center = 0;
 	ggprint16(&r, 16, 0x00ffff44, "Press C to go to credits");
 	ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
-    ggprint16(&r, 16, 0x00ffff44, "Press R for rain");
+	ggprint16(&r, 16, 0x00ffff44, "Press R for rain");
 }
 

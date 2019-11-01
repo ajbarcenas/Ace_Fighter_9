@@ -314,6 +314,54 @@ void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 			
 }
 
+void ABarGlobal::condenseCreds()
+{
+	showCreditsBorder(1920, 1080, 960, 540);
+	printCredBoxes(960, 540);
+	showCreditsBorder(180, 180, 960, 540, 14, 14, 138 );
+	showCreditsBorder(170, 170, 960, 540, 21, 21, 237);
+	showCreditsBorder(160, 160, 960, 540, 47, 47, 237);
+	showCreditsBorder(150, 150, 960, 540, 69, 80, 237);
+	showCreditsBorder(140, 140, 960, 540, 39, 123, 232);
+	showCreditsBorder(130, 130, 960, 540);
+	showCreditsBorder(130, 130, 480, 800);
+	showCreditsBorder(130, 130, 1440, 800);
+	showCreditsBorder(130, 130, 480, 300);
+	showCreditsBorder(130, 130, 1440, 300);
+	printAlexisB(r);
+	glColor3f(1.0, 1.0, 1.0);
+	r.bot = 145, r.left = 520;
+	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
+	r.bot = 145, r.left = 1500;
+	ggprint16(&r, 16, 0xcf13ac,
+		"Andrew Oliveros- HUD Creation/Sprites/Menu");
+}
+
+void ABarGlobal::condenseHigh()
+{
+    	showCreditsBorder(1920, 1080, 960, 540);
+	printCredBoxes(960, 540);
+	showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
+	colorBlendBorder(200, 200, 960,540,0,0,0,
+			255,255,255,
+			0,0,0,
+			255,255,255);
+	printHighScore(r);
+	printTempScores(r);
+}
+
+void ABarGlobal::condenseStart()
+{
+	colorBlendBorder(980, 1920, 960,540,230,0,0,
+			25,255,255,
+			34,204,0,
+			204,230,255);
+	drawButton(960, 800);
+	drawButton(960, 600);
+	drawButton(960, 400);
+	drawButton(960, 200);
+	printTempScreen(r);	
+}
 void Enemy::makeTest()
 {
 	if (n >= 5)

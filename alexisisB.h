@@ -111,6 +111,9 @@ class ABarGlobal {
 				int rColor2, int gColor2, int bColor2,
 				int rColor3, int gColor3, int bColor3,
 				int rColor4, int gColor4, int bColor4);
+		void condenseCreds();
+		void condenseHigh();
+		void condenseStart();
 };
 
 void printAlexisB(Rect r);

@@ -143,7 +143,7 @@ void printEnemy(struct Node* temp)
 		glVertex2i(-we[i], he[i]);
 		glVertex2i( we[i], he[i]);
 		glVertex2i( we[i],-he[i]);
-		glEnd();
+		glEnd();  
 		glPopMatrix();
 		temp = temp->next;
 	}

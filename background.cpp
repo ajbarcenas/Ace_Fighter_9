@@ -733,7 +733,8 @@ void render()
 	struct Node* temp = g.head;
 	while( e->n < 5) {
 		spawnEnemy(&g.head, e);
-		setEnemySize(g.head,e->n);
+		temp = g.head;
+		setEnemySize(temp,e->n);
 		e->n++;
 	}
 

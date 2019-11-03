@@ -321,6 +321,8 @@ int main()
     smokeMovement();
 	bulletMovement();
 	eLex.testMovement();
+	eLex.bossMovement();
+	eLex.bulletMovement();
     render();
 	x11.swapBuffers();
 	}
@@ -528,11 +530,14 @@ void check_mouse(XEvent *e)
 		return;
 	}
 	if (e->type == ButtonPress) {
-	cout << e->xbutton.button << endl;
-	if (e->xbutton.button== 1) {
-	}
-	if (e->xbutton.button== 3) {
-	   }
+		//cout << e->xbutton.button << endl;
+			if (e->xbutton.button== 1) {
+				int q = g.yres - e->xbutton.y;
+				cout << "test: " << e->xbutton.x << " " << q << endl;
+
+			}
+			if (e->xbutton.button== 3) {
+			}
 	}
 	if (e->type == MotionNotify) {
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
@@ -745,6 +750,12 @@ void render()
     //enemies
     eLex.makeTest();
     eLex.printTest();
+    
+    eLex.makeBoss(1850, 610);
+    eLex.printBoss();
+
+    eLex.makeEBullet(eLex.bossX - 100, eLex.bossY);
+    eLex.printEBullet();
     glColor3ub(190, 140, 10);
     glTranslatef(p->center.x, p->center.y, p->center.z);
 	glBegin(GL_QUADS);
@@ -793,59 +804,21 @@ void render()
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);
 	if (abG.showStart) {
-		abG.colorBlendBorder(980, 1920, 960,540,230,0,0,
-			25,255,255,
-			34,204,0,
-			204,230,255);
-		abG.drawButton(960, 800);
-        abG.drawButton(960, 600);
-		abG.drawButton(960, 400);
-		abG.drawButton(960, 200);
-		abG.printTempScreen(r);	
+		abG.condenseStart();	
 	}
 	if (abG.showCreds) {
-		showCreditsBorder(1920, 1080, 960, 540);
-		abG.printCredBoxes(960, 540);
-		showCreditsBorder(180, 180, 960, 540, 14, 14, 138 );
-		showCreditsBorder(170, 170, 960, 540, 21, 21, 237);
-		showCreditsBorder(160, 160, 960, 540, 47, 47, 237);
-		showCreditsBorder(150, 150, 960, 540, 69, 80, 237);
-		showCreditsBorder(140, 140, 960, 540, 39, 123, 232);
-		showCreditsBorder(130, 130, 960, 540);
-		showCreditsBorder(130, 130, 480, 800);
-		showCreditsBorder(130, 130, 1440, 800);
-		showCreditsBorder(130, 130, 480, 300);
-		showCreditsBorder(130, 130, 1440, 300);
+		abG.condenseCreds();
 		abG.printPicture(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
 		abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
 		abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
 		abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
 		abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
-		printAlexisB(r);
-		glColor3f(1.0, 1.0, 1.0);
 		showAlonsoText(r);
-		glColor3f(1.0, 1.0, 1.0);
-		//abG.printAceFighter9(r);
-		r.bot = 145, r.left = 520;
-		ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
-		r.bot = 145, r.left = 1500;
-		ggprint16(&r, 16, 0xcf13ac,
-			"Andrew Oliveros- HUD Creation/Sprites/Menu");
 	}
 	if (abG.showHigh) {
-	    	showCreditsBorder(1920, 1080, 960, 540);
-		abG.printCredBoxes(960, 540);
-		showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
-		abG.colorBlendBorder(200, 200, 960,540,0,0,0,
-				255,255,255,
-				0,0,0,
-				255,255,255);
-		abG.printHighScore(r);
-		abG.printTempScores(r);
-        makeConfetti();
-        printConfetti();
-	//	abG.drawTriangle(20,10,600,600,255,2,2);	
-	//	authScores();
+		abG.condenseHigh();
+        	makeConfetti();
+        	printConfetti();
 	}
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_2D);

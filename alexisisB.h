@@ -21,6 +21,7 @@ be receiving updates.
 #include <GL/glx.h>
 #include <stdio.h>
 #include <math.h>
+#include <unistd.h>
 const int MAX = 3000;
 const float GF = 0.0;
 
@@ -65,6 +66,17 @@ class Enemy {
 		int enemyX[5];
 		int enemyY[5];
 		int n = 0;
+		int m = 0;
+		int o = 0;
+		Dot boss[1];
+		void makeBoss(int x, int y);
+		void bossMovement();
+		void printBoss();
+		int bossX, bossY;
+		void makeEBullet(int x, int y);
+		void bulletMovement();
+		void printEBullet();
+		Dot bullets[20];
 		void makeTest();
 		void testMovement();
 		void printTest();
@@ -99,6 +111,9 @@ class ABarGlobal {
 				int rColor2, int gColor2, int bColor2,
 				int rColor3, int gColor3, int bColor3,
 				int rColor4, int gColor4, int bColor4);
+		void condenseCreds();
+		void condenseHigh();
+		void condenseStart();
 };
 
 void printAlexisB(Rect r);

@@ -297,6 +297,7 @@ extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
 extern int authScores();
+extern void hpDisplay();
 /*
    void initSound();
    void soundOneShot();
@@ -725,7 +726,8 @@ void render()
 {
     extern ABarGlobal abG;
     Rect r;
-
+    //hpDisplay();
+    
     //All of these scrolling background layers were done by Alonso Gomez
     // 
     //Background Layers

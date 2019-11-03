@@ -120,6 +120,7 @@ struct Enemy1 {
 	int damage;
 	int n = 0;
 	Shape s;
+	bool removeEnemy = false;
 };
 
 struct Player {
@@ -290,13 +291,13 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Shape *p);
+extern void checkPlayerLocation(Shape *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 *enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void printEnemy(struct Node* temp);
-extern void checkPlayerLocation(Shape *p);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(Shape *e, int *i);
-extern void removeEnemy(Shape *e, int *i);
+extern void checkEnemyLocation(struct Node* enemy, bool removeEnemy);
+extern void removeEnemy(struct Node* head, struct Node* head_ref, struct Node* enemy);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -617,14 +618,20 @@ void physics()
 	g.tex.xc[4] += 0.008;
 	g.tex.xc[5] += 0.008;
 	
-	/*
-		Enemy1 *e = &g.enemy;
-		struct Node* temp = g.head; 
-		for(int i = 0; i < 1; i++) {		
+	Enemy1 *e = &g.enemy;
+	struct Node* temp = g.head; 
+	for(int i = 0; i < e->n; i++) {		
+		if(temp != NULL) {
 			moveEnemy(temp);
+			checkEnemyLocation(temp,temp->data.removeEnemy);
+			if(temp->data.removeEnemy){
+				struct Node* head_ref = g.head;
+			//	removeEnemy(g.head, head_ref, temp);
+			}
 			temp = temp->next;
 		}
-		*/
+	}
+		
 }
 
 void render()

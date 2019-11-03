@@ -37,6 +37,7 @@ struct Enemy1 {
 	int damage;
 	int n = 0;
 	Shape s;
+	bool removeEnemy = false;
 };
 
 struct Node
@@ -52,6 +53,11 @@ void spawnPlayer(Shape *p)
 	p->height = 25;
 	p->center.x = 200;
 	p->center.y = 570;
+}
+
+void drawPlayer()
+{
+
 }
 
 void checkPlayerLocation(Shape *p)
@@ -82,12 +88,6 @@ if(e[j].center.x < 0.0){
 removeEnemy(e, i);
 }
 }
-}
-
-void moveEnemy(Shape *e)
-{
-e->velocity.x = -3.0;
-e->center.x += e->velocity.x;
 }
 
 void subtractEnemyHealth(struct Node* enemy, int damage)
@@ -149,22 +149,37 @@ void printEnemy(struct Node* temp)
 	}
 }
 
-/*void moveEnemy(struct Node* enemy) 
+void moveEnemy(struct Node* enemy) 
 {
-	if(enemy !=  NULL){
-		//enemy->data.s.velocity.x = -3.0;
-		//enemy->data.s.center.x += enemy->data.s.velocity.x;
-	}
-}*/
-
-void removeEnemy(struct Node* enemy)
-{
-
+	enemy->data.s.velocity.x = -3.0;
+	enemy->data.s.center.x += enemy->data.s.velocity.x;
 }
 
-void checkEnemyLocation(struct Node* enemy)
+void removeEnemy(struct Node* head, struct Node* head_ref, struct Node* enemy)
 {
+	for(int i = 0; i < 4; i++){
+		if(head == enemy){
+			head = head->next;
+			return;	
+		}
+		else if(head_ref->next == enemy) {
+			if(head_ref->next->next != NULL) {
+				head_ref->next = head_ref->next->next;
+				enemy = head_ref->next;
+			}
+			else{
+				enemy = head_ref;
+				enemy->next = NULL;
+			}
+		}
+	}	
+}
 
+void checkEnemyLocation(struct Node* enemy, bool removeEnemy)
+{
+	if(enemy->data.s.center.x < 0) {
+		enemy->data.removeEnemy = true;
+	}
 }
 
 void ShowDiegosPicture(int x, int y, GLuint textid)
@@ -289,8 +304,6 @@ int authScores()
 	SSL_CTX_free(ctx);
 	return 0;
 }
-
-
 
 void show_cert_data(SSL *ssl, BIO *outbio, const char *hostname)
 {

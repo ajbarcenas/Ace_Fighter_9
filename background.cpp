@@ -88,20 +88,21 @@ class Image {
     }
 };
 
-Image img[8] = { "./Images/MountainLayer.png",
+Image img[9] = { "./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
                  "./Images/freeRealEstate.jpg",
                  "./Images/DiegoPic.jpg",
                  "./Images/andrew.jpg",
-                 "./Images/PineTreeLayer.png"};
+                 "./Images/PineTreeLayer.png",
+                 "./Images/PlayerPlane.png"};
 
 class Texture {
 public:
     Image *backImage;
-    float xc[6];
-    float yc[6];
+    float xc[8];
+    float yc[8];
 };
 
 struct Vec {
@@ -179,6 +180,8 @@ public:
     GLuint cSilhouetteTexture;
     GLuint pineTreeTexture;
     GLuint pSilhouetteTexture;
+    GLuint playerTexture;
+    GLuint playerSilhouetteTexture;
     Shape player;
     Texture tex;
     Shape box;
@@ -676,6 +679,10 @@ void soundOneShot()
     alSourcei(s.alSourceOneShot, AL_LOOPING, AL_TRUE);
 
     alSourcePlay(s.alSourceOneShot);
+}
+
+int check_keys(XEvent *e)
+{
     //Was there input from the keyboard?
     Shape *p = &g.player;
     if (e->type == KeyPress) {

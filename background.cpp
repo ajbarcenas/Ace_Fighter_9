@@ -707,7 +707,7 @@ void physics()
                         moveEnemy(temp);
                         checkEnemyLocation(temp,temp->data.removeEnemy);
                         if(temp->data.removeEnemy){
-                                struct Node* head_ref = g.head;
+                                //struct Node* head_ref = g.head;
                         //      removeEnemy(g.head, head_ref, temp);
                         }
                         temp = temp->next;

@@ -21,7 +21,8 @@ be receiving updates.
 #include <GL/glx.h>
 #include <stdio.h>
 #include <math.h>
-const int MAX = 3000;
+#include <unistd.h>
+const int MAXENEMIES = 5;
 const float GF = 0.0;
 
 //New vector for hitboxes
@@ -61,11 +62,26 @@ struct Dot {
 class Enemy {
 	public:
 		
-		Dot test[MAX];
-		int enemyX[5];
-		int enemyY[5];
-		int n = 0;
-		void makeTest(int x, int y);
+		Dot test[MAXENEMIES];
+        void deleteEnemy(int i);
+        int getEX(int i);
+        int getEY(int i);
+		int enemyX[MAXENEMIES];
+		int enemyY[MAXENEMIES];
+		int numEnemy = 0;
+        int getNumEnemy();
+		int m = 0;
+		int o = 0;
+		Dot boss[1];
+		void makeBoss(int x, int y);
+		void bossMovement();
+		void printBoss();
+		int bossX, bossY;
+		void makeEBullet(int x, int y);
+		void bulletMovement();
+		void printEBullet();
+		Dot bullets[20];
+		void makeTest();
 		void testMovement();
 		void printTest();
 		bool increasing = true;
@@ -84,7 +100,7 @@ class ABarGlobal {
 		void printPicture(double x, double y, double z, GLuint texturecode);
 		void printCredBoxes(int x_pos, int y_pos);
 		void printHighScore(Rect r);
-		void incrementScore();
+		void incrementScore(int points);
 		void showHighScores();
 		void showCredits();
 		void showStartScreen();
@@ -99,6 +115,9 @@ class ABarGlobal {
 				int rColor2, int gColor2, int bColor2,
 				int rColor3, int gColor3, int bColor3,
 				int rColor4, int gColor4, int bColor4);
+		void condenseCreds();
+		void condenseHigh();
+		void condenseStart();
 };
 
 void printAlexisB(Rect r);

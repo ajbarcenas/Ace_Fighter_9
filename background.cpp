@@ -118,6 +118,26 @@ struct Particle {
     Vec Velocity;
 };
 
+struct Enemy1 {
+	int health;
+	int damage;
+	int n = 0;
+	Shape s;
+	bool removeEnemy = false;
+};
+
+struct Player {
+	int health; 
+	int damage;
+	Shape s;
+};
+
+struct Node {
+    Enemy1 data;
+    struct Node* next;
+};
+
+
 class Logo {
 public:
     Vect pos;
@@ -166,9 +186,10 @@ public:
     GLuint andrewTexId;
     int showLogo;
     int n = 0;
+    Enemy1 enemy;
+    struct Node* head = NULL;
     GLuint texid;
     int showCredits, showHighScores;
-    Shape enemy[5];
     int HighScore;
     Global() {
         //Pictures pic;
@@ -273,11 +294,13 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Shape *p);
-extern void spawnEnemy(int i, Shape *e);
 extern void checkPlayerLocation(Shape *p);
-extern void moveEnemy(Shape *e);
-extern void checkEnemyLocation(Shape *e, int *i);
-extern void removeEnemy(Shape *e, int *i);
+extern void spawnEnemy(struct Node** head_ref, Enemy1 *enemy);
+extern void setEnemySize(struct Node* head_ref, int i);
+extern void printEnemy(struct Node* temp);
+extern void moveEnemy(struct Node* enemy);
+extern void checkEnemyLocation(struct Node* enemy, bool removeEnemy);
+extern void removeEnemy(struct Node* head, struct Node* head_ref, struct Node* enemy);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -443,10 +466,11 @@ void init_opengl(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *pSilhouetteData = buildAlphaData(&img[7]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wp, hp, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
-    free(pSilhouetteData);
+	unsigned char *pSilhouetteData = buildAlphaData(&img[7]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wp, hp, 0,
+			GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
+	free(pSilhouetteData);
+
 
     //=========================================================================
     // Change view area of image
@@ -675,15 +699,21 @@ void physics()
     //=========================================================================
     // Enemy Physics
     //=========================================================================
-    int *n = &g.n;
-    Shape *e = g.enemy;
-    
-    for(int i = 0; i < 5; i++) {
-        checkEnemyLocation(e, n);		
-        moveEnemy(&g.enemy[i]);
-        //cout << *n << endl;
-    }
-  
+ 
+    Enemy1 *e = &g.enemy;
+        struct Node* temp = g.head;
+        for(int i = 0; i < e->n; i++) {
+                if(temp != NULL) {
+                        moveEnemy(temp);
+                        checkEnemyLocation(temp,temp->data.removeEnemy);
+                        if(temp->data.removeEnemy){
+                                struct Node* head_ref = g.head;
+                        //      removeEnemy(g.head, head_ref, temp);
+                        }
+                        temp = temp->next;
+                }
+        }
+ 
     /* 
     if (bullet.center.x <= e[i].center.x + enemy[i].width/2 &&
         bullet.center.x >= e[i].center.x - enemy[i].width/2 &&
@@ -829,28 +859,18 @@ void render()
     //=========================================================================
     // Diego Enemies
     //=========================================================================
-    while( g.n < 5) {
-        spawnEnemy(g.n, &g.enemy[g.n]);
-        g.n++;
-    }
-    float we[5];
-    float he[5];
-    for (int i = 0; i < 5; i++) {
-        glPushMatrix();
-        glColor3ub(190,150,10);
-        we[i] = g.enemy[i].width;
-        he[i] = g.enemy[i].height;
-        glTranslatef(g.enemy[i].center.x, 
-        g.enemy[i].center.y, g.enemy[i].center.z);
-        glBegin(GL_QUADS);
-            glVertex2i(-we[i],-he[i]);
-            glVertex2i(-we[i], he[i]);
-            glVertex2i( we[i], he[i]);
-            glVertex2i( we[i],-he[i]);
-        glEnd();
-        glPopMatrix();
-    }
-    
+     Enemy1 *e = &g.enemy;
+        struct Node* temp = g.head;
+        while( e->n < 5) {
+                spawnEnemy(&g.head, e);
+                temp = g.head;
+                setEnemySize(temp,e->n);
+                e->n++;
+        }
+
+        printEnemy(temp);
+
+
     //=========================================================================
     // Screens
     //=========================================================================

@@ -14,6 +14,8 @@ Goals:
 1.Have multiple background layers moving at different speeds
   to give a more depth visual to our game.
 2.Add smoke particles to follow the player
+3.Rain and Confetti paricles
+4.3D cube powerup
 */
 
 #include <stdio.h>
@@ -21,8 +23,18 @@ Goals:
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include <GL/glu.h>
 #include <math.h>
 #include "fonts.h"
+#include <iostream>
+#include <iomanip>
+#include "alexisisB.h"
+
+using namespace std;
+
+extern ABarGlobal abG;
+extern Enemy eLex;
+extern void incrementScore(int points);
 
 const int MAX_PARTICLES = 8000;
 const float GRAVITY = .05;
@@ -58,31 +70,222 @@ public:
     Particle smoke[MAX_PARTICLES];
     Particle bullet[MAX_PARTICLES];
     Particle confetti[MAX_PARTICLES];
+    Particle rain[MAX_PARTICLES];
     int n = 0;
-    //AlonsoGlobal();
+    int u = 0;
+    int k = 0;
+    int q = 0;
+    int power = 1;
+    float xr = 1.0;
+    float yr = 1.0;
+    float cx = 1.0;
+    float cy = 0.0;
+    float cz = 0.1;
+    double winX;
+    double winY;
+    double winZ;
+    bool increasing = true;
 }ag;
+
+void cubePower()
+{
+    /*
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    GLdouble modelview[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    */
+
+    //Cube rotation
+    ag.xr = ag.xr + 6;
+    ag.yr = ag.yr + 6;
+
+    //Cube goes up and down
+    
+    if (ag.increasing) {
+        ag.cy = ag.cy + 0.005;
+        if (ag.cy >= 1.0)
+            ag.increasing = false;
+    }
+    else {
+        ag.cy = ag.cy - 0.005;
+        if (ag.cy <= -1.0)
+            ag.increasing = true;
+    }
+
+    //Cube moves from right to left
+    if (ag.cx > -1.0)
+        ag.cx = ag.cx - 0.002;
+    if (ag.cx <= -1.0)
+        ag.cx = 1.0;
+
+    //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(ag.cx, ag.cy, ag.cz);
+    
+    //convert 3D coordinates to 2D coordinates
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    //cout <<"viewport: " << viewport << endl;
+
+    GLdouble modelview[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    //cout << "modelview: " <<modelview << endl;
+
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    //cout << "projection: " << projection << endl;
+
+    //cout << fixed << setprecision(2)
+      //   << endl << "3DX: " << ag.cx << " 3DY: " << ag.cy << endl;
+    gluProject(ag.cx, ag.cy, ag.cz,
+               modelview, projection, viewport,
+               &ag.winX, &ag.winY, &ag.winZ);
+    //cout << fixed << setprecision(0)
+      //   << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
+
+    ag.winX = (ag.winX/2) + (956/2) + 2;
+    ag.winY = (ag.winY/2) + (545/2);
+
+   // cout << fixed << setprecision(0)
+     //    << "NewX: " << ag.winX << " NewY: " << ag.winY << endl;
+
+    glRotatef(ag.xr, 1.0, 0.0, 0.0);
+    glRotatef(ag.yr, 0.0, 1.0, 0.0);
+
+    //Front
+    glBegin(GL_QUADS);
+        glColor3f(0.54f, 0.00f, 0.86f);  
+        glVertex3f(-0.05f, -0.05f, 0.05f);
+        glVertex3f(-0.05f,  0.05f, 0.05f);
+        glVertex3f( 0.05f,  0.05f, 0.05f);
+        glVertex3f( 0.05f, -0.05f, 0.05f);
+    //Back
+        glColor3f(0.54f, 0.00f, 0.86f); 
+        glVertex3f(-0.05f, -0.05f, -0.05f);
+        glVertex3f(-0.05f,  0.05f, -0.05f);
+        glVertex3f( 0.05f,  0.05f, -0.05f);
+        glVertex3f( 0.05f, -0.05f, -0.05f);
+    //Right
+        glColor3f(0.51f, 0.00f, 0.80f); 
+        glVertex3f(0.05f, -0.05f,  0.05f);
+        glVertex3f(0.05f,  0.05f,  0.05f);
+        glVertex3f(0.05f,  0.05f, -0.05f);
+        glVertex3f(0.05f, -0.05f, -0.05f);
+    //Left  
+        glColor3f(0.51f, 0.00f, 0.80f); 
+        glVertex3f(-0.05f, -0.05f, -0.05f);
+        glVertex3f(-0.05f,  0.05f, -0.05f);
+        glVertex3f(-0.05f,  0.05f,  0.05f);
+        glVertex3f(-0.05f, -0.05f,  0.05f);
+    //Top
+        glColor3f(0.49f, 0.00f, 0.78f); 
+        glVertex3f(-0.05f, 0.05f, -0.05f);
+        glVertex3f(-0.05f, 0.05f,  0.05f);
+        glVertex3f( 0.05f, 0.05f,  0.05f);
+        glVertex3f( 0.05f, 0.05f, -0.05f);
+    //Bottom
+        glColor3f(0.49f, 0.00f, 0.78f); 
+        glVertex3f(-0.05f, -0.05f,  0.05f);
+        glVertex3f(-0.05f, -0.05f, -0.05f);
+        glVertex3f( 0.05f, -0.05f, -0.05f);
+        glVertex3f( 0.05f, -0.05f,  0.05f);
+    glEnd();
+
+    glFlush();
+
+    /*
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    gluProject(ag.cx, ag.cy, ag.cz,
+               modelview, projection, viewport,
+               &ag.winX, &ag.winY, &ag.winZ);
+    cout << fixed << setprecision(0)
+         << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
+    */
+
+}
+
+void makeRain()
+{
+    if (ag.k >= MAX_PARTICLES)
+        return;
+
+    Particle *r = &ag.rain[ag.k];
+
+    r->s.center.x = rand() % 1921;
+    r->s.center.y = 1080;
+    r->velocity.y = -5.0;
+    r->velocity.x = -0.2;
+    ++ag.k;
+}
+
+void rainMovement()
+{
+    if (ag.k <= 0)
+        return;
+
+    for (int i = 0; i < ag.k; i++) {
+        Particle *r = &ag.rain[i];
+        r->s.center.x += r->velocity.x;
+        r->s.center.y += r->velocity.y;
+        r->velocity.y = r->velocity.y - GRAVITY;
+
+        //check for off screen
+        if (r->s.center.y < 0.0 || r->s.center.y > 1080 ||
+            r->s.center.x < 0.0 || r->s.center.y > 1920) {
+            ag.rain[i] = ag.rain[ag.k - 1];
+            --ag.k;
+        }
+    }
+}
+
+void printRain()
+{
+    float w, h;
+    
+    for(int i = 0; i < ag.k; i++) {
+        glPushMatrix();
+        glColor4ub(20,52,255,150);
+        Vec *v = &ag.rain[i].s.center;
+        w = h = 2;
+        glBegin(GL_QUADS);
+            glVertex2i(v->x-w, v->y-h);
+            glVertex2i(v->x-w, v->y+h);
+            glVertex2i(v->x+w, v->y+h);
+            glVertex2i(v->x+w, v->y-h);
+        glEnd();
+        glPopMatrix();
+    }
+}
 
 void makeConfetti()
 {
-    if (ag.n >= MAX_PARTICLES)
+    if (ag.u >= MAX_PARTICLES)
         return;
 
-    Particle *c = &ag.confetti[ag.n];
+    Particle *c = &ag.confetti[ag.u];
 
     c->s.center.x = rand() % 1921;
     c->s.center.y = 1080;
 
     c->velocity.y = -0.8;
     c->velocity.x = 0;
-    ++ag.n;
+    ++ag.u;
 }
 
 void confettiMovement()
 {
-    if (ag.n <= 0)
+    if (ag.u <= 0)
         return;
 
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.u; i++) {
         Particle *c = &ag.confetti[i];
         c->s.center.x += c->velocity.x;
         c->s.center.y += c->velocity.y;
@@ -91,8 +294,8 @@ void confettiMovement()
         //check for off screen
         if (c->s.center.y < 0.0 || c->s.center.y > 1080 ||
             c->s.center.x < 0.0 || c->s.center.y > 1920) {
-            ag.confetti[i] = ag.confetti[ag.n - 1];
-            --ag.n;
+            ag.confetti[i] = ag.confetti[ag.u - 1];
+            --ag.u;
         }
     }
 }
@@ -101,7 +304,7 @@ void printConfetti()
 {
     float w, h;
 
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.u; i++) {
         if (i % 7 == 0) {
             ag.confetti[i].r = 0;
             ag.confetti[i].g = 128;
@@ -217,33 +420,58 @@ void printSmoke()
 
 void makeBullet(int x, int y)
 {
-    if (ag.n >= MAX_PARTICLES)
+    if (ag.q >= MAX_PARTICLES)
         return;
 
-    Particle *b = &ag.bullet[ag.n];
-
+    Particle *b = &ag.bullet[ag.q];
     b->s.center.x = x;
     b->s.center.y = y;
     b->velocity.y = 0;
     b->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
-    ++ag.n;
+    ++ag.q;
 }
 
 void bulletMovement()
 {
-    if (ag.n <= 0)
+    if (ag.q <= 0)
         return;
-    for (int i = 0; i < ag.n; i++) {
+
+    for (int i = 0; i < ag.q; i++) {
         Particle *b = &ag.bullet[i];
         b->s.center.x += b->velocity.x;
         b->s.center.y += b->velocity.y;
-        //b->s.velocity.y = b->velocity.y - GRAVITY;
 
         //check for off screen
         if (b->s.center.y < 0.0 || b->s.center.y > 1080 ||
             b->s.center.x < 0.0 || b->s.center.x > 1920) {
-            ag.bullet[i] = ag.bullet[ag.n - 1];
-            --ag.n;
+            ag.bullet[i] = ag.bullet[ag.q - 1];
+            --ag.q;
+        }
+        
+        //check collision of bullet with cube powerup
+        if (b->s.center.y < ag.winY + 36 && b->s.center.y > ag.winY - 36 &&
+            b->s.center.x < ag.winX + 36 && b->s.center.x > ag.winX - 36) {
+            cout << endl << "COLLISON" << endl;
+            ag.cy = ((float)rand() / (float)RAND_MAX);
+            ag.cx = ((float)rand() / (float)RAND_MAX);
+            ag.bullet[i] = ag.bullet[ag.q - 1];
+            ag.power++;
+            --ag.q;
+            abG.incrementScore(100);
+            //abg.highscore += 100;
+        }
+
+        for (int j = 0; j < eLex.getNumEnemy(); j++) {
+            //check collision of bullet with enemies
+            if (b->s.center.y < eLex.getEY(j) + 30 &&
+                b->s.center.y > eLex.getEY(j) - 30 &&
+                b->s.center.x < eLex.getEX(j) + 30 &&
+                b->s.center.x > eLex.getEX(j) - 30) {
+                cout << endl << "COLLISON" << endl;
+                ag.bullet[i] = ag.bullet[ag.q - 1];
+                --ag.q;
+                eLex.deleteEnemy(i);
+            }
         }
     }
 }
@@ -252,7 +480,7 @@ void printBullet()
 {
     float w, h;
 
-    for (int i = 0; i < ag.n; i++) {
+    for (int i = 0; i < ag.q; i++) {
         ag.bullet[i].r = 255;
         ag.bullet[i].g = 0;
         ag.bullet[i].b = 0;
@@ -268,4 +496,9 @@ void printBullet()
         glEnd();
         glPopMatrix();
     }
+}
+
+int getPower()
+{
+    return ag.power;
 }

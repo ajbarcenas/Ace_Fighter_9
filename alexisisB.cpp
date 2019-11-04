@@ -20,7 +20,7 @@ be receiving updates.
 #include "alexisisB.h"
 using namespace std;
 ABarGlobal abG;
-
+Enemy eLex;
 //Prints out my name on the credits Screen
 void printAlexisB(Rect r)
 {
@@ -179,9 +179,9 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 	glPopMatrix();
 }
 
-void ABarGlobal::incrementScore() 
+void ABarGlobal::incrementScore(int points) 
 {
-	highscore++;
+	highscore += points;
 	cout << "Score: " << highscore << endl;
 }
 
@@ -200,6 +200,42 @@ void ABarGlobal::showCredits()
 		showHigh = 0;
 	}
 }
+void ABarGlobal::showStartScreen()
+{
+	showStart ^= 1;
+}
+
+void ABarGlobal::printTempScreen(Rect r)
+{
+        glColor3f(1.0, 1.0, 1.0);
+	r.bot = 800;
+	r.left = 960;
+        ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
+	ggprint16(&r, 16, 0xff1919, "Press S to Start the game");
+}
+void ABarGlobal::drawButton(int x_pos, int y_pos)
+{
+	glColor3f(1.0, 1.0, 1.0);
+	Box box;
+	box.width = 150;
+	box.height = 50;
+	box.center.x  = x_pos;
+	box.center.y = y_pos;
+	float h, w; 
+	glColor3ub(255, 255, 255);
+	glPushMatrix();
+	glTranslatef(box.center.x, box.center.y, 0);
+	w = box.width;
+	h = box.height;
+	glBegin(GL_QUADS);
+	glVertex2i(-w, -h);
+        glVertex2i(-w, h);
+        glVertex2i(w, h);
+        glVertex2i(w, -h);
+	glEnd();
+	glPopMatrix();
+}
+
 void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 	int rColor, int gColor, int bColor)
 {
@@ -276,5 +312,226 @@ void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 	glEnd();
 	glPopMatrix();
 			
+}
+
+void ABarGlobal::condenseCreds()
+{
+	showCreditsBorder(1920, 1080, 960, 540);
+	printCredBoxes(960, 540);
+	showCreditsBorder(180, 180, 960, 540, 14, 14, 138 );
+	showCreditsBorder(170, 170, 960, 540, 21, 21, 237);
+	showCreditsBorder(160, 160, 960, 540, 47, 47, 237);
+	showCreditsBorder(150, 150, 960, 540, 69, 80, 237);
+	showCreditsBorder(140, 140, 960, 540, 39, 123, 232);
+	showCreditsBorder(130, 130, 960, 540);
+	showCreditsBorder(130, 130, 480, 800);
+	showCreditsBorder(130, 130, 1440, 800);
+	showCreditsBorder(130, 130, 480, 300);
+	showCreditsBorder(130, 130, 1440, 300);
+	printAlexisB(r);
+	glColor3f(1.0, 1.0, 1.0);
+	r.bot = 145, r.left = 520;
+	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
+	r.bot = 145, r.left = 1500;
+	ggprint16(&r, 16, 0xcf13ac,
+		"Andrew Oliveros- HUD Creation/Sprites/Menu");
+}
+
+void ABarGlobal::condenseHigh()
+{
+    	showCreditsBorder(1920, 1080, 960, 540);
+	printCredBoxes(960, 540);
+	showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
+	colorBlendBorder(200, 200, 960,540,0,0,0,
+			255,255,255,
+			0,0,0,
+			255,255,255);
+	printHighScore(r);
+	printTempScores(r);
+}
+
+void ABarGlobal::condenseStart()
+{
+	colorBlendBorder(980, 1920, 960,540,230,0,0,
+			25,255,255,
+			34,204,0,
+			204,230,255);
+	drawButton(960, 800);
+	drawButton(960, 600);
+	drawButton(960, 400);
+	drawButton(960, 200);
+	printTempScreen(r);	
+}
+void Enemy::makeTest()
+{
+	if (numEnemy >= 5)
+		return;
+	Dot *p = &test[numEnemy];
+	p->e.center.x = 1920;
+	p->e.center.y = rand() % 1081;
+
+	p->velocity.y = rand() % 15 + (-6); 
+	p->velocity.x = rand () % 4 + (-5);
+	++numEnemy;
+}
+
+void Enemy::testMovement()
+{
+	if (numEnemy <= 0)
+		return;
+	for (int i = 0; i < numEnemy; i++) {
+		Dot *p = &test[i];
+		p->e.center.x += p->velocity.x;
+		p->e.center.y += p->velocity.y;
+
+		if (p->e.center.y < 0.0 || p->e.center.y > 1080) {
+			p->velocity.y = -(p->velocity.y); 
+		}
+
+		if (p->e.center.x < 0.0)
+		    p->e.center.x = 1920;
+
+		enemyX[i] = p->e.center.x;
+		enemyY[i] = p->e.center.y;
+	}
+}
+
+void Enemy::printTest()
+{
+	float w, h;
+	for (int i = 0; i < numEnemy; i++) {
+		glPushMatrix();
+		glColor3ub(100,100,100);
+		Vec1 *c = &test[i].e.center;
+		w = h = 30;
+		glBegin(GL_QUADS);
+		    glVertex2i(c->x-w, c->y-h);
+		    glVertex2i(c->x-w, c->y+h);
+		    glVertex2i(c->x+w, c->y+h);
+		    glVertex2i(c->x+w, c->y-h);
+		glEnd();
+		glPopMatrix();
+	}
+}
+
+void Enemy::deleteEnemy(int i)
+{
+    test[i] = test[numEnemy - 1];
+    --numEnemy;
+}
+
+int Enemy::getEX(int i)
+{
+    Dot *p = &test[i];
+    return p->e.center.x;
+}
+
+int Enemy::getEY(int i)
+{
+    Dot *p = &test[i];
+    return p->e.center.y;
+}
+
+int Enemy::getNumEnemy()
+{
+    return numEnemy;
+}
+
+void Enemy::makeBoss(int x, int y)
+{
+	if (m >= 1)
+		return;
+	Dot *b = &boss[m];
+	b->e.center.x = x;
+	b->e.center.y = y;
+
+	b->velocity.y = 2;
+	b->velocity.x = 0;
+	++m;
+}
+
+void Enemy::bossMovement()
+{
+	if (m <= 0)
+	    return;
+	for (int i = 0; i < m; i++) {
+		Dot *b = &boss[i];
+		b->e.center.x += b->velocity.x;
+		b->e.center.y += b->velocity.y;
+
+		if (b->e.center.y < 0.0 || b->e.center.y > 1080) {
+			b->velocity.y = -(b->velocity.y);
+		}
+		bossX = b->e.center.x;
+		bossY = b->e.center.y;
+	}
+}
+
+void Enemy::printBoss()
+{
+	float w, h;
+	for (int i = 0; i < m; i++) {
+		glPushMatrix();
+		glColor3ub(0, 255, 255);
+		Vec1 *d = &boss[i].e.center;
+		w = 200;
+		h = 150;
+		glBegin(GL_QUADS);
+	        glVertex2i(d->x-w, d->y-h);
+                glVertex2i(d->x-w, d->y+h);
+                glVertex2i(d->x+w, d->y+h);
+                glVertex2i(d->x+w, d->y-h);
+		glEnd();
+		glPopMatrix();
+	
+	}
+}
+
+
+void Enemy::makeEBullet(int x, int y)
+{
+	if (o >= 20)
+		return;
+	Dot *a = &bullets[o];
+	a->e.center.x = x;
+	a->e.center.y = y;
+
+	a->velocity.y = rand() % 4 + (-2);
+	a->velocity.x = -2;
+	++o;
+}
+
+void Enemy::bulletMovement()
+{
+	if (o <= 0)
+	    return;
+	for (int i = 0; i < o; i++) {
+		Dot *a = &bullets[i];
+		a->e.center.x += a->velocity.x;
+		a->e.center.y += a->velocity.y;
+
+		if (a->e.center.x < 0.0) {
+			bullets[i] = bullets[o - 1];
+			--o;
+		}
+	}
+}
+
+void Enemy::printEBullet()
+{
+        float w, h;
+	for (int i = 0; i < o; i++) {
+                glPushMatrix();
+                glColor3ub(0, 0, 255);
+                Vec1 *g = &bullets[i].e.center;
+                w = h = 4;
+                glBegin(GL_QUADS);
+                glVertex2i(g->x-w, g->y-h);
+		glVertex2i(g->x-w, g->y+h);
+		glVertex2i(g->x+w, g->y+h);
+		glVertex2i(g->x+w, g->y-h);
+		glEnd();
+		glPopMatrix();
+	 }
 }
 #endif

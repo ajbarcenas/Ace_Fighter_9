@@ -22,7 +22,7 @@ be receiving updates.
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
-const int MAX = 3000;
+const int MAXENEMIES = 5;
 const float GF = 0.0;
 
 //New vector for hitboxes
@@ -62,10 +62,14 @@ struct Dot {
 class Enemy {
 	public:
 		
-		Dot test[MAX];
-		int enemyX[5];
-		int enemyY[5];
-		int n = 0;
+		Dot test[MAXENEMIES];
+        void deleteEnemy(int i);
+        int getEX(int i);
+        int getEY(int i);
+		int enemyX[MAXENEMIES];
+		int enemyY[MAXENEMIES];
+		int numEnemy = 0;
+        int getNumEnemy();
 		int m = 0;
 		int o = 0;
 		Dot boss[1];

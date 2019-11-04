@@ -33,6 +33,7 @@ Goals:
 using namespace std;
 
 extern ABarGlobal abG;
+extern Enemy eLex;
 extern void incrementScore(int points);
 
 const int MAX_PARTICLES = 8000;
@@ -434,6 +435,7 @@ void bulletMovement()
 {
     if (ag.q <= 0)
         return;
+
     for (int i = 0; i < ag.q; i++) {
         Particle *b = &ag.bullet[i];
         b->s.center.x += b->velocity.x;
@@ -457,6 +459,19 @@ void bulletMovement()
             --ag.q;
             abG.incrementScore(100);
             //abg.highscore += 100;
+        }
+
+        for (int j = 0; j < eLex.getNumEnemy(); j++) {
+            //check collision of bullet with enemies
+            if (b->s.center.y < eLex.getEY(j) + 30 &&
+                b->s.center.y > eLex.getEY(j) - 30 &&
+                b->s.center.x < eLex.getEX(j) + 30 &&
+                b->s.center.x > eLex.getEX(j) - 30) {
+                cout << endl << "COLLISON" << endl;
+                ag.bullet[i] = ag.bullet[ag.q - 1];
+                --ag.q;
+                eLex.deleteEnemy(i);
+            }
         }
     }
 }

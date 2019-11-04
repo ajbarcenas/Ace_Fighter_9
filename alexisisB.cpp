@@ -364,22 +364,22 @@ void ABarGlobal::condenseStart()
 }
 void Enemy::makeTest()
 {
-	if (n >= 5)
+	if (numEnemy >= 5)
 		return;
-	Dot *p = &test[n];
+	Dot *p = &test[numEnemy];
 	p->e.center.x = 1920;
 	p->e.center.y = rand() % 1081;
 
 	p->velocity.y = rand() % 15 + (-6); 
 	p->velocity.x = rand () % 4 + (-5);
-	++n;
+	++numEnemy;
 }
 
 void Enemy::testMovement()
 {
-	if (n <= 0)
+	if (numEnemy <= 0)
 		return;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < numEnemy; i++) {
 		Dot *p = &test[i];
 		p->e.center.x += p->velocity.x;
 		p->e.center.y += p->velocity.y;
@@ -399,7 +399,7 @@ void Enemy::testMovement()
 void Enemy::printTest()
 {
 	float w, h;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < numEnemy; i++) {
 		glPushMatrix();
 		glColor3ub(100,100,100);
 		Vec1 *c = &test[i].e.center;
@@ -412,6 +412,29 @@ void Enemy::printTest()
 		glEnd();
 		glPopMatrix();
 	}
+}
+
+void Enemy::deleteEnemy(int i)
+{
+    test[i] = test[numEnemy - 1];
+    --numEnemy;
+}
+
+int Enemy::getEX(int i)
+{
+    Dot *p = &test[i];
+    return p->e.center.x;
+}
+
+int Enemy::getEY(int i)
+{
+    Dot *p = &test[i];
+    return p->e.center.y;
+}
+
+int Enemy::getNumEnemy()
+{
+    return numEnemy;
 }
 
 void Enemy::makeBoss(int x, int y)

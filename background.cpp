@@ -211,9 +211,9 @@ public:
         XSetWindowAttributes swa;
         swa.colormap = cmap;
         swa.event_mask =
-        ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
-        ButtonPressMask | ButtonReleaseMask |
-        StructureNotifyMask | SubstructureNotifyMask;
+            ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
+            ButtonPressMask | ButtonReleaseMask |
+            StructureNotifyMask | SubstructureNotifyMask;
         win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
             vi->depth, InputOutput, vi->visual,
             CWColormap | CWEventMask, &swa);
@@ -813,7 +813,7 @@ void render()
     //=========================================================================
     // Alexis Enemies
     //=========================================================================
-    if (eLex.getNumEnemy() < 5)
+    if (eLex.getNumEnemy() < eLex.getMAXENEMIES())
         eLex.makeTest();
     eLex.printTest();
     

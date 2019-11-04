@@ -131,29 +131,19 @@ void cubePower()
     //convert 3D coordinates to 2D coordinates
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-    //cout <<"viewport: " << viewport << endl;
 
     GLdouble modelview[16];
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    //cout << "modelview: " <<modelview << endl;
 
     GLdouble projection[16];
     glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    //cout << "projection: " << projection << endl;
 
-    //cout << fixed << setprecision(2)
-      //   << endl << "3DX: " << ag.cx << " 3DY: " << ag.cy << endl;
     gluProject(ag.cx, ag.cy, ag.cz,
                modelview, projection, viewport,
                &ag.winX, &ag.winY, &ag.winZ);
-    //cout << fixed << setprecision(0)
-      //   << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
 
     ag.winX = (ag.winX/2) + (956/2) + 2;
     ag.winY = (ag.winY/2) + (545/2);
-
-   // cout << fixed << setprecision(0)
-     //    << "NewX: " << ag.winX << " NewY: " << ag.winY << endl;
 
     glRotatef(ag.xr, 1.0, 0.0, 0.0);
     glRotatef(ag.yr, 0.0, 1.0, 0.0);

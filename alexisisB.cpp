@@ -416,8 +416,14 @@ void Enemy::printTest()
 
 void Enemy::deleteEnemy(int i)
 {
-    test[i] = test[numEnemy - 1];
+    for (int j = i; j < numEnemy; j++)
+        test[j] = test[numEnemy - 1];
     --numEnemy;
+}
+
+int Enemy::getMAXENEMIES()
+{
+    return MAXENEMIES;
 }
 
 int Enemy::getEX(int i)

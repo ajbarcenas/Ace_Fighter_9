@@ -420,6 +420,11 @@ void Enemy::deleteEnemy(int i)
 	--numEnemy;
 }
 
+int Enemy::getMAXENEMIES()
+{
+    return MAXENEMIES;
+}
+
 int Enemy::getEX(int i)
 {
 	Dot *p = &test[i];

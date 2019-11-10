@@ -30,6 +30,7 @@ Goals:
 #include <iomanip>
 #include "alexisisB.h"
 
+//Global g;
 using namespace std;
 
 extern ABarGlobal abG;
@@ -76,6 +77,8 @@ public:
     int k = 0;
     int q = 0;
     int power = 1;
+    int pointsX;
+    int pointsY;
     float xr = 1.0;
     float yr = 1.0;
     float cx = 1.0;
@@ -84,6 +87,7 @@ public:
     double winX;
     double winY;
     double winZ;
+    bool printPoints = false;
     bool increasing = true;
 }ag;
 
@@ -131,29 +135,19 @@ void cubePower()
     //convert 3D coordinates to 2D coordinates
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-    //cout <<"viewport: " << viewport << endl;
 
     GLdouble modelview[16];
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    //cout << "modelview: " <<modelview << endl;
 
     GLdouble projection[16];
     glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    //cout << "projection: " << projection << endl;
 
-    //cout << fixed << setprecision(2)
-      //   << endl << "3DX: " << ag.cx << " 3DY: " << ag.cy << endl;
     gluProject(ag.cx, ag.cy, ag.cz,
                modelview, projection, viewport,
                &ag.winX, &ag.winY, &ag.winZ);
-    //cout << fixed << setprecision(0)
-      //   << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
 
     ag.winX = (ag.winX/2) + (956/2) + 2;
     ag.winY = (ag.winY/2) + (545/2);
-
-   // cout << fixed << setprecision(0)
-     //    << "NewX: " << ag.winX << " NewY: " << ag.winY << endl;
 
     glRotatef(ag.xr, 1.0, 0.0, 0.0);
     glRotatef(ag.yr, 0.0, 1.0, 0.0);
@@ -210,6 +204,12 @@ void cubePower()
          << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
     */
 
+}
+
+double timeDiff(struct timespec *start, struct timespec *end)
+{
+    return (double)(end->tv_sec - start->tv_sec) +
+           (double)(end->tv_nsec - start->tv_nsec) * (1.0/1e9);
 }
 
 void makeRain()
@@ -433,6 +433,8 @@ void makeBullet(int x, int y)
 
 void bulletMovement()
 {
+    Rect r;
+
     if (ag.q <= 0)
         return;
 
@@ -458,11 +460,10 @@ void bulletMovement()
             ag.power++;
             --ag.q;
             abG.incrementScore(100);
-            //abg.highscore += 100;
         }
 
+        //check collision of bullet with Alexis enemies
         for (int j = 0; j < eLex.getNumEnemy(); j++) {
-            //check collision of bullet with enemies
             if (b->s.center.y < eLex.getEY(j) + 30 &&
                 b->s.center.y > eLex.getEY(j) - 30 &&
                 b->s.center.x < eLex.getEX(j) + 30 &&
@@ -470,29 +471,48 @@ void bulletMovement()
                 cout << endl << "COLLISON" << endl;
                 ag.bullet[i] = ag.bullet[ag.q - 1];
                 --ag.q;
-                eLex.deleteEnemy(i);
+                ag.pointsY = eLex.getEY(j) - 30;
+                ag.pointsX = eLex.getEX(j) - 30;
+                ag.printPoints = true;
+                eLex.deleteEnemy(j);
+                ggprint16(&r, 16, 0x00ffff44, "+1000");
+                abG.incrementScore(1000);
             }
         }
+
+        //check collision of bullet with Diego enemies
+
     }
 }
 
-void printBullet()
+bool getPrintPoints()
 {
-    float w, h;
+    return ag.printPoints;
+}
+int getPointsX()
+{
+    return ag.pointsX;
+}
 
+int getPointsY()
+{
+    return ag.pointsY;
+}
+
+void printBullet(float w, float h, GLuint Texture)
+{
     for (int i = 0; i < ag.q; i++) {
-        ag.bullet[i].r = 255;
-        ag.bullet[i].g = 0;
-        ag.bullet[i].b = 0;
         glPushMatrix();
-        glColor3ub(ag.bullet[i].r, ag.bullet[i].g, ag.bullet[i].b);
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor3ub(255,255,255);
         Vec *c = &ag.bullet[i].s.center;
-        w = h = 2;
         glBegin(GL_QUADS);
-            glVertex2i(c->x-w, c->y-h);
-            glVertex2i(c->x-w, c->y+h);
-            glVertex2i(c->x+w, c->y+h);
-            glVertex2i(c->x+w, c->y-h);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(c->x-w*.05, c->y-h*.05);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(c->x-w*.05, c->y+h*.05);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(c->x+w*.05, c->y+h*.05);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(c->x+w*.05, c->y-h*.05);
         glEnd();
         glPopMatrix();
     }

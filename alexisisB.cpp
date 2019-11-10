@@ -369,10 +369,36 @@ void Enemy::makeTest()
 	Dot *p = &test[numEnemy];
 	p->e.center.x = 1920;
 	p->e.center.y = rand() % 1081;
-
+	
 	p->velocity.y = rand() % 15 + (-6); 
 	p->velocity.x = rand () % 4 + (-5);
 	++numEnemy;
+}
+
+void Enemy::makeVEnem()
+{
+	if (numVEnemy >= 5)
+		return;
+	Dot *v = &vEnemy[numVEnemy];
+	if (numVEnemy == 0) {	
+		v->e.center.x = 2320;
+		v->e.center.y = 1000;
+	} else if (numVEnemy == 1) {
+		v->e.center.x = 2120;
+		v->e.center.y = 800;
+	} else if (numVEnemy == 2) {
+		v->e.center.x = 1920;
+		v->e.center.y = 600;
+	} else if (numVEnemy == 3) {
+		v->e.center.x = 2120;
+		v->e.center.y = 400;
+	} else if (numVEnemy == 4) {
+		v->e.center.x = 2320;
+		v->e.center.y = 200;
+	}
+	v->velocity.y = 0;
+	v->velocity.x = -4;
+	++numVEnemy;
 }
 
 void Enemy::testMovement()
@@ -396,6 +422,22 @@ void Enemy::testMovement()
 	}
 }
 
+void Enemy::vEnemMovement()
+{
+	if (numEnemy <= 0)
+		return;
+	for (int i = 0; i < numVEnemy; i++) {
+		Dot *v = &vEnemy[i];
+	v->e.center.x += v->velocity.x;
+	v->e.center.y += v->velocity.y;
+	if (v->e.center.y < 0.0 || v->e.center.y > 1080) {
+		v->velocity.y = -(v->velocity.y);
+	}
+		if (v->e.center.x < 0.0)
+			v->e.center.x = 1920;
+        }
+}
+
 void Enemy::printTest()
 {
 	float w, h;
@@ -413,7 +455,23 @@ void Enemy::printTest()
 		glPopMatrix();
 	}
 }
-
+void Enemy::printVEnem()
+{
+	float w, h;
+	for (int i = 0; i < numVEnemy; i++) {
+		glPushMatrix();
+		glColor3ub(0,252,100);
+		Vec1 *q = &vEnemy[i].e.center;
+		w = h = 30;
+		glBegin(GL_QUADS);
+			glVertex2i(q->x-w, q->y-h);	
+			glVertex2i(q->x-w, q->y+h);
+			glVertex2i(q->x+w, q->y+h);
+			glVertex2i(q->x+w, q->y-h);
+		glEnd();
+		glPopMatrix();
+	}
+}
 void Enemy::deleteEnemy(int i)
 {
 	test[i] = test[numEnemy - 1];
@@ -422,7 +480,7 @@ void Enemy::deleteEnemy(int i)
 
 int Enemy::getMAXENEMIES()
 {
-    return MAXENEMIES;
+	return MAXENEMIES;
 }
 
 int Enemy::getEX(int i)
@@ -441,6 +499,29 @@ int Enemy::getNumEnemy()
 {
 	return numEnemy;
 }
+
+void Enemy::deleteVEnemy(int i)
+{
+	vEnemy[i] = vEnemy[numVEnemy - 1];
+}
+
+int Enemy::getVX(int i) 
+{
+	Dot *v = &vEnemy[i];
+	return v->e.center.x;
+}
+int Enemy::getVY(int i)
+{
+	Dot *v = &vEnemy[i];
+	return v->e.center.y;
+}
+
+int Enemy::getVNumEnemy()
+{
+	return numVEnemy;
+}
+
+
 
 void Enemy::makeBoss(int x, int y)
 {

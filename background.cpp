@@ -360,6 +360,7 @@ int main()
     smokeMovement();
     //bulletMovement();
     eLex.testMovement();
+    eLex.vEnemMovement();
     eLex.bossMovement();
     eLex.bulletMovement();
     render();
@@ -933,6 +934,9 @@ void render()
     if (eLex.getNumEnemy() < eLex.getMAXENEMIES())
         eLex.makeTest();
     eLex.printTest();
+
+    eLex.makeVEnem();
+    eLex.printVEnem();
     
     //=========================================================================
     // Alexis Boss

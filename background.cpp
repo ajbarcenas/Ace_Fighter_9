@@ -198,10 +198,14 @@ public:
     GLuint texid;
     int showCredits, showHighScores;
     int HighScore;
-    int getTime = 1;
+    int getCTime = 1;
+    int getBTime = 1;
     struct timespec cTimeStart;
     struct timespec cTimeCurr;
+    struct timespec bTimeStart;
+    struct timespec bTimeCurr;
     double cTime;
+    double bTime;
     double billion = 1.0/1e9;
     Global() {
         //Pictures pic;
@@ -334,6 +338,7 @@ extern void makeRain();
 extern void printRain();
 extern void rainMovement();
 extern void cubePower();
+extern void makeCubeCoordsNull();
 extern int getPointsX();
 extern int getPointsY();
 extern bool getPrintPoints();
@@ -671,7 +676,7 @@ int check_keys(XEvent *e)
             case XK_t:
                 abG.incrementScore(1);
                 authScores();
-            	break;
+		break;
             case XK_h:
                 //g.showHighScores ^= 1;
                 abG.showHighScores();
@@ -689,29 +694,38 @@ int check_keys(XEvent *e)
                 cube ^= 1;
                 break;
             case XK_space:
-                if (getPower() == 1)
-                    makeBullet(p->center.x, p->center.y);
-                else if (getPower() == 2) {
-                    makeBullet(p->center.x, p->center.y + 4);
-                    makeBullet(p->center.x, p->center.y - 4);
+                if (g.getBTime == 1) {
+                    clock_gettime(CLOCK_REALTIME, &g.bTimeStart);
+                    g.getBTime = 0;
                 }
-                else if (getPower() == 3) {
-                    makeBullet(p->center.x, p->center.y + 8);
-                    makeBullet(p->center.x, p->center.y);
-                    makeBullet(p->center.x, p->center.y - 8);
-                }
-                else if (getPower() == 4) {
-                    makeBullet(p->center.x, p->center.y + 12);
-                    makeBullet(p->center.x, p->center.y + 4);
-                    makeBullet(p->center.x, p->center.y - 4);
-                    makeBullet(p->center.x, p->center.y - 12);
-                }
-                else if (getPower() >= 5) {
-                    makeBullet(p->center.x, p->center.y + 16);
-                    makeBullet(p->center.x, p->center.y + 8);
-                    makeBullet(p->center.x, p->center.y);
-                    makeBullet(p->center.x, p->center.y - 8);
-                    makeBullet(p->center.x, p->center.y - 16);
+                clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
+                g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
+                if (g.bTime > 0.1) {
+                    if (getPower() == 1)
+                        makeBullet(p->center.x, p->center.y);
+                    else if (getPower() == 2) {
+                        makeBullet(p->center.x, p->center.y + 4);
+                        makeBullet(p->center.x, p->center.y - 4);
+                    }
+                    else if (getPower() == 3) {
+                        makeBullet(p->center.x, p->center.y + 8);
+                        makeBullet(p->center.x, p->center.y);
+                        makeBullet(p->center.x, p->center.y - 8);
+                    }
+                    else if (getPower() == 4) {
+                        makeBullet(p->center.x, p->center.y + 12);
+                        makeBullet(p->center.x, p->center.y + 4);
+                        makeBullet(p->center.x, p->center.y - 4);
+                        makeBullet(p->center.x, p->center.y - 12);
+                    }
+                    else if (getPower() >= 5) {
+                        makeBullet(p->center.x, p->center.y + 16);
+                        makeBullet(p->center.x, p->center.y + 8);
+                        makeBullet(p->center.x, p->center.y);
+                        makeBullet(p->center.x, p->center.y - 8);
+                        makeBullet(p->center.x, p->center.y - 16);
+                    }
+                    g.getBTime = 1;
                 }
                 break;
             case XK_Escape:
@@ -885,9 +899,9 @@ void render()
     glEnd();
     glPopMatrix();
 
-    //glBindTexture(GL_TEXTURE_2D, g.bgSilhouetteTexture);
-    //glEnable(GL_ALPHA_TEST);
-    //glAlphaFunc(GL_GREATER, 0.0f);
+    //=========================================================================
+    // Bullets
+    //=========================================================================
     printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -896,32 +910,23 @@ void render()
     // Cube Powerup
     //=========================================================================
     
-    if (g.getTime == 1) {
-        clock_gettime(CLOCK_MONOTONIC, &g.cTimeStart);
-        g.getTime = 0;
+    if (g.getCTime == 1) {
+        clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
+        g.getCTime = 0;
     }
 
-    clock_gettime(CLOCK_MONOTONIC, &g.cTimeCurr);
+    clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
 
     g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
-    //g.cTime = (double)(g.cTimeCurr.tv_sec - 
-      //        g.cTimeStart.tv_sec) + (double)(g.cTimeCurr.tv_nsec -
-        //      g.cTimeStart.tv_nsec) * g.billion;
-    if (g.cTime > 2.0) {
+    if (g.cTime > 10.0) {
         glPushMatrix();
         cubePower();
         glPopMatrix();
-        if (g.cTime > 5.0)
-            g.getTime = 1;
+        if (g.cTime > 15.0){
+            g.getCTime = 1;
+            makeCubeCoordsNull();
+        }
     }
-
-    /*
-    if (cube == 1) {
-        glPushMatrix();
-        cubePower();
-        glPopMatrix();
-    }
-    */
 
     //=========================================================================
     // Creating Enemies

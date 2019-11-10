@@ -29,6 +29,7 @@ using namespace std;
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
+#include <ctime>
 
 typedef double Vect[3];
 
@@ -85,20 +86,22 @@ class Image {
     }
 };
 
-Image img[8] = { "./Images/MountainLayer.png",
+Image img[10] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
                  "./Images/freeRealEstate.jpg",
                  "./Images/DiegoPic.jpg",
                  "./Images/andrew.jpg",
-                 "./Images/PineTreeLayer.png"};
+                 "./Images/PineTreeLayer.png",
+                 "./Images/BulletGray.png",
+                 "./Images/MissileRed.png"};
 
 class Texture {
 public:
     Image *backImage;
-    float xc[6];
-    float yc[6];
+    float xc[8];
+    float yc[8];
 };
 
 struct Vec {
@@ -176,6 +179,10 @@ public:
     GLuint cSilhouetteTexture;
     GLuint pineTreeTexture;
     GLuint pSilhouetteTexture;
+    GLuint bulletGrayTexture;
+    GLuint bgSilhouetteTexture;
+    GLuint missleRedTexture;
+    GLuint mrSilhouetteTexture;
     Shape player;
     Texture tex;
     Shape box;
@@ -191,6 +198,11 @@ public:
     GLuint texid;
     int showCredits, showHighScores;
     int HighScore;
+    int getTime = 1;
+    struct timespec cTimeStart;
+    struct timespec cTimeCurr;
+    double cTime;
+    double billion = 1.0/1e9;
     Global() {
         //Pictures pic;
         xres=1920, yres=1080;
@@ -232,9 +244,9 @@ public:
         XSetWindowAttributes swa;
         swa.colormap = cmap;
         swa.event_mask =
-        ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
-        ButtonPressMask | ButtonReleaseMask |
-        StructureNotifyMask | SubstructureNotifyMask;
+            ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
+            ButtonPressMask | ButtonReleaseMask |
+            StructureNotifyMask | SubstructureNotifyMask;
         win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
             vi->depth, InputOutput, vi->visual,
             CWColormap | CWEventMask, &swa);
@@ -313,7 +325,7 @@ extern void makeSmoke(int x, int y);
 extern void printSmoke();
 extern void smokeMovement();
 extern void makeBullet(int x, int y);
-extern void printBullet();
+extern void printBullet(float w, float h, GLuint Texture);
 extern void bulletMovement();
 extern void makeConfetti();
 extern void printConfetti();
@@ -322,6 +334,10 @@ extern void makeRain();
 extern void printRain();
 extern void rainMovement();
 extern void cubePower();
+extern int getPointsX();
+extern int getPointsY();
+extern bool getPrintPoints();
+extern double timeDiff(struct timespec *, struct timespec *);
 extern int authScores();
 //===========================================================================
 //===========================================================================
@@ -342,7 +358,7 @@ int main()
     rainMovement();
     confettiMovement();
     smokeMovement();
-    bulletMovement();
+    //bulletMovement();
     eLex.testMovement();
     eLex.bossMovement();
     eLex.bulletMovement();
@@ -402,6 +418,8 @@ void init_opengl(void)
     glGenTextures(1, &g.cSilhouetteTexture);
     glGenTextures(1, &g.pineTreeTexture);
     glGenTextures(1, &g.pSilhouetteTexture);
+    glGenTextures(1, &g.bulletGrayTexture);
+    glGenTextures(1, &g.bgSilhouetteTexture);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -471,6 +489,31 @@ void init_opengl(void)
 			GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
 	free(pSilhouetteData);
 
+    //=========================================================================
+    // Bullet Gray Layer
+    //=========================================================================
+    int wbg = img[8].width;
+    int hbg = img[8].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.bulletGrayTexture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, wbg, hbg, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, img[8].data);
+
+    //=========================================================================
+    // Bullet Gray Silhouette
+    //=========================================================================
+
+    glBindTexture(GL_TEXTURE_2D, g.bgSilhouetteTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *bgSilhouetteData = buildAlphaData(&img[8]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wbg, hbg, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, bgSilhouetteData);
+    free(bgSilhouetteData);
 
     //=========================================================================
     // Change view area of image
@@ -499,6 +542,14 @@ void init_opengl(void)
     g.tex.xc[5] = 1.0;
     g.tex.yc[4] = 0.0;
     g.tex.yc[5] = 1.0;
+
+    //=========================================================================
+    // Bullet Gray Image
+    //=========================================================================
+    g.tex.xc[6] = 0.0;
+    g.tex.xc[7] = 1.0;
+    g.tex.yc[6] = 0.0;
+    g.tex.yc[7] = 1.0;
 
     //=========================================================================
     // Logo Picture
@@ -695,6 +746,11 @@ void physics()
     //=========================================================================
     g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
+
+    //=========================================================================
+    // Bullet Gray Layer
+    //=========================================================================
+   
     
     //=========================================================================
     // Enemy Physics
@@ -722,6 +778,8 @@ void physics()
         cout << "collision" << endl;
     }
     */
+
+    bulletMovement();
 }
 
 void render()
@@ -729,6 +787,7 @@ void render()
     extern ABarGlobal abG;
     extern Enemy eLex;
     Rect r;
+    Rect pd;
 
     //All of these scrolling background layers were done by Alonso Gomez
 	
@@ -825,17 +884,45 @@ void render()
         glVertex2i( w,-h);
     glEnd();
     glPopMatrix();
-    printBullet();
+
+    //glBindTexture(GL_TEXTURE_2D, g.bgSilhouetteTexture);
+    //glEnable(GL_ALPHA_TEST);
+    //glAlphaFunc(GL_GREATER, 0.0f);
+    printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     //=========================================================================
     // Cube Powerup
     //=========================================================================
+    
+    if (g.getTime == 1) {
+        clock_gettime(CLOCK_MONOTONIC, &g.cTimeStart);
+        g.getTime = 0;
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &g.cTimeCurr);
+
+    g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
+    //g.cTime = (double)(g.cTimeCurr.tv_sec - 
+      //        g.cTimeStart.tv_sec) + (double)(g.cTimeCurr.tv_nsec -
+        //      g.cTimeStart.tv_nsec) * g.billion;
+    if (g.cTime > 2.0) {
+        glPushMatrix();
+        cubePower();
+        glPopMatrix();
+        if (g.cTime > 5.0)
+            g.getTime = 1;
+    }
+
+    /*
     if (cube == 1) {
         glPushMatrix();
         cubePower();
         glPopMatrix();
     }
-    
+    */
+
     //=========================================================================
     // Creating Enemies
     //=========================================================================
@@ -843,18 +930,18 @@ void render()
     //=========================================================================
     // Alexis Enemies
     //=========================================================================
-    if (eLex.getNumEnemy() < 5)
+    if (eLex.getNumEnemy() < eLex.getMAXENEMIES())
         eLex.makeTest();
     eLex.printTest();
     
     //=========================================================================
     // Alexis Boss
     //========================================================================= 
-    eLex.makeBoss(1850, 610);
-    eLex.printBoss();
+    //eLex.makeBoss(1850, 610);
+    //eLex.printBoss();
 
-    eLex.makeEBullet(eLex.bossX - 100, eLex.bossY);
-    eLex.printEBullet();
+    //eLex.makeEBullet(eLex.bossX - 100, eLex.bossY);
+    //eLex.printEBullet();
 
     //=========================================================================
     // Diego Enemies
@@ -911,6 +998,14 @@ void render()
     //=========================================================================
     // On Screen Text
     //=========================================================================
+    
+    if (getPrintPoints()) {
+        pd.bot = getPointsX();
+        pd.left = getPointsY();
+        pd.center = 0;
+        ggprint16(&pd, 16, 0x0ffff44, "+1000");
+    }
+
     //unsigned int c = 0x00ffff44;
     r.bot = 100;
     r.left = 40;

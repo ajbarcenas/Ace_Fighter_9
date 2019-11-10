@@ -360,6 +360,7 @@ int main()
     smokeMovement();
     //bulletMovement();
     eLex.testMovement();
+    eLex.vEnemMovement();
     eLex.bossMovement();
     eLex.bulletMovement();
     render();
@@ -763,7 +764,7 @@ void physics()
                         moveEnemy(temp);
                         checkEnemyLocation(temp,temp->data.removeEnemy);
                         if(temp->data.removeEnemy){
-                                struct Node* head_ref = g.head;
+                                //struct Node* head_ref = g.head;
                         //      removeEnemy(g.head, head_ref, temp);
                         }
                         temp = temp->next;
@@ -933,6 +934,9 @@ void render()
     if (eLex.getNumEnemy() < eLex.getMAXENEMIES())
         eLex.makeTest();
     eLex.printTest();
+
+    eLex.makeVEnem();
+    eLex.printVEnem();
     
     //=========================================================================
     // Alexis Boss

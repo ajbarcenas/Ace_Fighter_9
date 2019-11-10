@@ -63,16 +63,23 @@ class Enemy {
 	public:
 		
 		Dot test[MAXENEMIES];
+		Dot vEnemy[MAXENEMIES];
         void deleteEnemy(int i);
         int getMAXENEMIES();
         int getEX(int i);
         int getEY(int i);
+		void deleteVEnemy(int i);
+		int getVX(int i);
+		int getVY(int i);
+		int getVNumEnemy();
 		int enemyX[MAXENEMIES];
 		int enemyY[MAXENEMIES];
 		int numEnemy = 0;
+		int numVEnemy = 0;
         int getNumEnemy();
 		int m = 0;
 		int o = 0;
+		int v = 0;
 		Dot boss[1];
 		void makeBoss(int x, int y);
 		void bossMovement();
@@ -85,6 +92,10 @@ class Enemy {
 		void makeTest();
 		void testMovement();
 		void printTest();
+		void makeVEnem();
+		void vEnemMovement();
+		void printVEnem();
+		
 		bool increasing = true;
 		float cx = 1.0;
 		float cy = 0.0;

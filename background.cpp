@@ -124,7 +124,6 @@ struct Particle {
 struct Enemy1 {
 	int health;
 	int damage;
-	int n = 0;
 	Shape s;
 	bool removeEnemy = false;
 };
@@ -306,13 +305,14 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Shape *p);
+extern void printPlayer(Shape *p);
 extern void checkPlayerLocation(Shape *p);
-extern void spawnEnemy(struct Node** head_ref, Enemy1 *enemy);
+extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void printEnemy(struct Node* temp);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(struct Node* enemy, bool removeEnemy);
-extern void removeEnemy(struct Node* head, struct Node* head_ref, struct Node* enemy);
+extern void checkEnemyLocation(struct Node* enemy);
+extern void removeEnemy(struct Node** head, struct Node* enemy, int &n);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -757,15 +757,13 @@ void physics()
     // Enemy Physics
     //=========================================================================
  
-    Enemy1 *e = &g.enemy;
         struct Node* temp = g.head;
-        for(int i = 0; i < e->n; i++) {
-                if(temp != NULL) {
+        for(int i = 0; i < g.n; i++) {
+                if(temp != NULL  ) {
                         moveEnemy(temp);
-                        checkEnemyLocation(temp,temp->data.removeEnemy);
+                        checkEnemyLocation(temp);
                         if(temp->data.removeEnemy){
-                                //struct Node* head_ref = g.head;
-                        //      removeEnemy(g.head, head_ref, temp);
+                              removeEnemy(&g.head, temp, g.n);
                         }
                         temp = temp->next;
                 }
@@ -866,25 +864,14 @@ void render()
         p->playerExists = true;
     }
     checkPlayerLocation(p);
+    printPlayer(p);
     //glColor3ub(190,140,10);
-    glPushMatrix();
-    float w = p->width;
-    float h = p->height;
     //=========================================================================
     // Smoke Following Player
     //=========================================================================
     makeSmoke(p->center.x, p->center.y);
     makeSmoke(p->center.x, p->center.y);
     printSmoke();
-    glColor3ub(190, 140, 10);
-    glTranslatef(p->center.x, p->center.y, p->center.z);
-    glBegin(GL_QUADS);
-        glVertex2i(-w,-h);
-        glVertex2i(-w, h);
-        glVertex2i( w, h);
-        glVertex2i( w,-h);
-    glEnd();
-    glPopMatrix();
 
     //glBindTexture(GL_TEXTURE_2D, g.bgSilhouetteTexture);
     //glEnable(GL_ALPHA_TEST);
@@ -950,17 +937,16 @@ void render()
     //=========================================================================
     // Diego Enemies
     //=========================================================================
-     Enemy1 *e = &g.enemy;
+     Enemy1 e = g.enemy;
         struct Node* temp = g.head;
-        while( e->n < 5) {
+        while( g.n < 5) {
                 spawnEnemy(&g.head, e);
                 temp = g.head;
-                setEnemySize(temp,e->n);
-                e->n++;
+                setEnemySize(temp,g.n);
+                g.n++;
         }
 
         printEnemy(temp);
-
 
     //=========================================================================
     // Screens

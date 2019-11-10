@@ -35,7 +35,6 @@ struct Shape {
 struct Enemy1 {
 	int health;
 	int damage;
-	int n = 0;
 	Shape s;
 	bool removeEnemy = false;
 };
@@ -55,6 +54,23 @@ void spawnPlayer(Shape *p)
 	p->center.y = 570;
 }
 
+void printPlayer(Shape *p)
+{
+glPushMatrix();
+    float w = p->width;
+    float h = p->height;
+    glColor3ub(190, 140, 10);
+    glTranslatef(p->center.x, p->center.y, p->center.z);
+    glBegin(GL_QUADS);
+        glVertex2i(-w,-h);
+        glVertex2i(-w, h);
+        glVertex2i( w, h);
+        glVertex2i( w,-h);
+    glEnd();
+    glPopMatrix();
+
+}
+
 void drawPlayer()
 {
 
@@ -70,26 +86,6 @@ void checkPlayerLocation(Shape *p)
 
 // =========================Enemy Functions =================================
 /*
-   void removeEnemy(Shape *e, int *i)
-   {
-   for(int j = 0; j < *i; j++){
-   cout << *i << endl;
-   e[j] = e[*i-1];
-   (*i)--;
-   }
-   }
-
-   void checkEnemyLocation(Shape *e, int *i)
-   {	
-   for(int j = 0; j < *i; j++){
-//cout << e[j].center.x << endl;
-if(e[j].center.x < 0.0){
-//cout << "true" << endl;
-removeEnemy(e, i);
-}
-}
-}
-
 void subtractEnemyHealth(struct Node* enemy, int damage)
 {
 enemy->data.health -= damage;
@@ -108,13 +104,11 @@ gameOver();
 
 */
 
-void spawnEnemy(struct Node** head_ref, Enemy1 *enemy) 
+void spawnEnemy(struct Node** head_ref, Enemy1 enemy) 
 {
 	struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
-	new_node->data = *enemy;
-	if(head_ref != NULL) {
-		new_node->next = (*head_ref);
-	}
+	new_node->data = enemy;
+	new_node->next = (*head_ref);
 	(*head_ref) = new_node;
 }
 
@@ -155,29 +149,43 @@ void moveEnemy(struct Node* enemy)
 	enemy->data.s.center.x += enemy->data.s.velocity.x;
 }
 
-void removeEnemy(struct Node* head, struct Node* head_ref, struct Node* enemy)
+void removeEnemy(struct Node** head, struct Node* enemy, int &n)
 {
-	for(int i = 0; i < 4; i++){
-		if(head == enemy){
-			head = head->next;
-			return;	
-		}
-		else if(head_ref->next == enemy) {
-			if(head_ref->next->next != NULL) {
-				head_ref->next = head_ref->next->next;
-				enemy = head_ref->next;
-			}
-			else{
-				enemy = head_ref;
-				enemy->next = NULL;
-			}
-		}
-	}	
+
+	struct Node* temp = *head;
+	struct Node* prev = *head;
+	// If head node itself holds the key to be deleted 
+	if (temp != NULL && temp == enemy) 
+	{ 
+		*head = temp->next;   // Changed head 
+		free(temp);		// free old head 
+		cout << "working" << endl;
+		n--;
+		return; 
+	} 
+
+	// Search for the key to be deleted, keep track of the 
+	// previous node as we need to change 'prev->next' 
+	while (temp != NULL && temp != enemy) 
+	{ 
+		prev = temp; 
+		temp = temp->next; 
+		cout << "This one is working" << endl;
+	} 
+
+	// If key was not present in linked list 
+	if (temp == NULL) return; 
+
+	// Unlink the node from linked list 
+	prev->next = temp->next; 
+	free(temp);	
+	n--;
+	cout << n << endl;
 }
 
-void checkEnemyLocation(struct Node* enemy, bool removeEnemy)
+void checkEnemyLocation(struct Node* enemy)
 {
-	if(enemy->data.s.center.x < 0) {
+	if(enemy->data.s.center.x < 100) {
 		enemy->data.removeEnemy = true;
 	}
 }

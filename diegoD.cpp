@@ -185,7 +185,7 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n)
 
 	// Search for the key to be deleted, keep track of the 
 	// previous node as we need to change 'prev->next' 
-	while (temp != NULL && &temp != &enemy) 
+	while (temp != NULL && temp != enemy) 
 	{ 
 		prev = temp; 
 		temp = temp->next; 
@@ -197,7 +197,6 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n)
 
 	// Unlink the node from linked list 
 	prev->next = temp->next; 
-
 	free(temp);	
 	n--;
 }

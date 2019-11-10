@@ -54,6 +54,23 @@ void spawnPlayer(Shape *p)
 	p->center.y = 570;
 }
 
+void printPlayer(Shape *p)
+{
+glPushMatrix();
+    float w = p->width;
+    float h = p->height;
+    glColor3ub(190, 140, 10);
+    glTranslatef(p->center.x, p->center.y, p->center.z);
+    glBegin(GL_QUADS);
+        glVertex2i(-w,-h);
+        glVertex2i(-w, h);
+        glVertex2i( w, h);
+        glVertex2i( w,-h);
+    glEnd();
+    glPopMatrix();
+
+}
+
 void drawPlayer()
 {
 
@@ -69,26 +86,6 @@ void checkPlayerLocation(Shape *p)
 
 // =========================Enemy Functions =================================
 /*
-   void removeEnemy(Shape *e, int *i)
-   {
-   for(int j = 0; j < *i; j++){
-   cout << *i << endl;
-   e[j] = e[*i-1];
-   (*i)--;
-   }
-   }
-
-   void checkEnemyLocation(Shape *e, int *i)
-   {	
-   for(int j = 0; j < *i; j++){
-//cout << e[j].center.x << endl;
-if(e[j].center.x < 0.0){
-//cout << "true" << endl;
-removeEnemy(e, i);
-}
-}
-}
-
 void subtractEnemyHealth(struct Node* enemy, int damage)
 {
 enemy->data.health -= damage;
@@ -154,22 +151,6 @@ void moveEnemy(struct Node* enemy)
 
 void removeEnemy(struct Node** head, struct Node* enemy, int &n)
 {
-	/*struct Node* temp = head;
-	  for(int i = 0; i < 5;i++){
-	  if(head == enemy){
-	  head = head->next;
-	  return;	
-	  }
-	  else if(temp->next == enemy) {
-	  if(temp->next->next != NULL) {
-	  temp->next = temp->next->next;
-	  }
-	  else{
-	  enemy = temp;
-	  enemy->next = NULL;
-	  }
-	  }
-	  }*/
 
 	struct Node* temp = *head;
 	struct Node* prev = *head;
@@ -199,6 +180,7 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n)
 	prev->next = temp->next; 
 	free(temp);	
 	n--;
+	cout << n << endl;
 }
 
 void checkEnemyLocation(struct Node* enemy)

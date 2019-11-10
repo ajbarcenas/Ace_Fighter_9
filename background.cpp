@@ -305,6 +305,7 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Shape *p);
+extern void printPlayer(Shape *p);
 extern void checkPlayerLocation(Shape *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
@@ -863,25 +864,14 @@ void render()
         p->playerExists = true;
     }
     checkPlayerLocation(p);
+    printPlayer(p);
     //glColor3ub(190,140,10);
-    glPushMatrix();
-    float w = p->width;
-    float h = p->height;
     //=========================================================================
     // Smoke Following Player
     //=========================================================================
     makeSmoke(p->center.x, p->center.y);
     makeSmoke(p->center.x, p->center.y);
     printSmoke();
-    glColor3ub(190, 140, 10);
-    glTranslatef(p->center.x, p->center.y, p->center.z);
-    glBegin(GL_QUADS);
-        glVertex2i(-w,-h);
-        glVertex2i(-w, h);
-        glVertex2i( w, h);
-        glVertex2i( w,-h);
-    glEnd();
-    glPopMatrix();
 
     //glBindTexture(GL_TEXTURE_2D, g.bgSilhouetteTexture);
     //glEnable(GL_ALPHA_TEST);

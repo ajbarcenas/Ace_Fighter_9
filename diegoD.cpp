@@ -35,7 +35,6 @@ struct Shape {
 struct Enemy1 {
 	int health;
 	int damage;
-	int n = 0;
 	Shape s;
 	bool removeEnemy = false;
 };
@@ -108,13 +107,11 @@ gameOver();
 
 */
 
-void spawnEnemy(struct Node** head_ref, Enemy1 *enemy) 
+void spawnEnemy(struct Node** head_ref, Enemy1 enemy) 
 {
 	struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
-	new_node->data = *enemy;
-	if(head_ref != NULL) {
-		new_node->next = (*head_ref);
-	}
+	new_node->data = enemy;
+	new_node->next = (*head_ref);
 	(*head_ref) = new_node;
 }
 
@@ -155,29 +152,59 @@ void moveEnemy(struct Node* enemy)
 	enemy->data.s.center.x += enemy->data.s.velocity.x;
 }
 
-void removeEnemy(struct Node* head, struct Node* head_ref, struct Node* enemy)
+void removeEnemy(struct Node** head, struct Node* enemy, int &n)
 {
-	for(int i = 0; i < 4; i++){
-		if(head == enemy){
-			head = head->next;
-			return;	
-		}
-		else if(head_ref->next == enemy) {
-			if(head_ref->next->next != NULL) {
-				head_ref->next = head_ref->next->next;
-				enemy = head_ref->next;
-			}
-			else{
-				enemy = head_ref;
-				enemy->next = NULL;
-			}
-		}
-	}	
+	/*struct Node* temp = head;
+	  for(int i = 0; i < 5;i++){
+	  if(head == enemy){
+	  head = head->next;
+	  return;	
+	  }
+	  else if(temp->next == enemy) {
+	  if(temp->next->next != NULL) {
+	  temp->next = temp->next->next;
+	  }
+	  else{
+	  enemy = temp;
+	  enemy->next = NULL;
+	  }
+	  }
+	  }*/
+
+	struct Node* temp = *head;
+	struct Node* prev = *head;
+	// If head node itself holds the key to be deleted 
+	if (temp != NULL && temp == enemy) 
+	{ 
+		*head = temp->next;   // Changed head 
+		free(temp);		// free old head 
+		cout << "working" << endl;
+		n--;
+		return; 
+	} 
+
+	// Search for the key to be deleted, keep track of the 
+	// previous node as we need to change 'prev->next' 
+	while (temp != NULL && &temp != &enemy) 
+	{ 
+		prev = temp; 
+		temp = temp->next; 
+		cout << "This one is working" << endl;
+	} 
+
+	// If key was not present in linked list 
+	if (temp == NULL) return; 
+
+	// Unlink the node from linked list 
+	prev->next = temp->next; 
+
+	free(temp);	
+	n--;
 }
 
-void checkEnemyLocation(struct Node* enemy, bool removeEnemy)
+void checkEnemyLocation(struct Node* enemy)
 {
-	if(enemy->data.s.center.x < 0) {
+	if(enemy->data.s.center.x < 100) {
 		enemy->data.removeEnemy = true;
 	}
 }

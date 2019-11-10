@@ -30,7 +30,6 @@ Goals:
 #include <iomanip>
 #include "alexisisB.h"
 
-//Global g;
 using namespace std;
 
 extern ABarGlobal abG;
@@ -193,17 +192,11 @@ void cubePower()
 
     glFlush();
 
-    /*
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    gluProject(ag.cx, ag.cy, ag.cz,
-               modelview, projection, viewport,
-               &ag.winX, &ag.winY, &ag.winZ);
-    cout << fixed << setprecision(0)
-         << "CubeX: " << ag.winX << " CubeY: " << ag.winY << endl;
-    */
+}
 
+void makeCubeCoordsNull()
+{
+    ag.winX = ag.winY = ag.winZ = 9999;
 }
 
 double timeDiff(struct timespec *start, struct timespec *end)
@@ -368,7 +361,7 @@ void makeSmoke(int x, int y)
         p->s.center.y = y - (rand() % 8);
 
     p->velocity.y = 0;
-    p->velocity.x = - ((double)rand() / (double)RAND_MAX) - 5;
+    p->velocity.x = - ((double)rand() / (double)RAND_MAX) - 30;
     ++ag.n;
 }
 

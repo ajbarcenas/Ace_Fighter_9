@@ -416,8 +416,8 @@ void Enemy::printTest()
 
 void Enemy::deleteEnemy(int i)
 {
-    for (int j = i; j < numEnemy; j++)
-        test[j] = test[numEnemy - 1];
+    //for (int j = i; j < numEnemy; j++)
+    test[i] = test[numEnemy - 1];
     --numEnemy;
 }
 

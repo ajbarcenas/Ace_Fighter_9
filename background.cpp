@@ -366,6 +366,7 @@ int main()
     //bulletMovement();
     eLex.testMovement();
     eLex.vEnemMovement();
+    eLex.cEnemMovement();
     eLex.bossMovement();
     eLex.bulletMovement();
     render();
@@ -929,6 +930,9 @@ void render()
 
     eLex.makeVEnem();
     eLex.printVEnem();
+
+    eLex.makeCEnem();
+    eLex.printCEnem();
     
     //=========================================================================
     // Alexis Boss

@@ -23,6 +23,7 @@ be receiving updates.
 #include <math.h>
 #include <unistd.h>
 const int MAXENEMIES = 5;
+const int CHECKMAXENEM = 20;
 const float GF = 0.0;
 
 //New vector for hitboxes
@@ -64,6 +65,7 @@ class Enemy {
 		
 		Dot test[MAXENEMIES];
 		Dot vEnemy[MAXENEMIES];
+		Dot cEnemy[CHECKMAXENEM];
         void deleteEnemy(int i);
         int getMAXENEMIES();
         int getEX(int i);
@@ -76,10 +78,12 @@ class Enemy {
 		int enemyY[MAXENEMIES];
 		int numEnemy = 0;
 		int numVEnemy = 0;
-        int getNumEnemy();
+		int numCEnemy = 0;
+		int getNumEnemy();
 		int m = 0;
 		int o = 0;
 		int v = 0;
+		int r = 0;
 		Dot boss[1];
 		void makeBoss(int x, int y);
 		void bossMovement();
@@ -95,6 +99,9 @@ class Enemy {
 		void makeVEnem();
 		void vEnemMovement();
 		void printVEnem();
+		void makeCEnem();
+		void cEnemMovement();
+		void printCEnem();
 		
 		bool increasing = true;
 		float cx = 1.0;

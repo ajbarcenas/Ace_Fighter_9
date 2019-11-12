@@ -375,6 +375,82 @@ void Enemy::makeTest()
 	++numEnemy;
 }
 
+void Enemy::makeCEnem()
+{
+	if (numCEnemy >= 20)
+		return;
+	Dot *f = &cEnemy[numCEnemy];
+
+	if (numCEnemy == 0) {	
+		f->e.center.x = 1920;
+		f->e.center.y = 1000;
+	} else if (numCEnemy == 1) {
+		f->e.center.x = 2120;
+		f->e.center.y = 1000;
+	} else if (numCEnemy == 2) {
+		f->e.center.x = 2320;
+		f->e.center.y = 1000;
+	} else if (numCEnemy == 3) {
+		f->e.center.x = 2520;
+		f->e.center.y = 1000;
+	
+	} else if (numCEnemy == 4) {
+		f->e.center.x = 2000;
+		f->e.center.y = 800;
+	} else if (numCEnemy == 5) {
+		f->e.center.x = 2200;
+		f->e.center.y = 800;
+	} else if (numCEnemy == 6) {
+		f->e.center.x = 2400;
+		f->e.center.y = 800;
+	} else if (numCEnemy == 7) {
+		f->e.center.x = 2600;
+		f->e.center.y = 800;
+	
+	} else if (numCEnemy == 8) {
+		f->e.center.x = 1920;
+		f->e.center.y = 600;
+	} else if (numCEnemy == 9) {
+		f->e.center.x = 2120;
+		f->e.center.y = 600;
+	} else if (numCEnemy == 10) {
+		f->e.center.x = 2320;
+		f->e.center.y = 600;
+	} else if (numCEnemy == 11) {
+		f->e.center.x = 2520;
+		f->e.center.y = 600;
+	
+	} else if (numCEnemy == 12) {
+		f->e.center.x = 2000;
+		f->e.center.y = 400;
+	} else if (numCEnemy == 13) {
+		f->e.center.x = 2200;
+		f->e.center.y = 400;
+	} else if (numCEnemy == 14) {
+		f->e.center.x = 2400;
+		f->e.center.y = 400;
+	} else if (numCEnemy == 15) {
+		f->e.center.x = 2600;
+		f->e.center.y = 400;
+	
+	} else if (numCEnemy == 16) {
+		f->e.center.x = 1920;
+		f->e.center.y = 200;
+	} else if (numCEnemy == 17) {
+		f->e.center.x = 2120;
+		f->e.center.y = 200;
+	} else if (numCEnemy == 18) {
+		f->e.center.x = 2320;
+		f->e.center.y = 200;
+	} else if (numCEnemy == 19) {
+		f->e.center.x = 2520;
+		f->e.center.y = 200;
+	}
+	f->velocity.y = 0;
+	f->velocity.x = -4;
+	++numCEnemy;
+}
+
 void Enemy::makeVEnem()
 {
 	if (numVEnemy >= 5)
@@ -422,9 +498,26 @@ void Enemy::testMovement()
 	}
 }
 
+void Enemy::cEnemMovement()
+{
+	if (numCEnemy <= 0)
+		return;
+	for (int i = 0; i < numCEnemy; i++) {
+		Dot *f = &cEnemy[i];
+
+		f->e.center.x += f->velocity.x;
+		f->e.center.y += f->velocity.y;
+	if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
+		f->velocity.y = -(f->velocity.y);
+	}
+		if (f->e.center.x < 0.0)
+			f->e.center.x = 1920;
+        }
+}
+
 void Enemy::vEnemMovement()
 {
-	if (numEnemy <= 0)
+	if (numVEnemy <= 0)
 		return;
 	for (int i = 0; i < numVEnemy; i++) {
 		Dot *v = &vEnemy[i];
@@ -451,6 +544,24 @@ void Enemy::printTest()
 		    glVertex2i(c->x-w, c->y+h);
 		    glVertex2i(c->x+w, c->y+h);
 		    glVertex2i(c->x+w, c->y-h);
+		glEnd();
+		glPopMatrix();
+	}
+}
+
+void Enemy::printCEnem()
+{
+	float w, h;
+	for (int i = 0; i < numCEnemy; i++) {
+		glPushMatrix();
+		glColor3ub(252,50,50);
+		Vec1 *g = &cEnemy[i].e.center;
+		w = h = 30;
+		glBegin(GL_QUADS);
+		    glVertex2i(g->x-w, g->y-h);
+		    glVertex2i(g->x-w, g->y+h);
+		    glVertex2i(g->x+w, g->y+h);
+		    glVertex2i(g->x+w, g->y-h);
 		glEnd();
 		glPopMatrix();
 	}

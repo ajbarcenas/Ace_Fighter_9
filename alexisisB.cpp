@@ -34,9 +34,9 @@ void printAlexisB(Rect r)
 void ABarGlobal::printHighScore(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
-	r.left = 960;
+	r.left = 835;
 	r.bot = 650;
-	ggprint16(&r, 16, 0xcf13ac, "HIGH SCORES");
+	ggprint16(&r, 16, 0xcf13ac, "         HIGH SCORES");
 	ggprint16(&r, 16, 0xcf13ac, " Press T to increment scores");
 }
 /*Prints out "Ace Fighter 9" in a cross format across the screen
@@ -209,9 +209,9 @@ void ABarGlobal::printTempScreen(Rect r)
 {
         glColor3f(1.0, 1.0, 1.0);
 	r.bot = 800;
-	r.left = 960;
+	r.left = 825;
         ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
-	ggprint16(&r, 16, 0xff1919, "Press S to Start the game");
+	ggprint16(&r, 16, 0xff1919, "   Press S to Start the game");
 }
 void ABarGlobal::drawButton(int x_pos, int y_pos)
 {
@@ -265,7 +265,7 @@ void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 void ABarGlobal::printTempScores(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
-	r.left = 850;
+	r.left = 800;
 	r.bot = 575;
 	ggprint16(&r, 50, 0xcf13ac, "Test Person");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 2");
@@ -330,9 +330,9 @@ void ABarGlobal::condenseCreds()
 	showCreditsBorder(130, 130, 1440, 300);
 	printAlexisB(r);
 	glColor3f(1.0, 1.0, 1.0);
-	r.bot = 145, r.left = 520;
+	r.bot = 145, r.left = 340;
 	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
-	r.bot = 145, r.left = 1500;
+	r.bot = 145, r.left = 1300;
 	ggprint16(&r, 16, 0xcf13ac,
 		"Andrew Oliveros- HUD Creation/Sprites/Menu");
 }

@@ -192,6 +192,8 @@ public:
     GLuint andrewTexId;
     int showLogo;
     int n = 0;
+    int maxEnemy1 = 5;
+    bool enemies1Dead = true;
     Enemy1 enemy;
     struct Node* head = NULL;
     GLuint texid;
@@ -313,10 +315,10 @@ extern void printPlayer(Shape *p);
 extern void checkPlayerLocation(Shape *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
-extern void printEnemy(struct Node* temp);
+extern void printEnemy(struct Node* temp, int n);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
-extern void removeEnemy(struct Node** head, struct Node* enemy, int &n);
+extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -351,7 +353,7 @@ int main()
     init_opengl();
     int done=0;
     g.n = 0;
-    cout << g.n << endl;
+    g.enemies1Dead = true;
     while (!done) {
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
@@ -773,14 +775,14 @@ void physics()
  
         struct Node* temp = g.head;
         for(int i = 0; i < g.n; i++) {
-                if(temp != NULL  ) {
-                        moveEnemy(temp);
-                        checkEnemyLocation(temp);
-                        if(temp->data.removeEnemy){
-                              removeEnemy(&g.head, temp, g.n);
-                        }
-                        temp = temp->next;
+            if(temp != NULL) {
+	        moveEnemy(temp);
+                checkEnemyLocation(temp);
+                if(temp->data.removeEnemy) {
+                    removeEnemy(&g.head, temp, g.n, g.enemies1Dead);
                 }
+                temp = temp->next;
+	    }
         }
  
     /* 
@@ -944,14 +946,17 @@ void render()
     //=========================================================================
      Enemy1 e = g.enemy;
         struct Node* temp = g.head;
-        while( g.n < 5) {
+        while( g.n < g.maxEnemy1 && g.enemies1Dead) {
                 spawnEnemy(&g.head, e);
                 temp = g.head;
                 setEnemySize(temp,g.n);
                 g.n++;
+		if ( g.n == 5) {
+			g.enemies1Dead = false;
+		}
         }
-
-        printEnemy(temp);
+	
+        printEnemy(temp, g.n);
 
     //=========================================================================
     // Screens

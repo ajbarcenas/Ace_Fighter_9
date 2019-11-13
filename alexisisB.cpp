@@ -34,9 +34,9 @@ void printAlexisB(Rect r)
 void ABarGlobal::printHighScore(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
-	r.left = 960;
+	r.left = 835;
 	r.bot = 650;
-	ggprint16(&r, 16, 0xcf13ac, "HIGH SCORES");
+	ggprint16(&r, 16, 0xcf13ac, "         HIGH SCORES");
 	ggprint16(&r, 16, 0xcf13ac, " Press T to increment scores");
 }
 /*Prints out "Ace Fighter 9" in a cross format across the screen
@@ -209,9 +209,9 @@ void ABarGlobal::printTempScreen(Rect r)
 {
         glColor3f(1.0, 1.0, 1.0);
 	r.bot = 800;
-	r.left = 960;
+	r.left = 825;
         ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
-	ggprint16(&r, 16, 0xff1919, "Press S to Start the game");
+	ggprint16(&r, 16, 0xff1919, "   Press S to Start the game");
 }
 void ABarGlobal::drawButton(int x_pos, int y_pos)
 {
@@ -265,7 +265,7 @@ void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 void ABarGlobal::printTempScores(Rect r)
 {
 	glColor3f(1.0, 1.0, 1.0);
-	r.left = 850;
+	r.left = 800;
 	r.bot = 575;
 	ggprint16(&r, 50, 0xcf13ac, "Test Person");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 2");
@@ -330,9 +330,9 @@ void ABarGlobal::condenseCreds()
 	showCreditsBorder(130, 130, 1440, 300);
 	printAlexisB(r);
 	glColor3f(1.0, 1.0, 1.0);
-	r.bot = 145, r.left = 520;
+	r.bot = 145, r.left = 340;
 	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
-	r.bot = 145, r.left = 1500;
+	r.bot = 145, r.left = 1300;
 	ggprint16(&r, 16, 0xcf13ac,
 		"Andrew Oliveros- HUD Creation/Sprites/Menu");
 }
@@ -375,6 +375,82 @@ void Enemy::makeTest()
 	++numEnemy;
 }
 
+void Enemy::makeCEnem()
+{
+	if (numCEnemy >= 20)
+		return;
+	Dot *f = &cEnemy[numCEnemy];
+
+	if (numCEnemy == 0) {	
+		f->e.center.x = 1920;
+		f->e.center.y = 1000;
+	} else if (numCEnemy == 1) {
+		f->e.center.x = 2120;
+		f->e.center.y = 1000;
+	} else if (numCEnemy == 2) {
+		f->e.center.x = 2320;
+		f->e.center.y = 1000;
+	} else if (numCEnemy == 3) {
+		f->e.center.x = 2520;
+		f->e.center.y = 1000;
+	
+	} else if (numCEnemy == 4) {
+		f->e.center.x = 2000;
+		f->e.center.y = 800;
+	} else if (numCEnemy == 5) {
+		f->e.center.x = 2200;
+		f->e.center.y = 800;
+	} else if (numCEnemy == 6) {
+		f->e.center.x = 2400;
+		f->e.center.y = 800;
+	} else if (numCEnemy == 7) {
+		f->e.center.x = 2600;
+		f->e.center.y = 800;
+	
+	} else if (numCEnemy == 8) {
+		f->e.center.x = 1920;
+		f->e.center.y = 600;
+	} else if (numCEnemy == 9) {
+		f->e.center.x = 2120;
+		f->e.center.y = 600;
+	} else if (numCEnemy == 10) {
+		f->e.center.x = 2320;
+		f->e.center.y = 600;
+	} else if (numCEnemy == 11) {
+		f->e.center.x = 2520;
+		f->e.center.y = 600;
+	
+	} else if (numCEnemy == 12) {
+		f->e.center.x = 2000;
+		f->e.center.y = 400;
+	} else if (numCEnemy == 13) {
+		f->e.center.x = 2200;
+		f->e.center.y = 400;
+	} else if (numCEnemy == 14) {
+		f->e.center.x = 2400;
+		f->e.center.y = 400;
+	} else if (numCEnemy == 15) {
+		f->e.center.x = 2600;
+		f->e.center.y = 400;
+	
+	} else if (numCEnemy == 16) {
+		f->e.center.x = 1920;
+		f->e.center.y = 200;
+	} else if (numCEnemy == 17) {
+		f->e.center.x = 2120;
+		f->e.center.y = 200;
+	} else if (numCEnemy == 18) {
+		f->e.center.x = 2320;
+		f->e.center.y = 200;
+	} else if (numCEnemy == 19) {
+		f->e.center.x = 2520;
+		f->e.center.y = 200;
+	}
+	f->velocity.y = 0;
+	f->velocity.x = -4;
+	++numCEnemy;
+}
+
 void Enemy::makeVEnem()
 {
 	if (numVEnemy >= 5)
@@ -415,27 +491,44 @@ void Enemy::testMovement()
 		}
 
 		if (p->e.center.x < 0.0)
-		    p->e.center.x = 1920;
+			p->e.center.x = 1920;
 
 		enemyX[i] = p->e.center.x;
 		enemyY[i] = p->e.center.y;
 	}
 }
 
+void Enemy::cEnemMovement()
+{
+	if (numCEnemy <= 0)
+		return;
+	for (int i = 0; i < numCEnemy; i++) {
+		Dot *f = &cEnemy[i];
+
+		f->e.center.x += f->velocity.x;
+		f->e.center.y += f->velocity.y;
+	if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
+		f->velocity.y = -(f->velocity.y);
+	}
+		if (f->e.center.x < 0.0)
+			f->e.center.x = 1920;
+	}
+}
+
 void Enemy::vEnemMovement()
 {
-	if (numEnemy <= 0)
+	if (numVEnemy <= 0)
 		return;
 	for (int i = 0; i < numVEnemy; i++) {
 		Dot *v = &vEnemy[i];
-	v->e.center.x += v->velocity.x;
-	v->e.center.y += v->velocity.y;
-	if (v->e.center.y < 0.0 || v->e.center.y > 1080) {
-		v->velocity.y = -(v->velocity.y);
-	}
+		v->e.center.x += v->velocity.x;
+		v->e.center.y += v->velocity.y;
+		if (v->e.center.y < 0.0 || v->e.center.y > 1080) {
+			v->velocity.y = -(v->velocity.y);
+		}
 		if (v->e.center.x < 0.0)
 			v->e.center.x = 1920;
-        }
+	}
 }
 
 void Enemy::printTest()
@@ -447,10 +540,28 @@ void Enemy::printTest()
 		Vec1 *c = &test[i].e.center;
 		w = h = 30;
 		glBegin(GL_QUADS);
-		    glVertex2i(c->x-w, c->y-h);
-		    glVertex2i(c->x-w, c->y+h);
-		    glVertex2i(c->x+w, c->y+h);
-		    glVertex2i(c->x+w, c->y-h);
+			glVertex2i(c->x-w, c->y-h);
+			glVertex2i(c->x-w, c->y+h);
+			glVertex2i(c->x+w, c->y+h);
+			glVertex2i(c->x+w, c->y-h);
+		glEnd();
+		glPopMatrix();
+	}
+}
+
+void Enemy::printCEnem()
+{
+	float w, h;
+	for (int i = 0; i < numCEnemy; i++) {
+		glPushMatrix();
+		glColor3ub(252,50,50);
+		Vec1 *g = &cEnemy[i].e.center;
+		w = h = 30;
+		glBegin(GL_QUADS);
+			glVertex2i(g->x-w, g->y-h);
+			glVertex2i(g->x-w, g->y+h);
+			glVertex2i(g->x+w, g->y+h);
+			glVertex2i(g->x+w, g->y-h);
 		glEnd();
 		glPopMatrix();
 	}
@@ -563,10 +674,10 @@ void Enemy::printBoss()
 		w = 200;
 		h = 150;
 		glBegin(GL_QUADS);
-		glVertex2i(d->x-w, d->y-h);
-		glVertex2i(d->x-w, d->y+h);
-		glVertex2i(d->x+w, d->y+h);
-		glVertex2i(d->x+w, d->y-h);
+			glVertex2i(d->x-w, d->y-h);
+			glVertex2i(d->x-w, d->y+h);
+			glVertex2i(d->x+w, d->y+h);
+			glVertex2i(d->x+w, d->y-h);
 		glEnd();
 		glPopMatrix();
 	
@@ -605,19 +716,19 @@ void Enemy::bulletMovement()
 
 void Enemy::printEBullet()
 {
-        float w, h;
+	float w, h;
 	for (int i = 0; i < o; i++) {
 		glPushMatrix();
 		glColor3ub(0, 0, 255);
 		Vec1 *g = &bullets[i].e.center;
 		w = h = 4;
 		glBegin(GL_QUADS);
-		glVertex2i(g->x-w, g->y-h);
-		glVertex2i(g->x-w, g->y+h);
-		glVertex2i(g->x+w, g->y+h);
-		glVertex2i(g->x+w, g->y-h);
+			glVertex2i(g->x-w, g->y-h);
+			glVertex2i(g->x-w, g->y+h);
+			glVertex2i(g->x+w, g->y+h);
+			glVertex2i(g->x+w, g->y-h);
 		glEnd();
 		glPopMatrix();
-	 }
+	}
 }
 #endif

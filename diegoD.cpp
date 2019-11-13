@@ -45,26 +45,34 @@ struct Enemy1 {
 	bool removeEnemy = false;
 };
 
+struct Player {
+	int currentHealth;
+        int maxHealth;
+        int damage;
+        Shape s;
+};
+
 struct Node {
 	Enemy1 data;
 	struct Node *next;
 };
 
-void spawnPlayer(Shape *p)
+void spawnPlayer(Player *p)
 {
-	p->width = 25;
-	p->height = 25;
-	p->center.x = 200;
-	p->center.y = 570;
+	p->s.width = 25;
+	p->s.height = 25;
+	p->s.center.x = 200;
+	p->s.center.y = 570;
+	p->damage = 10;
 }
 
-void printPlayer(Shape *p)
+void printPlayer(Player *p)
 {
 	glPushMatrix();
-	float w = p->width;
-	float h = p->height;
+	float w = p->s.width;
+	float h = p->s.height;
 	glColor3ub(190, 140, 10);
-	glTranslatef(p->center.x, p->center.y, p->center.z);
+	glTranslatef(p->s.center.x, p->s.center.y, p->s.center.z);
 	glBegin(GL_QUADS);
 	glVertex2i(-w,-h);
 	glVertex2i(-w, h);
@@ -74,11 +82,11 @@ void printPlayer(Shape *p)
 	glPopMatrix();
 }
 
-void checkPlayerLocation(Shape *p)
+void checkPlayerLocation(Player *p)
 {
-	if(p->center.x - p->width < -25 || p->center.x + p->width > 1945 ||
-			p->center.y - p->height < -25 || 
-			p->center.y + p->height > 1105) {
+	if(p->s.center.x - p->s.width < -25 || p->s.center.x + p->s.width > 1945 ||
+			p->s.center.y - p->s.height < -25 || 
+			p->s.center.y + p->s.height > 1105) {
 		spawnPlayer(p);
 	}
 }
@@ -181,7 +189,6 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 		n--;
 		if(temp->next == NULL)
 			enemies1Dead = true;
-	//	cout << n << endl;
 		return; 
 	} 
 
@@ -203,7 +210,6 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 	free(temp);
 	cout << n << endl;	
 	n--;
-	//cout << n << endl;
 }
 
 void checkEnemyCollision(struct Node* enemy)

@@ -129,7 +129,8 @@ struct Enemy1 {
 };
 
 struct Player {
-	int health; 
+	int currentHealth;
+	int maxHealth; 
 	int damage;
 	Shape s;
 };
@@ -182,7 +183,7 @@ public:
     GLuint bgSilhouetteTexture;
     GLuint missileRedTexture;
     GLuint mrSilhouetteTexture;
-    Shape player;
+    Player player;
     Texture tex;
     Shape box;
     GLuint logoTexture;
@@ -311,9 +312,9 @@ void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics(void);
 void render(void);
-extern void spawnPlayer(Shape *p);
-extern void printPlayer(Shape *p);
-extern void checkPlayerLocation(Shape *p);
+extern void spawnPlayer(Player *p);
+extern void printPlayer(Player *p);
+extern void checkPlayerLocation(Player *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void printEnemy(struct Node* temp, int n);
@@ -663,7 +664,7 @@ void init_opengl(void)
 
 void check_mouse(XEvent *e)
 {
-    Shape *p = &g.player;
+    Player *p = &g.player;
     //Did the mouse move?
     //Was a mouse button clicked?
     static int savex = 0;
@@ -693,8 +694,8 @@ void check_mouse(XEvent *e)
             savex = e->xbutton.x;
             savey = e->xbutton.y;
             int y = g.yres - e->xbutton.y;
-            p->center.x = e->xbutton.x;
-            p->center.y = y;
+            p->s.center.x = e->xbutton.x;
+            p->s.center.y = y;
         }
     }
 }
@@ -706,26 +707,27 @@ int check_keys(XEvent *e)
         g.getBTime = 0;
     }
     //Was there input from the keyboard?
-    Shape *p = &g.player;
+    Player *p = &g.player;
     if (e->type == KeyPress) {
         int key = XLookupKeysym(&e->xkey, 0);
         switch(key) {
             case XK_Left:
-                p->velocity.x = -15;
-                p->center.x += p->velocity.x;
+                p->s.velocity.x = -15;
+                p->s.center.x += p->s.velocity.x;
                 break;
             case XK_Right:
-                p->velocity.x = 15;
-                p->center.x += p->velocity.x;
+                p->s.velocity.x = 15;
+                p->s.center.x += p->s.velocity.x;
                 break;
             case XK_Up:
-                p->velocity.y = 15;
-                p->center.y += p->velocity.y;
+                p->s.velocity.y = 15;
+                p->s.center.y += p->s.velocity.y;
                 break;
             case XK_Down:
-                p->velocity.y = -15;
-                p->center.y += p->velocity.y;
+                p->s.velocity.y = -15;
+                p->s.center.y += p->s.velocity.y;
                 break;
+
             case XK_t:
                 abG.incrementScore(1);
                 authScores();
@@ -757,27 +759,27 @@ int check_keys(XEvent *e)
                 g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
                 if (g.bTime > 0.2) {
                     if (getPower() == 1)
-                        makeBullet(p->center.x, p->center.y);
+                        makeBullet(p->s.center.x, p->s.center.y);
                     else if (getPower() == 2) {
-                        makeBullet(p->center.x, p->center.y + 4);
-                        makeBullet(p->center.x, p->center.y - 4);
+                        makeBullet(p->s.center.x, p->s.center.y + 4);
+                        makeBullet(p->s.center.x, p->s.center.y - 4);
                     }
                     else if (getPower() == 3) {
-                        makeBullet(p->center.x, p->center.y + 8);
-                        makeBullet(p->center.x, p->center.y);
-                        makeBullet(p->center.x, p->center.y - 8);
+                        makeBullet(p->s.center.x, p->s.center.y + 8);
+                        makeBullet(p->s.center.x, p->s.center.y);
+                        makeBullet(p->s.center.x, p->s.center.y - 8);
                     }
                     else if (getPower() == 4) {
-                        makeMissile(p->center.x, p->center.y);
+                        makeMissile(p->s.center.x, p->s.center.y);
                     }
                     else if (getPower() >= 5) {
-                        makeMissile(p->center.x, p->center.y + 20);
-                        makeMissile(p->center.x, p->center.y - 20);
+                        makeMissile(p->s.center.x, p->s.center.y + 20);
+                        makeMissile(p->s.center.x, p->s.center.y - 20);
                     }
                     g.getBTime = 1;
                 }
                 break;
-            case XK_Escape:
+		case XK_Escape:
                 return 1;
         }
         if (key == XK_Escape)
@@ -922,10 +924,10 @@ void render()
     //=========================================================================
     // Creating Player
     //=========================================================================
-    Shape *p = &g.player;
-    if(!p->playerExists) {
+    Player *p = &g.player;
+    if(!p->s.playerExists) {
         spawnPlayer(p);
-        p->playerExists = true;
+        p->s.playerExists = true;
     }
     checkPlayerLocation(p);
     //printPlayer(p);
@@ -933,10 +935,10 @@ void render()
     //=========================================================================
     // Smoke Following Player
     //=========================================================================
-    makeSmoke(p->center.x, p->center.y);
-    makeSmoke(p->center.x, p->center.y);
-    makeSmoke(p->center.x, p->center.y);
-    makeSmoke(p->center.x, p->center.y);
+    makeSmoke(p->s.center.x, p->s.center.y);
+    makeSmoke(p->s.center.x, p->s.center.y);
+    makeSmoke(p->s.center.x, p->s.center.y);
+    makeSmoke(p->s.center.x, p->s.center.y);
     printSmoke();
     printPlayer(p);
     //=========================================================================

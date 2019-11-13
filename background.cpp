@@ -949,7 +949,7 @@ void render()
         while( g.n < g.maxEnemy1 && g.enemies1Dead) {
                 spawnEnemy(&g.head, e);
                 temp = g.head;
-                setEnemySize(temp,g.n);
+                setEnemySize(temp, g.n);
                 g.n++;
 		if ( g.n == 5) {
 			g.enemies1Dead = false;

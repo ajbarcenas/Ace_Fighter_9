@@ -178,7 +178,8 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 		free(temp);		// free old head 
 		cout << "working" << endl;
 		n--;
-		enemies1Dead = true;
+		if(temp->next == NULL)
+			enemies1Dead = true;
 	//	cout << n << endl;
 		return; 
 	} 

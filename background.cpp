@@ -100,8 +100,8 @@ Image img[10] = {"./Images/MountainLayer.png",
 class Texture {
 public:
     Image *backImage;
-    float xc[8];
-    float yc[8];
+    float xc[10];
+    float yc[10];
 };
 
 struct Vec {
@@ -180,7 +180,7 @@ public:
     GLuint pSilhouetteTexture;
     GLuint bulletGrayTexture;
     GLuint bgSilhouetteTexture;
-    GLuint missleRedTexture;
+    GLuint missileRedTexture;
     GLuint mrSilhouetteTexture;
     Shape player;
     Texture tex;
@@ -333,6 +333,9 @@ extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet(float w, float h, GLuint Texture);
 extern void bulletMovement();
+extern void makeMissile(int x, int y);
+extern void printMissile(float w, float h, GLuint Texture);
+extern void missileMovement();
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
@@ -428,6 +431,8 @@ void init_opengl(void)
     glGenTextures(1, &g.pSilhouetteTexture);
     glGenTextures(1, &g.bulletGrayTexture);
     glGenTextures(1, &g.bgSilhouetteTexture);
+    glGenTextures(1, &g.missileRedTexture);
+    glGenTextures(1, &g.mrSilhouetteTexture);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -524,6 +529,32 @@ void init_opengl(void)
     free(bgSilhouetteData);
 
     //=========================================================================
+    // Missile Red Layer
+    //=========================================================================
+    int wmr = img[9].width;
+    int hmr = img[9].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missileRedTexture);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, wmr, hmr, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, img[9].data);
+
+    //=========================================================================
+    // Missile Red Silhouette
+    //=========================================================================
+
+    glBindTexture(GL_TEXTURE_2D, g.mrSilhouetteTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *mrSilhouetteData = buildAlphaData(&img[9]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wmr, hmr, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, mrSilhouetteData);
+    free(mrSilhouetteData);
+
+    //=========================================================================
     // Change view area of image
     //=========================================================================
 
@@ -558,6 +589,14 @@ void init_opengl(void)
     g.tex.xc[7] = 1.0;
     g.tex.yc[6] = 0.0;
     g.tex.yc[7] = 1.0;
+
+    //=========================================================================
+    // Missile Red Image
+    //=========================================================================
+    g.tex.xc[8] = 0.0;
+    g.tex.xc[9] = 1.0;
+    g.tex.yc[8] = 0.0;
+    g.tex.yc[9] = 1.0;
 
     //=========================================================================
     // Logo Picture
@@ -655,6 +694,10 @@ void check_mouse(XEvent *e)
 
 int check_keys(XEvent *e)
 {
+    if (g.getBTime == 1) {
+        clock_gettime(CLOCK_REALTIME, &g.bTimeStart);
+        g.getBTime = 0;
+    }
     //Was there input from the keyboard?
     Shape *p = &g.player;
     if (e->type == KeyPress) {
@@ -679,7 +722,7 @@ int check_keys(XEvent *e)
             case XK_t:
                 abG.incrementScore(1);
                 authScores();
-		break;
+                break;
             case XK_h:
                 //g.showHighScores ^= 1;
                 abG.showHighScores();
@@ -697,13 +740,9 @@ int check_keys(XEvent *e)
                 cube ^= 1;
                 break;
             case XK_space:
-                if (g.getBTime == 1) {
-                    clock_gettime(CLOCK_REALTIME, &g.bTimeStart);
-                    g.getBTime = 0;
-                }
                 clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
                 g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
-                if (g.bTime > 0.1) {
+                if (g.bTime > 0.2) {
                     if (getPower() == 1)
                         makeBullet(p->center.x, p->center.y);
                     else if (getPower() == 2) {
@@ -716,17 +755,11 @@ int check_keys(XEvent *e)
                         makeBullet(p->center.x, p->center.y - 8);
                     }
                     else if (getPower() == 4) {
-                        makeBullet(p->center.x, p->center.y + 12);
-                        makeBullet(p->center.x, p->center.y + 4);
-                        makeBullet(p->center.x, p->center.y - 4);
-                        makeBullet(p->center.x, p->center.y - 12);
+                        makeMissile(p->center.x, p->center.y);
                     }
                     else if (getPower() >= 5) {
-                        makeBullet(p->center.x, p->center.y + 16);
-                        makeBullet(p->center.x, p->center.y + 8);
-                        makeBullet(p->center.x, p->center.y);
-                        makeBullet(p->center.x, p->center.y - 8);
-                        makeBullet(p->center.x, p->center.y - 16);
+                        makeMissile(p->center.x, p->center.y + 20);
+                        makeMissile(p->center.x, p->center.y - 20);
                     }
                     g.getBTime = 1;
                 }
@@ -795,6 +828,7 @@ void physics()
     */
 
     bulletMovement();
+    missileMovement();
 }
 
 void render()
@@ -880,19 +914,24 @@ void render()
         p->playerExists = true;
     }
     checkPlayerLocation(p);
-    printPlayer(p);
+    //printPlayer(p);
     //glColor3ub(190,140,10);
     //=========================================================================
     // Smoke Following Player
     //=========================================================================
     makeSmoke(p->center.x, p->center.y);
     makeSmoke(p->center.x, p->center.y);
+    makeSmoke(p->center.x, p->center.y);
+    makeSmoke(p->center.x, p->center.y);
     printSmoke();
-
+    printPlayer(p);
     //=========================================================================
     // Bullets
     //=========================================================================
-    printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
+    if (getPower() < 4)
+        printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
+    if (getPower() >= 4)
+        printMissile(img[9].width, img[9].height, g.mrSilhouetteTexture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
 

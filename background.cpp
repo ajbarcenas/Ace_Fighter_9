@@ -319,6 +319,7 @@ extern void printEnemy(struct Node* temp, int n);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
+extern void checkEnemyCollision(struct Node* enemy);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -333,6 +334,8 @@ extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet(float w, float h, GLuint Texture);
 extern void bulletMovement();
+extern void getBulletXY(int &bulletX, int &bulletY, int i);
+extern void getTotalBullets(int &tot);
 extern void makeMissile(int x, int y);
 extern void printMissile(float w, float h, GLuint Texture);
 extern void missileMovement();
@@ -811,6 +814,7 @@ void physics()
         for(int i = 0; i < g.n; i++) {
             if(temp != NULL) {
 	        moveEnemy(temp);
+		checkEnemyCollision(temp);
                 checkEnemyLocation(temp);
                 if(temp->data.removeEnemy) {
                     removeEnemy(&g.head, temp, g.n, g.enemies1Dead);

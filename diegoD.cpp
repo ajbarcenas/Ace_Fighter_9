@@ -21,6 +21,10 @@ using namespace std;
 
 const int  MAX_READ_ERRORS = 100;
 
+
+extern void getBulletXY(int &x, int &y, int i);
+extern void getTotalBullets(int &tot);
+
 struct Vec {
 	float x,y,z;
 };
@@ -198,6 +202,21 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 	cout << n << endl;	
 	n--;
 	//cout << n << endl;
+}
+
+void checkEnemyCollision(struct Node* enemy)
+{
+	int x, y, tot;
+	getTotalBullets(tot);
+	for(int i = 0; i < tot; i++) {
+		getBulletXY(x,y,i);
+		if(x > enemy->data.s.center.x - enemy->data.s.width && 
+			x < enemy->data.s.center.x + enemy->data.s.width &&
+			y < enemy->data.s.center.y + enemy->data.s.height &&
+			y > enemy->data.s.center.y - enemy->data.s.height) {
+		enemy->data.removeEnemy = true;
+	        }
+	}
 }
 
 void checkEnemyLocation(struct Node* enemy)

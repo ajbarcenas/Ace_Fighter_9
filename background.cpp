@@ -751,22 +751,22 @@ int check_keys(XEvent *e)
                     g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
                     if (g.bTime > 0.2) {
                         if (getPower() == 1)
-                            makeBullet(p->center.x, p->center.y);
+                            makeBullet(p->s.center.x, p->s.center.y);
                         else if (getPower() == 2) {
-                            makeBullet(p->center.x, p->center.y + 4);
-                            makeBullet(p->center.x, p->center.y - 4);
+                            makeBullet(p->s.center.x, p->s.center.y + 4);
+                            makeBullet(p->s.center.x, p->s.center.y - 4);
                         }
                         else if (getPower() == 3) {
-                            makeBullet(p->center.x, p->center.y + 8);
-                            makeBullet(p->center.x, p->center.y);
-                            makeBullet(p->center.x, p->center.y - 8);
+                            makeBullet(p->s.center.x, p->s.center.y + 8);
+                            makeBullet(p->s.center.x, p->s.center.y);
+                            makeBullet(p->s.center.x, p->s.center.y - 8);
                         }
                         else if (getPower() == 4) {
-                            makeMissile(p->center.x, p->center.y);
+                            makeMissile(p->s.center.x, p->s.center.y);
                         }
                         else if (getPower() >= 5) {
-                            makeMissile(p->center.x, p->center.y + 20);
-                            makeMissile(p->center.x, p->center.y - 20);
+                            makeMissile(p->s.center.x, p->s.center.y + 20);
+                            makeMissile(p->s.center.x, p->s.center.y - 20);
                         }
                         g.getBTime = 1;
                     }

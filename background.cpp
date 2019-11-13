@@ -1049,7 +1049,8 @@ void render()
     //=========================================================================
     if (abG.showHigh) {
         abG.condenseHigh();
-        makeConfetti();
+        if (!g.isPaused)
+            makeConfetti();
         printConfetti();
     }
     glDisable(GL_TEXTURE_2D);

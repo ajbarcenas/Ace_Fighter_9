@@ -371,11 +371,7 @@ int main()
             done = check_keys(&e);
         }
     if(!g.isPaused)
-	physics();
-    rainMovement();
-    confettiMovement();
-    smokeMovement();
-    //bulletMovement();
+	    physics();
     render();
     x11.swapBuffers();
     }
@@ -736,12 +732,12 @@ int check_keys(XEvent *e)
                 //g.showCredits ^= 1;
                 g.showLogo ^= 1;
                 break;
-	    case XK_p:
-		if(g.isPaused)
-			g.isPaused = false;
-		else
-			g.isPaused = true;
-		break;
+	        case XK_p:
+                if(g.isPaused)
+                    g.isPaused = false;
+                else
+                    g.isPaused = true;
+                break;
             case XK_r:
                 rainDrops ^= 1;
                 break;
@@ -750,28 +746,30 @@ int check_keys(XEvent *e)
                 cube ^= 1;
                 break;
             case XK_space:
-                clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
-                g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
-                if (g.bTime > 0.2) {
-                    if (getPower() == 1)
-                        makeBullet(p->s.center.x, p->s.center.y);
-                    else if (getPower() == 2) {
-                        makeBullet(p->s.center.x, p->s.center.y + 4);
-                        makeBullet(p->s.center.x, p->s.center.y - 4);
+                if (!g.isPaused) {
+                    clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
+                    g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
+                    if (g.bTime > 0.2) {
+                        if (getPower() == 1)
+                            makeBullet(p->s.center.x, p->s.center.y);
+                        else if (getPower() == 2) {
+                            makeBullet(p->s.center.x, p->s.center.y + 4);
+                            makeBullet(p->s.center.x, p->s.center.y - 4);
+                        }
+                        else if (getPower() == 3) {
+                            makeBullet(p->s.center.x, p->s.center.y + 8);
+                            makeBullet(p->s.center.x, p->s.center.y);
+                            makeBullet(p->s.center.x, p->s.center.y - 8);
+                        }
+                        else if (getPower() == 4) {
+                            makeMissile(p->s.center.x, p->s.center.y);
+                        }
+                        else if (getPower() >= 5) {
+                            makeMissile(p->s.center.x, p->s.center.y + 20);
+                            makeMissile(p->s.center.x, p->s.center.y - 20);
+                        }
+                        g.getBTime = 1;
                     }
-                    else if (getPower() == 3) {
-                        makeBullet(p->s.center.x, p->s.center.y + 8);
-                        makeBullet(p->s.center.x, p->s.center.y);
-                        makeBullet(p->s.center.x, p->s.center.y - 8);
-                    }
-                    else if (getPower() == 4) {
-                        makeMissile(p->s.center.x, p->s.center.y);
-                    }
-                    else if (getPower() >= 5) {
-                        makeMissile(p->s.center.x, p->s.center.y + 20);
-                        makeMissile(p->s.center.x, p->s.center.y - 20);
-                    }
-                    g.getBTime = 1;
                 }
                 break;
 		case XK_Escape:
@@ -838,8 +836,11 @@ void physics()
     }
     */
 
+    smokeMovement();
     bulletMovement();
     missileMovement();
+    confettiMovement();
+    rainMovement();
     eLex.testMovement();
     eLex.vEnemMovement();
     eLex.cEnemMovement();
@@ -877,16 +878,17 @@ void render()
     //=========================================================================
     // Rain Particles
     //=========================================================================
-    if (rainDrops){
-        makeRain();
-        makeRain();
-        makeRain();
-        makeRain();
-        makeRain();
-        makeRain();
-        printRain();
+    if (!g.isPaused) {
+        if (rainDrops) {
+            makeRain();
+            makeRain();
+            makeRain();
+            makeRain();
+            makeRain();
+            makeRain();
+        }
     }
-    
+    printRain();
     //=========================================================================
     // Cloud Layer
     //=========================================================================
@@ -935,42 +937,43 @@ void render()
     //=========================================================================
     // Smoke Following Player
     //=========================================================================
-    makeSmoke(p->s.center.x, p->s.center.y);
-    makeSmoke(p->s.center.x, p->s.center.y);
-    makeSmoke(p->s.center.x, p->s.center.y);
-    makeSmoke(p->s.center.x, p->s.center.y);
+    if(!g.isPaused) {
+	makeSmoke(p->s.center.x, p->s.center.y);
+   	makeSmoke(p->s.center.x, p->s.center.y);
+    	makeSmoke(p->s.center.x, p->s.center.y);
+    	makeSmoke(p->s.center.x, p->s.center.y);
+    }
     printSmoke();
     printPlayer(p);
     //=========================================================================
     // Bullets
     //=========================================================================
-    if(!g.isPaused) {
-        if(getPower() < 4)
-            printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
-        if(getPower() >= 4)
-            printMissile(img[9].width, img[9].height, g.mrSilhouetteTexture);
-        glDisable(GL_ALPHA_TEST);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
+    if (getPower() < 4)
+        printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
+    if (getPower() >= 4)
+        printMissile(img[9].width, img[9].height, g.mrSilhouetteTexture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
     //=========================================================================
     // Cube Powerup
     //=========================================================================
-    
-    if (g.getCTime == 1) {
-        clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
-        g.getCTime = 0;
-    }
+    if (!g.isPaused) {
+        if (g.getCTime == 1) {
+            clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
+            g.getCTime = 0;
+        }
 
-    clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
+        clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
 
-    g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
-    if (g.cTime > 10.0) {
-        glPushMatrix();
-        cubePower();
-        glPopMatrix();
-        if (g.cTime > 15.0){
-            g.getCTime = 1;
-            makeCubeCoordsNull();
+        g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
+        if (g.cTime > 10.0) {
+            glPushMatrix();
+            cubePower();
+            glPopMatrix();
+            if (g.cTime > 15.0){
+                g.getCTime = 1;
+                makeCubeCoordsNull();
+            }
         }
     }
 

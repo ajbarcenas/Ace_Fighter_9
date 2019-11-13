@@ -15,12 +15,13 @@
 #include <netdb.h>
 #include <fcntl.h>
 #include <iostream>
+#include "alexisisB.h"
 using namespace std;
 #define PORT 443
 #define USERAGENT "CMPS-3350"
 
+extern ABarGlobal abG;
 const int  MAX_READ_ERRORS = 100;
-
 
 extern void getBulletXY(int &x, int &y, int i);
 extern void getTotalBullets(int &tot);
@@ -215,7 +216,8 @@ void checkEnemyCollision(struct Node* enemy)
 			x < enemy->data.s.center.x + enemy->data.s.width &&
 			y < enemy->data.s.center.y + enemy->data.s.height &&
 			y > enemy->data.s.center.y - enemy->data.s.height) {
-		enemy->data.removeEnemy = true;
+			enemy->data.removeEnemy = true;
+			abG.incrementScore(1000);
 	        }
 	}
 }

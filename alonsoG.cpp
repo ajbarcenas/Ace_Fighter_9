@@ -71,10 +71,12 @@ public:
     Particle bullet[MAX_PARTICLES];
     Particle confetti[MAX_PARTICLES];
     Particle rain[MAX_PARTICLES];
+    Particle missile[MAX_PARTICLES];
     int n = 0;
     int u = 0;
     int k = 0;
     int q = 0;
+    int p = 0;
     int power = 1;
     int pointsX;
     int pointsY;
@@ -90,31 +92,21 @@ public:
     bool increasing = true;
 }ag;
 
+//=============================================================================
+// Cube Functions
+//=============================================================================
 void cubePower()
 {
-    /*
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    GLdouble modelview[16];
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-
-    GLdouble projection[16];
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    */
-
     //Cube rotation
     ag.xr = ag.xr + 6;
     ag.yr = ag.yr + 6;
 
     //Cube goes up and down
-    
     if (ag.increasing) {
         ag.cy = ag.cy + 0.005;
         if (ag.cy >= 1.0)
             ag.increasing = false;
-    }
-    else {
+    } else {
         ag.cy = ag.cy - 0.005;
         if (ag.cy <= -1.0)
             ag.increasing = true;
@@ -126,7 +118,6 @@ void cubePower()
     if (ag.cx <= -1.0)
         ag.cx = 1.0;
 
-    //glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glTranslatef(ag.cx, ag.cy, ag.cz);
@@ -189,22 +180,12 @@ void cubePower()
         glVertex3f( 0.05f, -0.05f, -0.05f);
         glVertex3f( 0.05f, -0.05f,  0.05f);
     glEnd();
-
     glFlush();
-
 }
 
-void makeCubeCoordsNull()
-{
-    ag.winX = ag.winY = ag.winZ = 9999;
-}
-
-double timeDiff(struct timespec *start, struct timespec *end)
-{
-    return (double)(end->tv_sec - start->tv_sec) +
-           (double)(end->tv_nsec - start->tv_nsec) * (1.0/1e9);
-}
-
+//=============================================================================
+// Rain Functions
+//=============================================================================
 void makeRain()
 {
     if (ag.k >= MAX_PARTICLES)
@@ -243,7 +224,7 @@ void printRain()
 {
     float w, h;
     
-    for(int i = 0; i < ag.k; i++) {
+    for (int i = 0; i < ag.k; i++) {
         glPushMatrix();
         glColor4ub(20,52,255,150);
         Vec *v = &ag.rain[i].s.center;
@@ -258,6 +239,9 @@ void printRain()
     }
 }
 
+//=============================================================================
+// Confetti Functions
+//=============================================================================
 void makeConfetti()
 {
     if (ag.u >= MAX_PARTICLES)
@@ -347,21 +331,24 @@ void printConfetti()
     }
 }
 
+//=============================================================================
+// Smoke Functions
+//=============================================================================
 void makeSmoke(int x, int y)
 {
     if (ag.n >= MAX_PARTICLES)
         return;
     Particle *p = &ag.smoke[ag.n];
 
-    p->s.center.x = x;
+    p->s.center.x = x - (rand() % 25);
     
     if (rand() % 16 > 8)
-        p->s.center.y = y + (rand() % 8);
+        p->s.center.y = y + (rand() % 10);
     else
-        p->s.center.y = y - (rand() % 8);
+        p->s.center.y = y - (rand() % 10);
 
     p->velocity.y = 0;
-    p->velocity.x = - ((double)rand() / (double)RAND_MAX) - 30;
+    p->velocity.x = - ((double)rand() / (double)RAND_MAX) - 22;
     ++ag.n;
 }
 
@@ -374,7 +361,6 @@ void smokeMovement()
         Particle *p = &ag.smoke[i];
         p->s.center.x += p->velocity.x;
         p->s.center.y += p->velocity.y;
-       // p->velocity.y = p->velocity.y - GRAVITY;
 
         //check for off screen
         if (p->s.center.y < 0.0 || p->s.center.y > 1080 ||
@@ -400,7 +386,7 @@ void printSmoke()
         glPushMatrix();
         glColor3ub(ag.smoke[i].r, ag.smoke[i].g, ag.smoke[i].b);
         Vec *c = &ag.smoke[i].s.center;
-        w = h = 3;
+        w = h = 5;
         glBegin(GL_QUADS);
             glVertex2i(c->x-w, c->y-h);
             glVertex2i(c->x-w, c->y+h);
@@ -411,6 +397,9 @@ void printSmoke()
     }
 }
 
+//=============================================================================
+// Bullet Functions
+//=============================================================================
 void makeBullet(int x, int y)
 {
     if (ag.q >= MAX_PARTICLES)
@@ -446,7 +435,6 @@ void bulletMovement()
         //check collision of bullet with cube powerup
         if (b->s.center.y < ag.winY + 36 && b->s.center.y > ag.winY - 36 &&
             b->s.center.x < ag.winX + 36 && b->s.center.x > ag.winX - 36) {
-            cout << endl << "COLLISON" << endl;
             ag.cy = ((float)rand() / (float)RAND_MAX);
             ag.cx = ((float)rand() / (float)RAND_MAX);
             ag.bullet[i] = ag.bullet[ag.q - 1];
@@ -461,7 +449,6 @@ void bulletMovement()
                 b->s.center.y > eLex.getEY(j) - 30 &&
                 b->s.center.x < eLex.getEX(j) + 30 &&
                 b->s.center.x > eLex.getEX(j) - 30) {
-                cout << endl << "COLLISON" << endl;
                 ag.bullet[i] = ag.bullet[ag.q - 1];
                 --ag.q;
                 ag.pointsY = eLex.getEY(j) - 30;
@@ -476,20 +463,6 @@ void bulletMovement()
         //check collision of bullet with Diego enemies
 
     }
-}
-
-bool getPrintPoints()
-{
-    return ag.printPoints;
-}
-int getPointsX()
-{
-    return ag.pointsX;
-}
-
-int getPointsY()
-{
-    return ag.pointsY;
 }
 
 void printBullet(float w, float h, GLuint Texture)
@@ -511,7 +484,128 @@ void printBullet(float w, float h, GLuint Texture)
     }
 }
 
+//=============================================================================
+// Missile Functions
+//=============================================================================
+void makeMissile(int x, int y)
+{
+    if (ag.p >= MAX_PARTICLES)
+        return;
+
+    Particle *m = &ag.missile[ag.p];
+    m->s.center.x = x;
+    m->s.center.y = y;
+    m->velocity.y = 0;
+    m->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
+    ++ag.p;
+}
+
+void missileMovement()
+{
+    Rect r;
+
+    if (ag.p <= 0)
+        return;
+
+    for (int i = 0; i < ag.p; i++) {
+        Particle *m = &ag.missile[i];
+        m->s.center.x += m->velocity.x;
+        m->s.center.y += m->velocity.y;
+
+        //check for off screen
+        if (m->s.center.y < 0.0 || m->s.center.y > 1080 ||
+            m->s.center.x < 0.0 || m->s.center.x > 1920) {
+            ag.missile[i] = ag.missile[ag.p - 1];
+            --ag.p;
+        }
+        
+        //check collision of missile with cube powerup
+        if (m->s.center.y < ag.winY + 36 && m->s.center.y > ag.winY - 36 &&
+            m->s.center.x < ag.winX + 36 && m->s.center.x > ag.winX - 36) {
+            ag.cy = ((float)rand() / (float)RAND_MAX);
+            ag.cx = ((float)rand() / (float)RAND_MAX);
+            ag.missile[i] = ag.missile[ag.p - 1];
+            ag.power++;
+            --ag.p;
+            abG.incrementScore(100);
+        }
+
+        //check collision of missile with Alexis enemies
+        for (int j = 0; j < eLex.getNumEnemy(); j++) {
+            if (m->s.center.y < eLex.getEY(j) + 30 &&
+                m->s.center.y > eLex.getEY(j) - 30 &&
+                m->s.center.x < eLex.getEX(j) + 30 &&
+                m->s.center.x > eLex.getEX(j) - 30) {
+                ag.missile[i] = ag.missile[ag.p - 1];
+                --ag.p;
+                ag.pointsY = eLex.getEY(j) - 30;
+                ag.pointsX = eLex.getEX(j) - 30;
+                ag.printPoints = true;
+                eLex.deleteEnemy(j);
+                ggprint16(&r, 16, 0x00ffff44, "+1000");
+                abG.incrementScore(1000);
+            }
+        }
+
+        //check collision of bullet with Diego enemies
+
+    }
+}
+
+void printMissile(float w, float h, GLuint Texture)
+{
+    for (int i = 0; i < ag.p; i++) {
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor3ub(255,255,255);
+        Vec *c = &ag.missile[i].s.center;
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(c->x-w*.2, c->y-h*.2);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(c->x-w*.2, c->y+h*.2);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(c->x+w*.2, c->y+h*.2);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(c->x+w*.2, c->y-h*.2);
+        glEnd();
+        glPopMatrix();
+    }
+}
+
+//=============================================================================
+// Get Functions
+//=============================================================================
+bool getPrintPoints()
+{
+    return ag.printPoints;
+}
+
+int getPointsX()
+{
+    return ag.pointsX;
+}
+
+int getPointsY()
+{
+    return ag.pointsY;
+}
+
 int getPower()
 {
     return ag.power;
 }
+
+//=============================================================================
+// Miscellaneous
+//=============================================================================
+void makeCubeCoordsNull()
+{
+    ag.winX = ag.winY = ag.winZ = 9999;
+}
+
+double timeDiff(struct timespec *start, struct timespec *end)
+{
+    return (double)(end->tv_sec - start->tv_sec) +
+           (double)(end->tv_nsec - start->tv_nsec) * (1.0/1e9);
+}
+
+

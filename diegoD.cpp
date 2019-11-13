@@ -39,8 +39,7 @@ struct Enemy1 {
 	bool removeEnemy = false;
 };
 
-struct Node
-{
+struct Node {
 	Enemy1 data;
 	struct Node *next;
 };
@@ -56,7 +55,7 @@ void spawnPlayer(Shape *p)
 
 void printPlayer(Shape *p)
 {
-glPushMatrix();
+    glPushMatrix();
     float w = p->width;
     float h = p->height;
     glColor3ub(190, 140, 10);
@@ -68,11 +67,6 @@ glPushMatrix();
         glVertex2i( w,-h);
     glEnd();
     glPopMatrix();
-
-}
-
-void drawPlayer()
-{
 
 }
 
@@ -120,12 +114,12 @@ void setEnemySize(struct Node* head_ref, int i)
 	head_ref->data.s.center.y = 900 - ((i+1) * 90);
 }
 
-void printEnemy(struct Node* temp)
+void printEnemy(struct Node* temp, int n)
 {
-	float we[5];
-	float he[5];
+	float we[n];
+	float he[n];
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < n; i++) {
 		glPushMatrix();
 		glColor3ub(190,150,10);
 		we[i] = temp->data.s.width;
@@ -149,32 +143,33 @@ void moveEnemy(struct Node* enemy)
 	enemy->data.s.center.x += enemy->data.s.velocity.x;
 }
 
-void removeEnemy(struct Node** head, struct Node* enemy, int &n)
+void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead)
 {
 
 	struct Node* temp = *head;
 	struct Node* prev = *head;
 	// If head node itself holds the key to be deleted 
-	if (temp != NULL && temp == enemy) 
-	{ 
+	if (temp != NULL && temp == enemy) { 
 		*head = temp->next;   // Changed head 
 		free(temp);		// free old head 
 		cout << "working" << endl;
 		n--;
+		enemies1Dead = true;
 		return; 
 	} 
 
 	// Search for the key to be deleted, keep track of the 
 	// previous node as we need to change 'prev->next' 
-	while (temp != NULL && temp != enemy) 
-	{ 
+	while (temp != NULL && temp != enemy) { 
 		prev = temp; 
 		temp = temp->next; 
 		cout << "This one is working" << endl;
 	} 
 
 	// If key was not present in linked list 
-	if (temp == NULL) return; 
+	if (temp == NULL) {
+		return;
+	}	
 
 	// Unlink the node from linked list 
 	prev->next = temp->next; 

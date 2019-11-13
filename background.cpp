@@ -201,6 +201,7 @@ public:
     int HighScore;
     int getCTime = 1;
     int getBTime = 1;
+    bool isPaused = false;
     struct timespec cTimeStart;
     struct timespec cTimeCurr;
     struct timespec bTimeStart;
@@ -364,10 +365,12 @@ int main()
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
             x11.check_resize(&e);
-            check_mouse(&e);
+            if(!g.isPaused)
+		    check_mouse(&e);
             done = check_keys(&e);
         }
-    physics();
+    if(!g.isPaused)
+	physics();
     rainMovement();
     confettiMovement();
     smokeMovement();
@@ -736,6 +739,12 @@ int check_keys(XEvent *e)
                 //g.showCredits ^= 1;
                 g.showLogo ^= 1;
                 break;
+	    case XK_p:
+		if(g.isPaused)
+			g.isPaused = false;
+		else
+			g.isPaused = true;
+		break;
             case XK_r:
                 rainDrops ^= 1;
                 break;
@@ -933,13 +942,14 @@ void render()
     //=========================================================================
     // Bullets
     //=========================================================================
-    if (getPower() < 4)
-        printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
-    if (getPower() >= 4)
-        printMissile(img[9].width, img[9].height, g.mrSilhouetteTexture);
-    glDisable(GL_ALPHA_TEST);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
+    if(!g.isPaused) {
+        if(getPower() < 4)
+            printBullet(img[8].width, img[8].height, g.bgSilhouetteTexture);
+        if(getPower() >= 4)
+            printMissile(img[9].width, img[9].height, g.mrSilhouetteTexture);
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
     //=========================================================================
     // Cube Powerup
     //=========================================================================

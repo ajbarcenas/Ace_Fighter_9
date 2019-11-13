@@ -594,6 +594,18 @@ int getPower()
     return ag.power;
 }
 
+void getTotalBullets(int &tot)
+{
+	tot = ag.q;
+}
+
+void getBulletXY(int &bulletX, int &bulletY, int i)
+{
+	Particle *c = &ag.bullet[i];
+	bulletX = c->s.center.x;
+	bulletY = c->s.center.y;
+}
+
 //=============================================================================
 // Miscellaneous
 //=============================================================================

@@ -491,7 +491,7 @@ void Enemy::testMovement()
 		}
 
 		if (p->e.center.x < 0.0)
-		    p->e.center.x = 1920;
+			p->e.center.x = 1920;
 
 		enemyX[i] = p->e.center.x;
 		enemyY[i] = p->e.center.y;
@@ -512,7 +512,7 @@ void Enemy::cEnemMovement()
 	}
 		if (f->e.center.x < 0.0)
 			f->e.center.x = 1920;
-        }
+	}
 }
 
 void Enemy::vEnemMovement()
@@ -521,14 +521,14 @@ void Enemy::vEnemMovement()
 		return;
 	for (int i = 0; i < numVEnemy; i++) {
 		Dot *v = &vEnemy[i];
-	v->e.center.x += v->velocity.x;
-	v->e.center.y += v->velocity.y;
-	if (v->e.center.y < 0.0 || v->e.center.y > 1080) {
-		v->velocity.y = -(v->velocity.y);
-	}
+		v->e.center.x += v->velocity.x;
+		v->e.center.y += v->velocity.y;
+		if (v->e.center.y < 0.0 || v->e.center.y > 1080) {
+			v->velocity.y = -(v->velocity.y);
+		}
 		if (v->e.center.x < 0.0)
 			v->e.center.x = 1920;
-        }
+	}
 }
 
 void Enemy::printTest()
@@ -540,10 +540,10 @@ void Enemy::printTest()
 		Vec1 *c = &test[i].e.center;
 		w = h = 30;
 		glBegin(GL_QUADS);
-		    glVertex2i(c->x-w, c->y-h);
-		    glVertex2i(c->x-w, c->y+h);
-		    glVertex2i(c->x+w, c->y+h);
-		    glVertex2i(c->x+w, c->y-h);
+			glVertex2i(c->x-w, c->y-h);
+			glVertex2i(c->x-w, c->y+h);
+			glVertex2i(c->x+w, c->y+h);
+			glVertex2i(c->x+w, c->y-h);
 		glEnd();
 		glPopMatrix();
 	}
@@ -558,10 +558,10 @@ void Enemy::printCEnem()
 		Vec1 *g = &cEnemy[i].e.center;
 		w = h = 30;
 		glBegin(GL_QUADS);
-		    glVertex2i(g->x-w, g->y-h);
-		    glVertex2i(g->x-w, g->y+h);
-		    glVertex2i(g->x+w, g->y+h);
-		    glVertex2i(g->x+w, g->y-h);
+			glVertex2i(g->x-w, g->y-h);
+			glVertex2i(g->x-w, g->y+h);
+			glVertex2i(g->x+w, g->y+h);
+			glVertex2i(g->x+w, g->y-h);
 		glEnd();
 		glPopMatrix();
 	}
@@ -674,10 +674,10 @@ void Enemy::printBoss()
 		w = 200;
 		h = 150;
 		glBegin(GL_QUADS);
-		glVertex2i(d->x-w, d->y-h);
-		glVertex2i(d->x-w, d->y+h);
-		glVertex2i(d->x+w, d->y+h);
-		glVertex2i(d->x+w, d->y-h);
+			glVertex2i(d->x-w, d->y-h);
+			glVertex2i(d->x-w, d->y+h);
+			glVertex2i(d->x+w, d->y+h);
+			glVertex2i(d->x+w, d->y-h);
 		glEnd();
 		glPopMatrix();
 	
@@ -716,19 +716,19 @@ void Enemy::bulletMovement()
 
 void Enemy::printEBullet()
 {
-        float w, h;
+	float w, h;
 	for (int i = 0; i < o; i++) {
 		glPushMatrix();
 		glColor3ub(0, 0, 255);
 		Vec1 *g = &bullets[i].e.center;
 		w = h = 4;
 		glBegin(GL_QUADS);
-		glVertex2i(g->x-w, g->y-h);
-		glVertex2i(g->x-w, g->y+h);
-		glVertex2i(g->x+w, g->y+h);
-		glVertex2i(g->x+w, g->y-h);
+			glVertex2i(g->x-w, g->y-h);
+			glVertex2i(g->x-w, g->y+h);
+			glVertex2i(g->x+w, g->y+h);
+			glVertex2i(g->x+w, g->y-h);
 		glEnd();
 		glPopMatrix();
-	 }
+	}
 }
 #endif

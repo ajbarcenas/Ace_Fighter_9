@@ -370,8 +370,16 @@ void Enemy::makeTest()
 	p->e.center.x = 1920;
 	p->e.center.y = rand() % 1081;
 	
-	p->velocity.y = rand() % 15 + (-6); 
-	p->velocity.x = rand () % 4 + (-5);
+	if (abG.highscore >= 15000) {
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-8);
+	} if (abG.highscore >= 50000) {	
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-17);
+	} else {
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-5);
+	}
 	++numEnemy;
 }
 
@@ -446,6 +454,7 @@ void Enemy::makeCEnem()
 		f->e.center.x = 2520;
 		f->e.center.y = 200;
 	}
+	
 	f->velocity.y = 0;
 	f->velocity.x = -4;
 	++numCEnemy;

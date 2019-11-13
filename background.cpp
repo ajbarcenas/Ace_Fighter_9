@@ -202,7 +202,7 @@ public:
     int HighScore;
     int getCTime = 1;
     int getBTime = 1;
-    bool isPaused = false;
+    bool isPaused = true;
     struct timespec cTimeStart;
     struct timespec cTimeCurr;
     struct timespec bTimeStart;
@@ -718,7 +718,6 @@ int check_keys(XEvent *e)
                 p->s.velocity.y = -15;
                 p->s.center.y += p->s.velocity.y;
                 break;
-
             case XK_t:
                 abG.incrementScore(1);
                 authScores();
@@ -743,6 +742,7 @@ int check_keys(XEvent *e)
                 break;
             case XK_s:
                 abG.showStartScreen();
+		g.isPaused = false;
                 cube ^= 1;
                 break;
             case XK_space:

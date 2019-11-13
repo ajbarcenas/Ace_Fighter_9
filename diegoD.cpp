@@ -1,6 +1,7 @@
 // Name: Diego Diaz
 // Date: 9/17/2019
-// The four steps of debugging are to identify the bug, isolate the source of the bug, fix the bug, and review the bug.
+// The four steps of debugging are to identify the bug, isolate the source of 
+// the bug, fix the bug, and review the bug.
 #include <stdio.h>
 #include <string.h>
 #include <GL/glx.h>
@@ -44,7 +45,6 @@ struct Node {
 	struct Node *next;
 };
 
-
 void spawnPlayer(Shape *p)
 {
 	p->width = 25;
@@ -55,47 +55,46 @@ void spawnPlayer(Shape *p)
 
 void printPlayer(Shape *p)
 {
-    glPushMatrix();
-    float w = p->width;
-    float h = p->height;
-    glColor3ub(190, 140, 10);
-    glTranslatef(p->center.x, p->center.y, p->center.z);
-    glBegin(GL_QUADS);
-        glVertex2i(-w,-h);
-        glVertex2i(-w, h);
-        glVertex2i( w, h);
-        glVertex2i( w,-h);
-    glEnd();
-    glPopMatrix();
-
+	glPushMatrix();
+	float w = p->width;
+	float h = p->height;
+	glColor3ub(190, 140, 10);
+	glTranslatef(p->center.x, p->center.y, p->center.z);
+	glBegin(GL_QUADS);
+	glVertex2i(-w,-h);
+	glVertex2i(-w, h);
+	glVertex2i( w, h);
+	glVertex2i( w,-h);
+	glEnd();
+	glPopMatrix();
 }
 
 void checkPlayerLocation(Shape *p)
 {
 	if(p->center.x - p->width < -25 || p->center.x + p->width > 1945 ||
-			p->center.y - p->height < -25 || p->center.y + p->height > 1105) {
+			p->center.y - p->height < -25 || 
+			p->center.y + p->height > 1105) {
 		spawnPlayer(p);
 	}
 }
 
 // =========================Enemy Functions =================================
 /*
-void subtractEnemyHealth(struct Node* enemy, int damage)
-{
-enemy->data.health -= damage;
-if(enemy.health <= 0){
-removeEnemy(head_ref);
-}
-}
+   void subtractEnemyHealth(struct Node* enemy, int damage)
+   {
+   enemy->data.health -= damage;
+   if(enemy.health <= 0){
+   removeEnemy(head_ref);
+   }
+   }
 
-void subtractPlayerHealth(Shape player, int damage)
-{
-player.health -= damage;
-if(player.health <= 0) {
-gameOver();
-}
-}
-
+   void subtractPlayerHealth(Shape player, int damage)
+   {
+   player.health -= damage;
+   if(player.health <= 0) {
+   gameOver();
+   }
+   }
 */
 
 void spawnEnemy(struct Node** head_ref, Enemy1 enemy) 
@@ -108,10 +107,31 @@ void spawnEnemy(struct Node** head_ref, Enemy1 enemy)
 
 void setEnemySize(struct Node* head_ref, int i)
 {
-	head_ref->data.s.height = 18;
-	head_ref->data.s.width = 18;
-	head_ref->data.s.center.x = ((i+1) * 50) + 1500;
-	head_ref->data.s.center.y = 900 - ((i+1) * 90);
+	head_ref->data.s.height = 30;
+	head_ref->data.s.width = 30;
+	switch(i)
+	{
+		case 0:
+			head_ref->data.s.center.x =  2000;
+			head_ref->data.s.center.y = 950;
+			break;
+		case 1:
+			head_ref->data.s.center.x = 1800;
+			head_ref->data.s.center.y = 750;
+			break;
+		case 2:
+			head_ref->data.s.center.x = 1600;
+			head_ref->data.s.center.y = 550;
+			break;
+		case 3:
+			head_ref->data.s.center.x = 1800;
+			head_ref->data.s.center.y = 350;
+			break;
+		case 4:
+			head_ref->data.s.center.x = 2000;
+			head_ref->data.s.center.y = 150;
+			break;
+	}
 }
 
 void printEnemy(struct Node* temp, int n)
@@ -155,6 +175,7 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 		cout << "working" << endl;
 		n--;
 		enemies1Dead = true;
+	//	cout << n << endl;
 		return; 
 	} 
 
@@ -173,9 +194,10 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 
 	// Unlink the node from linked list 
 	prev->next = temp->next; 
-	free(temp);	
+	free(temp);
+	cout << n << endl;	
 	n--;
-	cout << n << endl;
+	//cout << n << endl;
 }
 
 void checkEnemyLocation(struct Node* enemy)
@@ -185,13 +207,7 @@ void checkEnemyLocation(struct Node* enemy)
 	}
 }
 
-void ShowDiegosPicture(int x, int y, GLuint textid)
-{
-
-}
-
-
-//==============================****  High Score Functions ****==============================================//
+//===============****  High Score Functions ****==========================//
 
 BIO *ssl_setup_bio(void)
 {
@@ -230,12 +246,11 @@ int authScores()
 	char buf[256];
 	int ret;
 
-	//
 	//Setup the SSL BIO
 	outbio = ssl_setup_bio();
 	//Initialize the SSL library
 	if(SSL_library_init() < 0)
-		BIO_printf(outbio, "Could not initialize the OpenSSL library !\n");
+	       	BIO_printf(outbio, "Could not initialize the OpenSSL library !\n");
 	method = SSLv23_client_method();
 	ctx = SSL_CTX_new(method);
 	SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2);
@@ -251,8 +266,8 @@ int authScores()
 	addr.sin_port = htons(port);
 	addr.sin_addr.s_addr = *(long*)(host->h_addr);
 	if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-		BIO_printf(outbio, "%s: Cannot connect to host %s [%s] on port %d.\n",
-				"highscore.cpp", hostname, inet_ntoa(addr.sin_addr), port);
+		BIO_printf(outbio, "%s: Cannot connect to host %s [%s] on port %d.\n","highscore.cpp", hostname, 
+				inet_ntoa(addr.sin_addr), port);
 	}
 	//Connect using the SSL certificate.
 	ssl = SSL_new(ctx);
@@ -274,7 +289,6 @@ int authScores()
 	if (ret <= 0) {
 		fprintf(stderr, "ERROR: SSL_write\n"); fflush(stderr);
 	}
-	//
 	//Get data returned from the server.
 	//First, do priming read.
 	//We can take this approach because our socket is non-blocking.
@@ -312,16 +326,18 @@ void show_cert_data(SSL *ssl, BIO *outbio, const char *hostname)
 {
 	//Display ssl certificate data here.
 	//Get the remote certificate into the X509 structure
-	printf("--------------------------------------------------------------\n");
+	printf("---------------------------------------------------------\n");
 	printf("Certificate data...\n");
 	X509 *cert;
 	X509_NAME *certname;
 	printf("calling SSL_get_peer_certificate(ssl)\n");
 	cert = SSL_get_peer_certificate(ssl);
 	if (cert == NULL)
-		printf("Error: Could not get a certificate from: %s.\n", hostname);
+		printf("Error: Could not get a certificate from: %s.\n"
+				, hostname);
 	else
-		printf("Retrieved the server's certificate from: %s.\n", hostname);
+		printf("Retrieved the server's certificate from: %s.\n"
+				, hostname);
 	//extract various certificate information
 	certname = X509_NAME_new();
 	certname = X509_get_subject_name(cert);
@@ -331,7 +347,7 @@ void show_cert_data(SSL *ssl, BIO *outbio, const char *hostname)
 	X509_NAME_print_ex(outbio, certname, 0, 0);
 	if (BIO_printf(outbio, "\n\n") < 0)
 		fprintf(stderr, "ERROR: BIO_printf\n");
-	printf("--------------------------------------------------------------\n");
+	printf("---------------------------------------------------------\n");
 }
 
 void set_to_non_blocking(const int sock)

@@ -372,11 +372,6 @@ int main()
     confettiMovement();
     smokeMovement();
     //bulletMovement();
-    eLex.testMovement();
-    eLex.vEnemMovement();
-    eLex.cEnemMovement();
-    eLex.bossMovement();
-    eLex.bulletMovement();
     render();
     x11.swapBuffers();
     }
@@ -834,6 +829,11 @@ void physics()
 
     bulletMovement();
     missileMovement();
+    eLex.testMovement();
+    eLex.vEnemMovement();
+    eLex.cEnemMovement();
+    eLex.bossMovement();
+    eLex.bulletMovement();
 }
 
 void render()

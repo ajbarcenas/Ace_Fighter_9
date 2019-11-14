@@ -25,6 +25,9 @@ const int  MAX_READ_ERRORS = 100;
 
 extern void getBulletXY(int &x, int &y, int i);
 extern void getTotalBullets(int &tot);
+extern void getMissileXY(int &x, int &y, int i);
+extern void getTotalMissiles(int &tot);
+extern int getPower();
 
 struct Vec {
 	float x,y,z;
@@ -215,17 +218,32 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 void checkEnemyCollision(struct Node* enemy)
 {
 	int x, y, tot;
-	getTotalBullets(tot);
-	for(int i = 0; i < tot; i++) {
-		getBulletXY(x,y,i);
-		if(x > enemy->data.s.center.x - enemy->data.s.width && 
-			x < enemy->data.s.center.x + enemy->data.s.width &&
-			y < enemy->data.s.center.y + enemy->data.s.height &&
-			y > enemy->data.s.center.y - enemy->data.s.height) {
-			enemy->data.removeEnemy = true;
-			abG.incrementScore(1000);
+    if (getPower() < 4) {
+	    getTotalBullets(tot);
+	    for(int i = 0; i < tot; i++) {
+		    getBulletXY(x,y,i);
+		    if(x > enemy->data.s.center.x - enemy->data.s.width && 
+			    x < enemy->data.s.center.x + enemy->data.s.width &&
+			    y < enemy->data.s.center.y + enemy->data.s.height &&
+			    y > enemy->data.s.center.y - enemy->data.s.height) {
+			    enemy->data.removeEnemy = true;
+			    abG.incrementScore(1000);
 	        }
-	}
+	    }
+    }
+    else {
+        getTotalMissiles(tot);
+	    for(int i = 0; i < tot; i++) {
+		    getMissileXY(x,y,i);
+		    if(x > enemy->data.s.center.x - enemy->data.s.width && 
+			    x < enemy->data.s.center.x + enemy->data.s.width &&
+			    y < enemy->data.s.center.y + enemy->data.s.height &&
+			    y > enemy->data.s.center.y - enemy->data.s.height) {
+			    enemy->data.removeEnemy = true;
+			    abG.incrementScore(1000);
+            }
+        }
+    }
 }
 
 void checkEnemyLocation(struct Node* enemy)

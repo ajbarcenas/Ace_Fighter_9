@@ -320,7 +320,8 @@ extern void setEnemySize(struct Node* head_ref, int i);
 extern void printEnemy(struct Node* temp, int n);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
-extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
+extern void removeEnemy(struct Node** head, struct Node* enemy,
+                        int &n, bool &enemies1Dead);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
@@ -341,6 +342,8 @@ extern void getTotalBullets(int &tot);
 extern void makeMissile(int x, int y);
 extern void printMissile(float w, float h, GLuint Texture);
 extern void missileMovement();
+extern void getTotalMissiles(int &tot);
+extern void getMissileXY(int &missileX, int &missileY, int i);
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
@@ -354,8 +357,8 @@ extern int getPointsY();
 extern bool getPrintPoints();
 extern double timeDiff(struct timespec *, struct timespec *);
 extern int authScores();
-//===========================================================================
-//===========================================================================
+//=============================================================================
+//=============================================================================
 int main()
 {
     init_opengl();
@@ -940,8 +943,8 @@ void render()
     if(!g.isPaused) {
 	makeSmoke(p->s.center.x, p->s.center.y);
    	makeSmoke(p->s.center.x, p->s.center.y);
-    	makeSmoke(p->s.center.x, p->s.center.y);
-    	makeSmoke(p->s.center.x, p->s.center.y);
+    makeSmoke(p->s.center.x, p->s.center.y);
+    makeSmoke(p->s.center.x, p->s.center.y);
     }
     printSmoke();
     printPlayer(p);
@@ -996,7 +999,7 @@ void render()
     
     //=========================================================================
     // Alexis Boss
-    //========================================================================= 
+    //=========================================================================
     //eLex.makeBoss(1850, 610);
     //eLex.printBoss();
 
@@ -1013,9 +1016,9 @@ void render()
                 temp = g.head;
                 setEnemySize(temp, g.n);
                 g.n++;
-		if ( g.n == 5) {
-			g.enemies1Dead = false;
-		}
+		    if ( g.n == 5) {
+			    g.enemies1Dead = false;
+		    }
         }
 	
         printEnemy(temp, g.n);

@@ -62,6 +62,7 @@ struct Particle {
     int r, g, b;
     Shape s;
     Vec velocity;
+    int damage;
 };
 
 class AlonsoGlobal {
@@ -411,6 +412,8 @@ void makeBullet(int x, int y)
     b->velocity.y = 0;
     b->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
     ++ag.q;
+
+    b->damage = 10;
 }
 
 void bulletMovement()
@@ -459,9 +462,6 @@ void bulletMovement()
                 abG.incrementScore(1000);
             }
         }
-
-        //check collision of bullet with Diego enemies
-
     }
 }
 
@@ -546,9 +546,6 @@ void missileMovement()
                 abG.incrementScore(1000);
             }
         }
-
-        //check collision of bullet with Diego enemies
-
     }
 }
 
@@ -594,6 +591,12 @@ int getPower()
     return ag.power;
 }
 
+int getBulletDamage()
+{
+    Particle *b = &ag.bullet[ag.q];
+    return b->damage;
+}
+
 void getTotalBullets(int &tot)
 {
 	tot = ag.q;
@@ -604,6 +607,18 @@ void getBulletXY(int &bulletX, int &bulletY, int i)
 	Particle *c = &ag.bullet[i];
 	bulletX = c->s.center.x;
 	bulletY = c->s.center.y;
+}
+
+void getTotalMissiles(int &tot)
+{
+    tot = ag.p;
+}
+
+void getMissileXY(int &missileX, int &missileY, int i)
+{
+    Particle *c = &ag.missile[i];
+    missileX = c->s.center.x;
+    missileY = c->s.center.y;
 }
 
 //=============================================================================

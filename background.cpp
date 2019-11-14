@@ -119,6 +119,7 @@ struct Shape {
 struct Particle {
     Shape s;
     Vec Velocity;
+    int damage;
 };
 
 struct Enemy1 {
@@ -1016,7 +1017,7 @@ void render()
                 spawnEnemy(&g.head, e);
                 temp = g.head;
                 setEnemySize(temp, g.n);
-		setEnemyHealth(temp, 10);
+		setEnemyHealth(temp, 20);
                 g.n++;
 		if ( g.n == 5) {
 			g.enemies1Dead = false;

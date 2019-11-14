@@ -641,7 +641,26 @@ int Enemy::getVNumEnemy()
 	return numVEnemy;
 }
 
+void Enemy::deleteCEnemy(int i)
+{
+	cEnemy[i] = cEnemy[numCEnemy - 1];
+}
 
+int Enemy::getCX(int i) 
+{
+	Dot *f = &cEnemy[i];
+	return f->e.center.x;
+}
+int Enemy::getCY(int i)
+{
+	Dot *f = &cEnemy[i];
+	return f->e.center.y;
+}
+
+int Enemy::getCNumEnemy()
+{
+	return numCEnemy;
+}
 
 void Enemy::makeBoss(int x, int y)
 {

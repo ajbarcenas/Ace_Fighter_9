@@ -102,7 +102,10 @@ class Enemy {
 		void makeCEnem();
 		void cEnemMovement();
 		void printCEnem();
-		
+		int getCX(int i);
+		int getCY(int i);
+		int getCNumEnemy();
+		void deleteCEnemy(int i);		
 		bool increasing = true;
 		float cx = 1.0;
 		float cy = 0.0;

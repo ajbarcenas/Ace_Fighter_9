@@ -459,9 +459,6 @@ void bulletMovement()
                 abG.incrementScore(1000);
             }
         }
-
-        //check collision of bullet with Diego enemies
-
     }
 }
 
@@ -546,9 +543,6 @@ void missileMovement()
                 abG.incrementScore(1000);
             }
         }
-
-        //check collision of bullet with Diego enemies
-
     }
 }
 
@@ -604,6 +598,18 @@ void getBulletXY(int &bulletX, int &bulletY, int i)
 	Particle *c = &ag.bullet[i];
 	bulletX = c->s.center.x;
 	bulletY = c->s.center.y;
+}
+
+void getTotalMissiles(int &tot)
+{
+    tot = ag.p;
+}
+
+void getMissileXY(int &missileX, int &missileY, int i)
+{
+    Particle *c = &ag.missile[i];
+    missileX = c->s.center.x;
+    missileY = c->s.center.y;
 }
 
 //=============================================================================

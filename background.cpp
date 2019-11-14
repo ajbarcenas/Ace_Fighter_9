@@ -122,7 +122,8 @@ struct Particle {
 };
 
 struct Enemy1 {
-	int health;
+	int maxHealth;
+	int currentHealth;
 	int damage;
 	Shape s;
 	bool removeEnemy = false;
@@ -193,6 +194,7 @@ public:
     GLuint andrewTexId;
     int showLogo;
     int n = 0;
+    int wave = 1;
     int maxEnemy1 = 5;
     bool enemies1Dead = true;
     Enemy1 enemy;
@@ -317,11 +319,13 @@ extern void printPlayer(Player *p);
 extern void checkPlayerLocation(Player *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
+extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
 extern void checkEnemyCollision(struct Node* enemy);
+extern void subtractEnemyHealth(struct Node* enemy, int damage);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -988,11 +992,11 @@ void render()
         eLex.makeTest();
     eLex.printTest();
 
-    eLex.makeVEnem();
-    eLex.printVEnem();
+    //eLex.makeVEnem();
+    //eLex.printVEnem();
 
-    eLex.makeCEnem();
-    eLex.printCEnem();
+    //eLex.makeCEnem();
+    //eLex.printCEnem();
     
     //=========================================================================
     // Alexis Boss
@@ -1012,6 +1016,7 @@ void render()
                 spawnEnemy(&g.head, e);
                 temp = g.head;
                 setEnemySize(temp, g.n);
+		setEnemyHealth(temp, 10);
                 g.n++;
 		if ( g.n == 5) {
 			g.enemies1Dead = false;

@@ -28,6 +28,7 @@ extern void getTotalBullets(int &tot);
 extern void getMissileXY(int &x, int &y, int i);
 extern void getTotalMissiles(int &tot);
 extern int getPower();
+extern int getBulletDamage();
 
 struct Vec {
 	float x,y,z;
@@ -42,7 +43,8 @@ struct Shape {
 };
 
 struct Enemy1 {
-	int health;
+	int maxHealth;
+	int currentHealth;
 	int damage;
 	Shape s;
 	bool removeEnemy = false;
@@ -50,9 +52,9 @@ struct Enemy1 {
 
 struct Player {
 	int currentHealth;
-        int maxHealth;
-        int damage;
-        Shape s;
+	int maxHealth;
+	int damage;
+	Shape s;
 };
 
 struct Node {
@@ -95,15 +97,8 @@ void checkPlayerLocation(Player *p)
 }
 
 // =========================Enemy Functions =================================
-/*
-   void subtractEnemyHealth(struct Node* enemy, int damage)
-   {
-   enemy->data.health -= damage;
-   if(enemy.health <= 0){
-   removeEnemy(head_ref);
-   }
-   }
 
+/*
    void subtractPlayerHealth(Shape player, int damage)
    {
    player.health -= damage;
@@ -111,7 +106,7 @@ void checkPlayerLocation(Player *p)
    gameOver();
    }
    }
-*/
+   */
 
 void spawnEnemy(struct Node** head_ref, Enemy1 enemy) 
 {
@@ -148,6 +143,12 @@ void setEnemySize(struct Node* head_ref, int i)
 			head_ref->data.s.center.y = 150;
 			break;
 	}
+}
+
+void setEnemyHealth(struct Node* head_ref, int maxHealth) 
+{
+	head_ref->data.maxHealth = maxHealth;
+	head_ref->data.currentHealth = maxHealth;
 }
 
 void printEnemy(struct Node* temp, int n)
@@ -188,7 +189,6 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 	if (temp != NULL && temp == enemy) { 
 		*head = temp->next;   // Changed head 
 		free(temp);		// free old head 
-		cout << "working" << endl;
 		n--;
 		if(temp->next == NULL)
 			enemies1Dead = true;
@@ -200,7 +200,6 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 	while (temp != NULL && temp != enemy) { 
 		prev = temp; 
 		temp = temp->next; 
-		cout << "This one is working" << endl;
 	} 
 
 	// If key was not present in linked list 
@@ -211,13 +210,24 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 	// Unlink the node from linked list 
 	prev->next = temp->next; 
 	free(temp);
-	cout << n << endl;	
 	n--;
 }
 
+void subtractEnemyHealth(struct Node* enemy, int damage)
+{
+	cout << enemy->data.currentHealth << endl;
+	enemy->data.currentHealth -= damage;
+	if(enemy->data.currentHealth <= 0){
+		enemy->data.removeEnemy = true;
+		abG.incrementScore(1000);
+	}
+}
+
+
 void checkEnemyCollision(struct Node* enemy)
 {
-	int x, y, tot;
+    int x, y, tot, damage;
+    damage = getBulletDamage();
     if (getPower() < 4) {
 	    getTotalBullets(tot);
 	    for(int i = 0; i < tot; i++) {
@@ -226,8 +236,9 @@ void checkEnemyCollision(struct Node* enemy)
 			    x < enemy->data.s.center.x + enemy->data.s.width &&
 			    y < enemy->data.s.center.y + enemy->data.s.height &&
 			    y > enemy->data.s.center.y - enemy->data.s.height) {
-			    enemy->data.removeEnemy = true;
-			    abG.incrementScore(1000);
+			    subtractEnemyHealth(enemy, damage);
+			    //enemy->data.removeEnemy = true;
+			    //abG.incrementScore(1000);
 	        }
 	    }
     }
@@ -239,8 +250,9 @@ void checkEnemyCollision(struct Node* enemy)
 			    x < enemy->data.s.center.x + enemy->data.s.width &&
 			    y < enemy->data.s.center.y + enemy->data.s.height &&
 			    y > enemy->data.s.center.y - enemy->data.s.height) {
-			    enemy->data.removeEnemy = true;
-			    abG.incrementScore(1000);
+			    subtractEnemyHealth(enemy,damage);
+			    //enemy->data.removeEnemy = true;
+			    //abG.incrementScore(1000);
             }
         }
     }
@@ -248,7 +260,7 @@ void checkEnemyCollision(struct Node* enemy)
 
 void checkEnemyLocation(struct Node* enemy)
 {
-	if(enemy->data.s.center.x < 100) {
+	if(enemy->data.s.center.x < 0) {
 		enemy->data.removeEnemy = true;
 	}
 }
@@ -296,7 +308,7 @@ int authScores()
 	outbio = ssl_setup_bio();
 	//Initialize the SSL library
 	if(SSL_library_init() < 0)
-	       	BIO_printf(outbio, "Could not initialize the OpenSSL library !\n");
+		BIO_printf(outbio, "Could not initialize the OpenSSL library !\n");
 	method = SSLv23_client_method();
 	ctx = SSL_CTX_new(method);
 	SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2);

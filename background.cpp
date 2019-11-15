@@ -119,10 +119,12 @@ struct Shape {
 struct Particle {
     Shape s;
     Vec Velocity;
+    int damage;
 };
 
 struct Enemy1 {
-	int health;
+	int maxHealth;
+	int currentHealth;
 	int damage;
 	Shape s;
 	bool removeEnemy = false;
@@ -193,6 +195,7 @@ public:
     GLuint andrewTexId;
     int showLogo;
     int n = 0;
+    int wave = 1;
     int maxEnemy1 = 5;
     bool enemies1Dead = true;
     Enemy1 enemy;
@@ -317,12 +320,13 @@ extern void printPlayer(Player *p);
 extern void checkPlayerLocation(Player *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
+extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
-extern void removeEnemy(struct Node** head, struct Node* enemy,
-                        int &n, bool &enemies1Dead);
+extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
 extern void checkEnemyCollision(struct Node* enemy);
+extern void subtractEnemyHealth(struct Node* enemy, int damage);
 extern void showCreditScreen();
 extern void showPicture(int x, int y, GLuint texid);
 void showAlonsoText(Rect r);
@@ -342,8 +346,6 @@ extern void getTotalBullets(int &tot);
 extern void makeMissile(int x, int y);
 extern void printMissile(float w, float h, GLuint Texture);
 extern void missileMovement();
-extern void getTotalMissiles(int &tot);
-extern void getMissileXY(int &missileX, int &missileY, int i);
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
@@ -357,8 +359,8 @@ extern int getPointsY();
 extern bool getPrintPoints();
 extern double timeDiff(struct timespec *, struct timespec *);
 extern int authScores();
-//=============================================================================
-//=============================================================================
+//===========================================================================
+//===========================================================================
 int main()
 {
     init_opengl();
@@ -943,8 +945,8 @@ void render()
     if(!g.isPaused) {
 	makeSmoke(p->s.center.x, p->s.center.y);
    	makeSmoke(p->s.center.x, p->s.center.y);
-    makeSmoke(p->s.center.x, p->s.center.y);
-    makeSmoke(p->s.center.x, p->s.center.y);
+    	makeSmoke(p->s.center.x, p->s.center.y);
+    	makeSmoke(p->s.center.x, p->s.center.y);
     }
     printSmoke();
     printPlayer(p);
@@ -991,15 +993,15 @@ void render()
         eLex.makeTest();
     eLex.printTest();
 
-    eLex.makeVEnem();
-    eLex.printVEnem();
+    //eLex.makeVEnem();
+    //eLex.printVEnem();
 
-    eLex.makeCEnem();
-    eLex.printCEnem();
+    //eLex.makeCEnem();
+    //eLex.printCEnem();
     
     //=========================================================================
     // Alexis Boss
-    //=========================================================================
+    //========================================================================= 
     //eLex.makeBoss(1850, 610);
     //eLex.printBoss();
 
@@ -1015,10 +1017,11 @@ void render()
                 spawnEnemy(&g.head, e);
                 temp = g.head;
                 setEnemySize(temp, g.n);
+		setEnemyHealth(temp, 20);
                 g.n++;
-		    if ( g.n == 5) {
-			    g.enemies1Dead = false;
-		    }
+		if ( g.n == 5) {
+			g.enemies1Dead = false;
+		}
         }
 	
         printEnemy(temp, g.n);

@@ -66,6 +66,7 @@ class Enemy {
 		Dot test[MAXENEMIES];
 		Dot vEnemy[MAXENEMIES];
 		Dot cEnemy[CHECKMAXENEM];
+		int getCHECKMAXENEM();
         void deleteEnemy(int i);
         int getMAXENEMIES();
         int getEX(int i);

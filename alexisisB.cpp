@@ -454,8 +454,22 @@ void Enemy::makeCEnem()
 		f->e.center.y = 200;
 	}
 	
-	f->velocity.y = 0;
-	f->velocity.x = -4;
+	// This is my Friday code
+	// As the score increases, the game's enemies gradually increase in
+	// speed.
+	if (abG.highscore >= 15000) {
+		f->velocity.y = 0; 
+		f->velocity.x = -6;
+	} if (abG.highscore >= 50000) {	
+		f->velocity.y = 0; 
+		f->velocity.x = -8;
+	} if (abG.highscore >= 100000) {
+		f->velocity.y = 0;
+		f->velocity.x = -10;
+	} else {
+		f->velocity.y = 0; 
+		f->velocity.x = -4;
+	}
 	++numCEnemy;
 }
 
@@ -480,8 +494,23 @@ void Enemy::makeVEnem()
 		v->e.center.x = 2320;
 		v->e.center.y = 200;
 	}
-	v->velocity.y = 0;
-	v->velocity.x = -4;
+		
+	// This is my Friday code
+	// As the score increases, the game's enemies gradually increase in
+	// speed.
+	if (abG.highscore >= 15000) {
+		v->velocity.y = 0; 
+		v->velocity.x = -6;
+	} if (abG.highscore >= 50000) {	
+		v->velocity.y = 0; 
+		v->velocity.x = -8;
+	} if (abG.highscore >= 100000) {
+		v->velocity.y = 0;
+		v->velocity.x = -10;
+	} else {
+		v->velocity.y = 0; 
+		v->velocity.x = -4;
+	}
 	++numVEnemy;
 }
 
@@ -601,7 +630,12 @@ int Enemy::getMAXENEMIES()
 {
 	return MAXENEMIES;
 }
-
+// This is my Friday code.
+// Finishing adding my get functions for Alonso's deletion.
+int Enemy::getCHECKMAXENEM()
+{
+	return CHECKMAXENEM;
+}
 int Enemy::getEX(int i)
 {
 	Dot *p = &test[i];

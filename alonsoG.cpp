@@ -591,6 +591,8 @@ int getPower()
     return ag.power;
 }
 
+//=============================================================================
+//This is my friday code
 int getBulletDamage()
 {
     Particle *b = &ag.bullet[ag.q];
@@ -614,6 +616,8 @@ void deleteMissile(int i)
     ag.missile[i] = ag.missile[ag.p - 1];
     --ag.p;
 }
+//Weapons have damage and delete after collision
+//=============================================================================
 
 void getTotalBullets(int &tot)
 {

@@ -29,6 +29,7 @@ extern void getMissileXY(int &x, int &y, int i);
 extern void getTotalMissiles(int &tot);
 extern int getPower();
 extern int getBulletDamage();
+extern int getMissileDamage();
 extern void deleteBullet(int i);
 extern void deleteMissile(int i);
 
@@ -225,7 +226,7 @@ void subtractEnemyHealth(struct Node* enemy, int damage)
 	}
 }
 
-
+//This is my friday code
 void checkEnemyCollision(struct Node* enemy)
 {
     int x, y, tot, damage;
@@ -246,6 +247,7 @@ void checkEnemyCollision(struct Node* enemy)
 	    }
     }
     else {
+        damage = getMissileDamage();
         getTotalMissiles(tot);
 	    for(int i = 0; i < tot; i++) {
 		    getMissileXY(x,y,i);
@@ -261,6 +263,7 @@ void checkEnemyCollision(struct Node* enemy)
         }
     }
 }
+//
 
 void checkEnemyLocation(struct Node* enemy)
 {

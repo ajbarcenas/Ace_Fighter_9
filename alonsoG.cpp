@@ -407,13 +407,12 @@ void makeBullet(int x, int y)
         return;
 
     Particle *b = &ag.bullet[ag.q];
+    b->damage = 10;
     b->s.center.x = x;
     b->s.center.y = y;
     b->velocity.y = 0;
     b->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
     ++ag.q;
-
-    b->damage = 10;
 }
 
 void bulletMovement()
@@ -493,6 +492,7 @@ void makeMissile(int x, int y)
         return;
 
     Particle *m = &ag.missile[ag.p];
+    m->damage = 50;
     m->s.center.x = x;
     m->s.center.y = y;
     m->velocity.y = 0;
@@ -595,6 +595,24 @@ int getBulletDamage()
 {
     Particle *b = &ag.bullet[ag.q];
     return b->damage;
+}
+
+int getMissileDamage()
+{
+    Particle *m = &ag.missile[ag.q];
+    return m->damage;
+}
+
+void deleteBullet(int i)
+{
+    ag.bullet[i] = ag.bullet[ag.q - 1];
+    --ag.q;
+}
+
+void deleteMissile(int i)
+{
+    ag.missile[i] = ag.missile[ag.p - 1];
+    --ag.p;
 }
 
 void getTotalBullets(int &tot)

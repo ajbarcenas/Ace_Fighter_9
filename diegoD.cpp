@@ -29,6 +29,8 @@ extern void getMissileXY(int &x, int &y, int i);
 extern void getTotalMissiles(int &tot);
 extern int getPower();
 extern int getBulletDamage();
+extern void deleteBullet(int i);
+extern void deleteMissile(int i);
 
 struct Vec {
 	float x,y,z;
@@ -215,9 +217,9 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 
 void subtractEnemyHealth(struct Node* enemy, int damage)
 {
-	cout << enemy->data.currentHealth << endl;
 	enemy->data.currentHealth -= damage;
-	if(enemy->data.currentHealth <= 0){
+	cout << enemy->data.currentHealth << endl;
+    if(enemy->data.currentHealth <= 0){
 		enemy->data.removeEnemy = true;
 		abG.incrementScore(1000);
 	}
@@ -237,6 +239,7 @@ void checkEnemyCollision(struct Node* enemy)
 			    y < enemy->data.s.center.y + enemy->data.s.height &&
 			    y > enemy->data.s.center.y - enemy->data.s.height) {
 			    subtractEnemyHealth(enemy, damage);
+                deleteBullet(i);
 			    //enemy->data.removeEnemy = true;
 			    //abG.incrementScore(1000);
 	        }
@@ -251,6 +254,7 @@ void checkEnemyCollision(struct Node* enemy)
 			    y < enemy->data.s.center.y + enemy->data.s.height &&
 			    y > enemy->data.s.center.y - enemy->data.s.height) {
 			    subtractEnemyHealth(enemy,damage);
+                deleteMissile(i);
 			    //enemy->data.removeEnemy = true;
 			    //abG.incrementScore(1000);
             }

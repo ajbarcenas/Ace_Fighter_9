@@ -182,7 +182,6 @@ void showCreditsBorder(int width, int height, int x_pos, int y_pos,
 void ABarGlobal::incrementScore(int points) 
 {
 	highscore += points;
-	cout << "Score: " << highscore << endl;
 }
 
 void ABarGlobal::showHighScores()

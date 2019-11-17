@@ -74,18 +74,19 @@ void spawnPlayer(Player *p)
 	p->damage = 10;
 }
 
-void printPlayer(Player *p)
+void printPlayer(Player *p, float w, float h, GLuint Texture)
 {
 	glPushMatrix();
-	float w = p->s.width;
-	float h = p->s.height;
-	glColor3ub(190, 140, 10);
+    glBindTexture(GL_TEXTURE_2D, Texture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
+	glColor3ub(255,255,255);
 	glTranslatef(p->s.center.x, p->s.center.y, p->s.center.z);
 	glBegin(GL_QUADS);
-	glVertex2i(-w,-h);
-	glVertex2i(-w, h);
-	glVertex2i( w, h);
-	glVertex2i( w,-h);
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(-w*.5,-h*.5);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(-w*.5, h*.5);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i( w*.5, h*.5);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i( w*.5,-h*.5);
 	glEnd();
 	glPopMatrix();
 }
@@ -154,23 +155,26 @@ void setEnemyHealth(struct Node* head_ref, int maxHealth)
 	head_ref->data.currentHealth = maxHealth;
 }
 
-void printEnemy(struct Node* temp, int n)
+void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture)
 {
 	float we[n];
 	float he[n];
 
 	for (int i = 0; i < n; i++) {
 		glPushMatrix();
-		glColor3ub(190,150,10);
-		we[i] = temp->data.s.width;
-		he[i] = temp->data.s.height;
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+		glColor3ub(255,255,255);
+		we[i] = w;
+		he[i] = h;
 		glTranslatef(temp->data.s.center.x,
 				temp->data.s.center.y, temp->data.s.center.z);
 		glBegin(GL_QUADS);
-		glVertex2i(-we[i],-he[i]);
-		glVertex2i(-we[i], he[i]);
-		glVertex2i( we[i], he[i]);
-		glVertex2i( we[i],-he[i]);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-we[i]*.5,-he[i]*.5);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-we[i]*.5, he[i]*.5);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i( we[i]*.5, he[i]*.5);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i( we[i]*.5,-he[i]*.5);
 		glEnd();  
 		glPopMatrix();
 		temp = temp->next;

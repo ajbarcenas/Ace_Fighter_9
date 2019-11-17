@@ -86,7 +86,7 @@ class Image {
     }
 };
 
-Image img[10] = {"./Images/MountainLayer.png",
+Image img[17] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
@@ -95,13 +95,20 @@ Image img[10] = {"./Images/MountainLayer.png",
                  "./Images/andrew.jpg",
                  "./Images/PineTreeLayer.png",
                  "./Images/BulletGray.png",
-                 "./Images/MissileRed.png"};
+                 "./Images/MissileRed.png",
+                 "./Images/PlayerJet.png",
+                 "./Images/EnemyJet1.png",
+                 "./Images/EnemyJet2.png",
+                 "./Images/EnemyJet3.png",
+                 "./Images/MinecraftCubeTop.png",
+                 "./Images/MinecraftCubeSide.png",
+                 "./Images/MinecraftCubeBottom.png"};
 
 class Texture {
 public:
     Image *backImage;
-    float xc[10];
-    float yc[10];
+    float xc[12];
+    float yc[12];
 };
 
 struct Vec {
@@ -177,14 +184,17 @@ class Global {
 public:
     int xres, yres;
     GLuint mountainTexture;
-    GLuint cloudTexture;
     GLuint cSilhouetteTexture;
-    GLuint pineTreeTexture;
     GLuint pSilhouetteTexture;
-    GLuint bulletGrayTexture;
     GLuint bgSilhouetteTexture;
-    GLuint missileRedTexture;
     GLuint mrSilhouetteTexture;
+    GLuint playerTexture;
+    GLuint enemy1Texture;
+    GLuint enemy2Texture;
+    GLuint enemy3Texture;
+    GLuint minecraftTop;
+    GLuint minecraftSide;
+    GLuint minecraftBottom;
     Player player;
     Texture tex;
     Shape box;
@@ -316,12 +326,12 @@ int check_keys(XEvent *e);
 void physics(void);
 void render(void);
 extern void spawnPlayer(Player *p);
-extern void printPlayer(Player *p);
+extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
-extern void printEnemy(struct Node* temp, int n);
+extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
@@ -429,14 +439,17 @@ void init_opengl(void)
     // Create opengl texture elements
     //=========================================================================
     glGenTextures(1, &g.mountainTexture);
-    glGenTextures(1, &g.cloudTexture);
     glGenTextures(1, &g.cSilhouetteTexture);
-    glGenTextures(1, &g.pineTreeTexture);
     glGenTextures(1, &g.pSilhouetteTexture);
-    glGenTextures(1, &g.bulletGrayTexture);
     glGenTextures(1, &g.bgSilhouetteTexture);
-    glGenTextures(1, &g.missileRedTexture);
     glGenTextures(1, &g.mrSilhouetteTexture);
+    glGenTextures(1, &g.playerTexture);
+    glGenTextures(1, &g.enemy1Texture);
+    glGenTextures(1, &g.enemy2Texture);
+    glGenTextures(1, &g.enemy3Texture);
+    glGenTextures(1, &g.minecraftTop);
+    glGenTextures(1, &g.minecraftSide);
+    glGenTextures(1, &g.minecraftBottom);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -459,104 +472,92 @@ void init_opengl(void)
     //=========================================================================
     // Cloud Layer
     //=========================================================================
-    int wc = img[1].width;
-    int hc = img[1].height;
-
-    glBindTexture(GL_TEXTURE_2D, g.cloudTexture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, wc, hc, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+    w = img[1].width;
+    h = img[1].height;
     
-    //=========================================================================
-    // Cloud Silhouette
-    //=========================================================================
     glBindTexture(GL_TEXTURE_2D, g.cSilhouetteTexture);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 
     unsigned char *cSilhouetteData = buildAlphaData(&img[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wc, hc, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, cSilhouetteData);
     free(cSilhouetteData);
 
     //=========================================================================
     // Pine Tree Layer
     //=========================================================================
-    int wp = img[7].width;
-    int hp = img[7].height;
+    w = img[7].width;
+    h = img[7].height;
 
-    glBindTexture(GL_TEXTURE_2D, g.pineTreeTexture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, wp, hp, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
-    
-    //=========================================================================
-    // Pine Tree Silhouette
-    //=========================================================================
     glBindTexture(GL_TEXTURE_2D, g.pSilhouetteTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	unsigned char *pSilhouetteData = buildAlphaData(&img[7]);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wp, hp, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, pSilhouetteData);
 	free(pSilhouetteData);
 
     //=========================================================================
     // Bullet Gray Layer
     //=========================================================================
-    int wbg = img[8].width;
-    int hbg = img[8].height;
-
-    glBindTexture(GL_TEXTURE_2D, g.bulletGrayTexture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, wbg, hbg, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, img[8].data);
-
-    //=========================================================================
-    // Bullet Gray Silhouette
-    //=========================================================================
+    w = img[8].width;
+    h = img[8].height;
 
     glBindTexture(GL_TEXTURE_2D, g.bgSilhouetteTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     unsigned char *bgSilhouetteData = buildAlphaData(&img[8]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wbg, hbg, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, bgSilhouetteData);
     free(bgSilhouetteData);
 
     //=========================================================================
     // Missile Red Layer
     //=========================================================================
-    int wmr = img[9].width;
-    int hmr = img[9].height;
-
-    glBindTexture(GL_TEXTURE_2D, g.missileRedTexture);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, wmr, hmr, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, img[9].data);
-
-    //=========================================================================
-    // Missile Red Silhouette
-    //=========================================================================
+    w = img[9].width;
+    h = img[9].height;
 
     glBindTexture(GL_TEXTURE_2D, g.mrSilhouetteTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     unsigned char *mrSilhouetteData = buildAlphaData(&img[9]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wmr, hmr, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, mrSilhouetteData);
     free(mrSilhouetteData);
+
+    //=========================================================================
+    // Player Jet
+    //=========================================================================
+    w = img[10].width;
+    h = img[10].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.playerTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *playerData = buildAlphaData(&img[10]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, playerData);
+    free(playerData);
+
+    //=========================================================================
+    // Enemy1 Jet
+    //=========================================================================
+    w = img[11].width;
+    h = img[11].height;
+    
+    glBindTexture(GL_TEXTURE_2D, g.enemy1Texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *enemy1Data = buildAlphaData(&img[11]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, enemy1Data);
+    free(enemy1Data);
 
     //=========================================================================
     // Change view area of image
@@ -601,6 +602,22 @@ void init_opengl(void)
     g.tex.xc[9] = 1.0;
     g.tex.yc[8] = 0.0;
     g.tex.yc[9] = 1.0;
+
+    //=========================================================================
+    // Player Jet Image
+    //=========================================================================
+    g.tex.xc[10] = 0.0;
+    g.tex.xc[11] = 1.0;
+    g.tex.yc[10] = 0.0;
+    g.tex.yc[11] = 1.0;
+
+    //=========================================================================
+    // Enemy1 Jet Image
+    //=========================================================================
+    g.tex.xc[12] = 0.0;
+    g.tex.xc[13] = 1.0;
+    g.tex.yc[12] = 0.0;
+    g.tex.yc[13] = 1.0;
 
     //=========================================================================
     // Logo Picture
@@ -756,22 +773,22 @@ int check_keys(XEvent *e)
                     g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
                     if (g.bTime > 0.2) {
                         if (getPower() == 1)
-                            makeBullet(p->s.center.x, p->s.center.y);
+                            makeBullet(p->s.center.x - 10, p->s.center.y - 33);
                         else if (getPower() == 2) {
-                            makeBullet(p->s.center.x, p->s.center.y + 4);
-                            makeBullet(p->s.center.x, p->s.center.y - 4);
+                            makeBullet(p->s.center.x - 10, p->s.center.y - 29);
+                            makeBullet(p->s.center.x - 10, p->s.center.y - 37);
                         }
                         else if (getPower() == 3) {
-                            makeBullet(p->s.center.x, p->s.center.y + 8);
-                            makeBullet(p->s.center.x, p->s.center.y);
-                            makeBullet(p->s.center.x, p->s.center.y - 8);
+                            makeBullet(p->s.center.x - 10, p->s.center.y - 25);
+                            makeBullet(p->s.center.x - 10, p->s.center.y - 33);
+                            makeBullet(p->s.center.x - 10, p->s.center.y - 41);
                         }
                         else if (getPower() == 4) {
-                            makeMissile(p->s.center.x, p->s.center.y);
+                            makeMissile(p->s.center.x - 10, p->s.center.y - 33);
                         }
                         else if (getPower() >= 5) {
-                            makeMissile(p->s.center.x, p->s.center.y + 20);
-                            makeMissile(p->s.center.x, p->s.center.y - 20);
+                            makeMissile(p->s.center.x - 10, p->s.center.y - 13);
+                            makeMissile(p->s.center.x - 10, p->s.center.y - 53);
                         }
                         g.getBTime = 1;
                     }
@@ -810,11 +827,6 @@ void physics()
     g.tex.xc[4] += 0.008;
     g.tex.xc[5] += 0.008;
 
-    //=========================================================================
-    // Bullet Gray Layer
-    //=========================================================================
-   
-    
     //=========================================================================
     // Enemy Physics
     //=========================================================================
@@ -949,7 +961,10 @@ void render()
     	makeSmoke(p->s.center.x, p->s.center.y);
     }
     printSmoke();
-    printPlayer(p);
+    printPlayer(p, img[10].width, img[10].height, g.playerTexture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     //=========================================================================
     // Bullets
     //=========================================================================
@@ -1024,7 +1039,9 @@ void render()
 		}
         }
 	
-        printEnemy(temp, g.n);
+        printEnemy(temp, g.n, img[11].width, img[11].height, g.enemy1Texture);
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
     //=========================================================================
     // Screens

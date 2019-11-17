@@ -96,7 +96,7 @@ class Enemy {
 		Dot bullets[20];
 		void makeTest();
 		void testMovement();
-		void printTest();
+		void printTest(float w, float h, GLuint Texture);
 		void makeVEnem();
 		void vEnemMovement();
 		void printVEnem();

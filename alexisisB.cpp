@@ -568,19 +568,20 @@ void Enemy::vEnemMovement()
 	}
 }
 
-void Enemy::printTest()
+void Enemy::printTest(float w, float h, GLuint Texture)
 {
-	float w, h;
 	for (int i = 0; i < numEnemy; i++) {
 		glPushMatrix();
-		glColor3ub(100,100,100);
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+		glColor3ub(255,255,255);
 		Vec1 *c = &test[i].e.center;
-		w = h = 30;
 		glBegin(GL_QUADS);
-			glVertex2i(c->x-w, c->y-h);
-			glVertex2i(c->x-w, c->y+h);
-			glVertex2i(c->x+w, c->y+h);
-			glVertex2i(c->x+w, c->y-h);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(c->x-w*.5, c->y-h*.5);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(c->x-w*.5, c->y+h*.5);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(c->x+w*.5, c->y+h*.5);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(c->x+w*.5, c->y-h*.5);
 		glEnd();
 		glPopMatrix();
 	}

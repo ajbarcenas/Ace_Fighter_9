@@ -276,6 +276,23 @@ void checkEnemyLocation(struct Node* enemy)
 	}
 }
 
+
+void waveManagement(int wave){
+	switch(wave)
+       	{
+		case 1:
+		    break;
+	    	case 2:
+		    break;
+		case 3: 
+		    break;
+		case 4:
+		    break;
+		case 5:	  
+		  break;  
+	}
+}
+
 //===============****  High Score Functions ****==========================//
 
 BIO *ssl_setup_bio(void)

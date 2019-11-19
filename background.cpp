@@ -575,6 +575,21 @@ void init_opengl(void)
     free(enemy2Data);
     
     //=========================================================================
+    // Enemy 3 Jet
+    //=========================================================================
+    w = img[13].width;
+    h = img[13].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.enemy3Texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *enemy3Data = buildAlphaData(&img[13]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, enemy3Data);
+    free(enemy3Data);
+
+    //=========================================================================
     // Minecraft Top
     //=========================================================================
     w = img[14].width;
@@ -800,7 +815,7 @@ int check_keys(XEvent *e)
                 if (!g.isPaused) {
                     clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
                     g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
-                    if (g.bTime > 0.2) {
+                    if (g.bTime > 0.1) {
                         if (getPower() == 1)
                             makeBullet(p->s.center.x - 10, p->s.center.y - 33);
                         else if (getPower() == 2) {
@@ -1034,10 +1049,10 @@ void render()
     // Alexis Enemies
     //=========================================================================
     if (g.wave == 2) {
-        if (eLex.getNumEnemy() < eLex.getMAXENEMIES() && eLex.testDead) {
+        if (eLex.getNumEnemy() < eLex.getMAXENEMIES() && eLex.rDead) {
             eLex.makeTest();
             if (eLex.getNumEnemy() == eLex.getMAXENEMIES()) {
-                eLex.testDead = false;
+                eLex.rDead = false;
             }
         }
         if (eLex.getNumEnemy() == 0) {
@@ -1048,12 +1063,34 @@ void render()
         glBindTexture(GL_TEXTURE_2D, 0);
     }
     if (g.wave == 3) {
-        eLex.makeVEnem();
-        eLex.printVEnem();
+        if (eLex.getVNumEnemy() < eLex.getMAXENEMIES() && eLex.vDead) {
+            eLex.makeVEnem();
+            if (eLex.getVNumEnemy() == eLex.getMAXENEMIES()) {
+                eLex.vDead = false;
+            }
+        }
+        if (eLex.getVNumEnemy() == 0) {
+            g.wave++;
+        }
+        eLex.printVEnem(img[11].width, img[11].height, g.enemy1Texture);
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    //eLex.makeCEnem();
-    //eLex.printCEnem();
+    if (g.wave == 4) {
+        if (eLex.getCNumEnemy() < eLex.getCHECKMAXENEM() && eLex.cDead) {
+            eLex.makeCEnem();
+            if (eLex.getCNumEnemy() == eLex.getCHECKMAXENEM()) {
+                eLex.cDead = false;
+            }
+        }
+        if (eLex.getCNumEnemy() == 0) {
+            g.wave++;
+        }
+        eLex.printCEnem(img[13].width, img[13].height, g.enemy3Texture);
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
     
     //=========================================================================
     // Alexis Boss

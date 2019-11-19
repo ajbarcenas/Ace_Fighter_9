@@ -587,36 +587,38 @@ void Enemy::printTest(float w, float h, GLuint Texture)
 	}
 }
 
-void Enemy::printCEnem()
+void Enemy::printCEnem(float w, float h, GLuint Texture)
 {
-	float w, h;
 	for (int i = 0; i < numCEnemy; i++) {
 		glPushMatrix();
-		glColor3ub(252,50,50);
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+		glColor3ub(255,255,255);
 		Vec1 *g = &cEnemy[i].e.center;
-		w = h = 30;
 		glBegin(GL_QUADS);
-			glVertex2i(g->x-w, g->y-h);
-			glVertex2i(g->x-w, g->y+h);
-			glVertex2i(g->x+w, g->y+h);
-			glVertex2i(g->x+w, g->y-h);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(g->x-w*.1, g->y-h*.1);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(g->x-w*.1, g->y+h*.1);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g->x+w*.1, g->y+h*.1);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g->x+w*.1, g->y-h*.1);
 		glEnd();
 		glPopMatrix();
 	}
 }
-void Enemy::printVEnem()
+void Enemy::printVEnem(float w, float h, GLuint Texture)
 {
-	float w, h;
 	for (int i = 0; i < numVEnemy; i++) {
 		glPushMatrix();
-		glColor3ub(0,252,100);
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+		glColor3ub(255,255,255);
 		Vec1 *q = &vEnemy[i].e.center;
-		w = h = 30;
 		glBegin(GL_QUADS);
-			glVertex2i(q->x-w, q->y-h);	
-			glVertex2i(q->x-w, q->y+h);
-			glVertex2i(q->x+w, q->y+h);
-			glVertex2i(q->x+w, q->y-h);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(q->x-w*.5, q->y-h*.5);	
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(q->x-w*.5, q->y+h*.5);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(q->x+w*.5, q->y+h*.5);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(q->x+w*.5, q->y-h*.5);
 		glEnd();
 		glPopMatrix();
 	}

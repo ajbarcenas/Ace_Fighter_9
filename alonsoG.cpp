@@ -477,7 +477,7 @@ void bulletMovement()
                 abG.incrementScore(1000);
             }
         }
-        //check collision of bullet with Alexis enemies
+        //check collision of bullet with Alexis Venemies
         for (int j = 0; j < eLex.getVNumEnemy(); j++) {
             if (b->s.center.y < eLex.getVY(j) + 30 &&
                 b->s.center.y > eLex.getVY(j) - 30 &&
@@ -489,6 +489,22 @@ void bulletMovement()
                 ag.pointsX = eLex.getVX(j) - 30;
                 ag.printPoints = true;
                 eLex.deleteVEnemy(j);
+                ggprint16(&r, 16, 0x00ffff44, "+1000");
+                abG.incrementScore(1000);
+            }
+        }
+        //check collision of bullet with Alexis Cenemies
+        for (int j = 0; j < eLex.getCNumEnemy(); j++) {
+            if (b->s.center.y < eLex.getCY(j) + 30 &&
+                b->s.center.y > eLex.getCY(j) - 30 &&
+                b->s.center.x < eLex.getCX(j) + 30 &&
+                b->s.center.x > eLex.getCX(j) - 30) {
+                ag.bullet[i] = ag.bullet[ag.q - 1];
+                --ag.q;
+                ag.pointsY = eLex.getCY(j) - 30;
+                ag.pointsX = eLex.getCX(j) - 30;
+                ag.printPoints = true;
+                eLex.deleteCEnemy(j);
                 ggprint16(&r, 16, 0x00ffff44, "+1000");
                 abG.incrementScore(1000);
             }
@@ -574,6 +590,38 @@ void missileMovement()
                 ag.pointsX = eLex.getEX(j) - 30;
                 ag.printPoints = true;
                 eLex.deleteEnemy(j);
+                ggprint16(&r, 16, 0x00ffff44, "+1000");
+                abG.incrementScore(1000);
+            }
+        }
+        //check collision of missile with Alexis Venemies
+        for (int j = 0; j < eLex.getVNumEnemy(); j++) {
+            if (m->s.center.y < eLex.getVY(j) + 30 &&
+                m->s.center.y > eLex.getVY(j) - 30 &&
+                m->s.center.x < eLex.getVX(j) + 30 &&
+                m->s.center.x > eLex.getVX(j) - 30) {
+                ag.missile[i] = ag.missile[ag.p - 1];
+                --ag.p;
+                ag.pointsY = eLex.getVY(j) - 30;
+                ag.pointsX = eLex.getVX(j) - 30;
+                ag.printPoints = true;
+                eLex.deleteVEnemy(j);
+                ggprint16(&r, 16, 0x00ffff44, "+1000");
+                abG.incrementScore(1000);
+            }
+        }
+        //check collision of missile with Alexis Cenemies
+        for (int j = 0; j < eLex.getCNumEnemy(); j++) {
+            if (m->s.center.y < eLex.getCY(j) + 30 &&
+                m->s.center.y > eLex.getCY(j) - 30 &&
+                m->s.center.x < eLex.getCX(j) + 30 &&
+                m->s.center.x > eLex.getCX(j) - 30) {
+                ag.missile[i] = ag.missile[ag.p - 1];
+                --ag.p;
+                ag.pointsY = eLex.getCY(j) - 30;
+                ag.pointsX = eLex.getCX(j) - 30;
+                ag.printPoints = true;
+                eLex.deleteCEnemy(j);
                 ggprint16(&r, 16, 0x00ffff44, "+1000");
                 abG.incrementScore(1000);
             }

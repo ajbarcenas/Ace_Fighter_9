@@ -564,7 +564,7 @@ void Enemy::vEnemMovement()
 			v->velocity.y = -(v->velocity.y);
 		}
 		if (v->e.center.x < 0.0)
-			v->e.center.x = 1920;
+			eLex.deleteVEnemy(i);
 	}
 }
 
@@ -657,6 +657,7 @@ int Enemy::getNumEnemy()
 void Enemy::deleteVEnemy(int i)
 {
 	vEnemy[i] = vEnemy[numVEnemy - 1];
+    --numVEnemy;
 }
 
 int Enemy::getVX(int i) 
@@ -678,6 +679,7 @@ int Enemy::getVNumEnemy()
 void Enemy::deleteCEnemy(int i)
 {
 	cEnemy[i] = cEnemy[numCEnemy - 1];
+    --numCEnemy;
 }
 
 int Enemy::getCX(int i) 

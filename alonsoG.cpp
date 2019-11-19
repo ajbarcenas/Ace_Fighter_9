@@ -477,6 +477,22 @@ void bulletMovement()
                 abG.incrementScore(1000);
             }
         }
+        //check collision of bullet with Alexis enemies
+        for (int j = 0; j < eLex.getVNumEnemy(); j++) {
+            if (b->s.center.y < eLex.getVY(j) + 30 &&
+                b->s.center.y > eLex.getVY(j) - 30 &&
+                b->s.center.x < eLex.getVX(j) + 30 &&
+                b->s.center.x > eLex.getVX(j) - 30) {
+                ag.bullet[i] = ag.bullet[ag.q - 1];
+                --ag.q;
+                ag.pointsY = eLex.getVY(j) - 30;
+                ag.pointsX = eLex.getVX(j) - 30;
+                ag.printPoints = true;
+                eLex.deleteVEnemy(j);
+                ggprint16(&r, 16, 0x00ffff44, "+1000");
+                abG.incrementScore(1000);
+            }
+        }
     }
 }
 

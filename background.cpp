@@ -334,7 +334,7 @@ extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
 extern void checkEnemyLocation(struct Node* enemy);
-extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead);
+extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void subtractEnemyHealth(struct Node* enemy, int damage);
 extern void showCreditScreen();
@@ -863,11 +863,11 @@ void physics()
         struct Node* temp = g.head;
         for(int i = 0; i < g.n; i++) {
             if(temp != NULL) {
-	        moveEnemy(temp);
-		checkEnemyCollision(temp);
+	            moveEnemy(temp);
+		        checkEnemyCollision(temp);
                 checkEnemyLocation(temp);
                 if(temp->data.removeEnemy) {
-                    removeEnemy(&g.head, temp, g.n, g.enemies1Dead);
+                    removeEnemy(&g.head, temp, g.n, g.enemies1Dead, g.wave);
                 }
                 temp = temp->next;
 	    }
@@ -1033,14 +1033,24 @@ void render()
     //=========================================================================
     // Alexis Enemies
     //=========================================================================
-    if (eLex.getNumEnemy() < eLex.getMAXENEMIES())
-        eLex.makeTest();
-    eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
-    glDisable(GL_ALPHA_TEST);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    //eLex.makeVEnem();
-    //eLex.printVEnem();
+    if (g.wave == 2) {
+        if (eLex.getNumEnemy() < eLex.getMAXENEMIES() && eLex.testDead) {
+            eLex.makeTest();
+            if (eLex.getNumEnemy() == eLex.getMAXENEMIES()) {
+                eLex.testDead = false;
+            }
+        }
+        if (eLex.getNumEnemy() == 0) {
+            g.wave++;
+        }
+        eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    if (g.wave == 3) {
+        eLex.makeVEnem();
+        eLex.printVEnem();
+    }
 
     //eLex.makeCEnem();
     //eLex.printCEnem();
@@ -1057,23 +1067,24 @@ void render()
     //=========================================================================
     // Diego Enemies
     //=========================================================================
-     Enemy1 e = g.enemy;
+    if (g.wave == 1) {
+        Enemy1 e = g.enemy;
         struct Node* temp = g.head;
         while( g.n < g.maxEnemy1 && g.enemies1Dead) {
-                spawnEnemy(&g.head, e);
-                temp = g.head;
-                setEnemySize(temp, g.n);
-		setEnemyHealth(temp, 20);
-                g.n++;
-		if ( g.n == 5) {
-			g.enemies1Dead = false;
-		}
+            spawnEnemy(&g.head, e);
+            temp = g.head;
+            setEnemySize(temp, g.n);
+		    setEnemyHealth(temp, 20);
+            g.n++;
+		    if ( g.n == 5) {
+			    g.enemies1Dead = false;
+		    }
         }
-	
+    
         printEnemy(temp, g.n, img[11].width, img[11].height, g.enemy1Texture);
         glDisable(GL_ALPHA_TEST);
         glBindTexture(GL_TEXTURE_2D, 0);
-
+    }
     //=========================================================================
     // Screens
     //=========================================================================

@@ -108,6 +108,7 @@ class Enemy {
 		int getCNumEnemy();
 		void deleteCEnemy(int i);		
 		bool increasing = true;
+        bool testDead = true;
 		float cx = 1.0;
 		float cy = 0.0;
 };

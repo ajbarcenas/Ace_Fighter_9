@@ -328,13 +328,15 @@ void render(void);
 extern void spawnPlayer(Player *p);
 extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
+extern void setPlayerHealth(Player *p, int maxHealth);
+extern void subtractPlayerHealth(Player *p, int damage);
 extern void waveManagement(int wave);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(struct Node* enemy);
+extern void checkEnemyLocation(struct Node* enemy, Player *p);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void subtractEnemyHealth(struct Node* enemy, int damage);
@@ -877,11 +879,12 @@ void physics()
     //=========================================================================
  
         struct Node* temp = g.head;
+	Player *p = &g.player;
         for(int i = 0; i < g.n; i++) {
             if(temp != NULL) {
 	            moveEnemy(temp);
 		        checkEnemyCollision(temp);
-                checkEnemyLocation(temp);
+		checkEnemyLocation(temp,p);
                 if(temp->data.removeEnemy) {
                     removeEnemy(&g.head, temp, g.n, g.enemies1Dead, g.wave);
                 }
@@ -991,6 +994,7 @@ void render()
     Player *p = &g.player;
     if(!p->s.playerExists) {
         spawnPlayer(p);
+	setPlayerHealth(p, 3);
         p->s.playerExists = true;
     }
     checkPlayerLocation(p);

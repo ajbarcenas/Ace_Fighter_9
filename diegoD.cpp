@@ -187,7 +187,7 @@ void moveEnemy(struct Node* enemy)
 	enemy->data.s.center.x += enemy->data.s.velocity.x;
 }
 
-void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead)
+void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave)
 {
 
 	struct Node* temp = *head;
@@ -198,7 +198,7 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 		free(temp);		// free old head 
 		n--;
 		if(temp->next == NULL)
-			enemies1Dead = true;
+            wave++;
 		return; 
 	} 
 

@@ -328,6 +328,7 @@ void render(void);
 extern void spawnPlayer(Player *p);
 extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
+extern void waveManagement(int wave);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);

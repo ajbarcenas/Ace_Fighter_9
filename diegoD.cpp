@@ -107,11 +107,11 @@ void checkPlayerLocation(Player *p)
 	}
 }
 
- void subtractPlayerHealth(Player *p, int damage)
+ void subtractPlayerHealth(int &currentHealth, int damage)
  {
- 	p->currentHealth -= damage;
-	cout << p->currentHealth << endl;
-	if(p->currentHealth <= 0) {
+	currentHealth -= damage;
+	cout << currentHealth << endl;
+	if(currentHealth <= 0) {
    		cout << "Game Over!!!" << endl;
    	}
  }
@@ -270,13 +270,12 @@ void checkEnemyCollision(struct Node* enemy)
         }
     }
 }
-//
 
-void checkEnemyLocation(struct Node* enemy, Player *p)
+void checkEnemyLocation(struct Node* enemy, int &currentHealth)
 {
 	if(enemy->data.s.center.x < 0) {
 		enemy->data.removeEnemy = true;
-		subtractPlayerHealth(p, 1);
+		subtractPlayerHealth(currentHealth, 1);
 	}
 }
 

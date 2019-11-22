@@ -329,14 +329,13 @@ extern void spawnPlayer(Player *p);
 extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
 extern void setPlayerHealth(Player *p, int maxHealth);
-extern void subtractPlayerHealth(Player *p, int damage);
-extern void waveManagement(int wave);
+extern void subtractPlayerHealth(int &currentHealth, int damage);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(struct Node* enemy, Player *p);
+extern void checkEnemyLocation(struct Node* enemy, int &currentHealth);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void subtractEnemyHealth(struct Node* enemy, int damage);
@@ -884,31 +883,22 @@ void physics()
             if(temp != NULL) {
 	            moveEnemy(temp);
 		        checkEnemyCollision(temp);
-		checkEnemyLocation(temp,p);
+		checkEnemyLocation(temp,p->currentHealth);
                 if(temp->data.removeEnemy) {
                     removeEnemy(&g.head, temp, g.n, g.enemies1Dead, g.wave);
                 }
                 temp = temp->next;
 	    }
         }
- 
-    /* 
-    if (bullet.center.x <= e[i].center.x + enemy[i].width/2 &&
-        bullet.center.x >= e[i].center.x - enemy[i].width/2 &&
-        bullet.center.y <= e[i].center.y + enemy[i].height/2 &&
-        bullet.center.y >= e[i].center.y - enemy[i].height/2 &&) {
-        cout << "collision" << endl;
-    }
-    */
 
     smokeMovement();
     bulletMovement();
     missileMovement();
     confettiMovement();
     rainMovement();
-    eLex.testMovement();
-    eLex.vEnemMovement();
-    eLex.cEnemMovement();
+    eLex.testMovement(p->currentHealth);
+    eLex.vEnemMovement(p->currentHealth);
+    eLex.cEnemMovement(p->currentHealth);
     eLex.bossMovement();
     eLex.bulletMovement();
 }

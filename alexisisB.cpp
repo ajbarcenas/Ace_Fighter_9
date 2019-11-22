@@ -21,6 +21,8 @@ be receiving updates.
 using namespace std;
 ABarGlobal abG;
 Enemy eLex;
+extern void subtractPlayerHealth(int &currentHealth, int damage);
+extern int getCurrentHealth();
 //Prints out my name on the credits Screen
 void printAlexisB(Rect r)
 {
@@ -514,7 +516,7 @@ void Enemy::makeVEnem()
 	++numVEnemy;
 }
 
-void Enemy::testMovement()
+void Enemy::testMovement(int &currentHealth)
 {
 	if (numEnemy <= 0)
 		return;
@@ -527,15 +529,17 @@ void Enemy::testMovement()
 			p->velocity.y = -(p->velocity.y); 
 		}
 
-		if (p->e.center.x < 0.0)
+		if (p->e.center.x < 0.0) {
+			subtractPlayerHealth(currentHealth, 1);
 			p->e.center.x = 1920;
+		}
 
 		enemyX[i] = p->e.center.x;
 		enemyY[i] = p->e.center.y;
 	}
 }
 
-void Enemy::cEnemMovement()
+void Enemy::cEnemMovement(int &currentHealth)
 {
 	if (numCEnemy <= 0)
 		return;
@@ -547,12 +551,14 @@ void Enemy::cEnemMovement()
 	if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
 		f->velocity.y = -(f->velocity.y);
 	}
-		if (f->e.center.x < 0.0)
+		if (f->e.center.x < 0.0) {
+			subtractPlayerHealth(currentHealth, 1);
 			f->e.center.x = 1920;
+		}
 	}
 }
 
-void Enemy::vEnemMovement()
+void Enemy::vEnemMovement(int &currentHealth)
 {
 	if (numVEnemy <= 0)
 		return;
@@ -563,8 +569,10 @@ void Enemy::vEnemMovement()
 		if (v->e.center.y < 0.0 || v->e.center.y > 1080) {
 			v->velocity.y = -(v->velocity.y);
 		}
-		if (v->e.center.x < 0.0)
+		if (v->e.center.x < 0.0) {
+			subtractPlayerHealth(currentHealth, 1);
 			eLex.deleteVEnemy(i);
+		}
 	}
 }
 

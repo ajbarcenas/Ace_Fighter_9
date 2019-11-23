@@ -204,6 +204,7 @@ public:
     GLuint diegoTexId;
     GLuint andrewTexId;
     int showLogo;
+    char keys[65536];
     int n = 0;
     int wave = 1;
     int maxEnemy1 = 5;
@@ -766,26 +767,25 @@ int check_keys(XEvent *e)
         g.getBTime = 0;
     }
     //Was there input from the keyboard?
-    Player *p = &g.player;
+    static int shift = 0;
+    int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
+    if (e->type == KeyRelease) {
+        g.keys[key]=0;
+        if (key == XK_Shift_L || key == XK_Shift_R)
+            shift=0;
+        return 0;
+    }
     if (e->type == KeyPress) {
-        int key = XLookupKeysym(&e->xkey, 0);
+        g.keys[key] = 1;
+	if (key == XK_Shift_L || key == XK_Shift_R) {
+		shift = 1;
+		return 0;
+	}
+    } else {
+       return 0;
+    }    
+        if(shift) {}	
         switch(key) {
-            case XK_Left:
-                p->s.velocity.x = -15;
-                p->s.center.x += p->s.velocity.x;
-                break;
-            case XK_Right:
-                p->s.velocity.x = 15;
-                p->s.center.x += p->s.velocity.x;
-                break;
-            case XK_Up:
-                p->s.velocity.y = 15;
-                p->s.center.y += p->s.velocity.y;
-                break;
-            case XK_Down:
-                p->s.velocity.y = -15;
-                p->s.center.y += p->s.velocity.y;
-                break;
             case XK_t:
                 abG.incrementScore(1);
                 authScores();
@@ -813,39 +813,11 @@ int check_keys(XEvent *e)
 		g.isPaused = false;
                 cube ^= 1;
                 break;
-            case XK_space:
-                if (!g.isPaused) {
-                    clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
-                    g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
-                    if (g.bTime > 0.1) {
-                        if (getPower() == 1)
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 33);
-                        else if (getPower() == 2) {
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 29);
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 37);
-                        }
-                        else if (getPower() == 3) {
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 25);
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 33);
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 41);
-                        }
-                        else if (getPower() == 4) {
-                            makeMissile(p->s.center.x - 10, p->s.center.y - 33);
-                        }
-                        else if (getPower() >= 5) {
-                            makeMissile(p->s.center.x - 10, p->s.center.y - 13);
-                            makeMissile(p->s.center.x - 10, p->s.center.y - 53);
-                        }
-                        g.getBTime = 1;
-                    }
-                }
-                break;
-		case XK_Escape:
+	    case XK_Escape:
                 return 1;
         }
         if (key == XK_Escape)
-            return 1;
-    }
+            return 1;  
     return 0;
 }
 
@@ -890,6 +862,56 @@ void physics()
                 temp = temp->next;
 	    }
         }
+
+        if(g.keys[XK_Left]) {
+           p->s.velocity.x = -15;
+           p->s.center.x += p->s.velocity.x;
+        }
+
+        if(g.keys[XK_Right]) {
+            p->s.velocity.x = 15;
+            p->s.center.x += p->s.velocity.x;
+	}
+
+        if(g.keys[XK_Up]) {
+            p->s.velocity.y = 15;
+            p->s.center.y += p->s.velocity.y;
+	}
+
+        if(g.keys[XK_Down]) {
+            p->s.velocity.y = -15;
+            p->s.center.y += p->s.velocity.y;
+	}
+
+	// key press for bullets
+        if(g.keys[XK_space]) {
+            if (!g.isPaused) {
+                clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
+                g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
+                if (g.bTime > 0.1) {
+                    if (getPower() == 1)
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 33);
+                    else if (getPower() == 2) {
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 29);
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 37);
+                    }
+                    else if (getPower() == 3) {
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 25);
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 33);
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 41);
+                    }
+                    else if (getPower() == 4) {
+                        makeMissile(p->s.center.x - 10, p->s.center.y - 33);
+                    }
+                    else if (getPower() >= 5) {
+                        makeMissile(p->s.center.x - 10, p->s.center.y - 13);
+                        makeMissile(p->s.center.x - 10, p->s.center.y - 53);
+                    }
+                    g.getBTime = 1;
+                }
+            }
+        }        
+
 
     smokeMovement();
     bulletMovement();

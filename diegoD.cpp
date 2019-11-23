@@ -204,8 +204,10 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 		*head = temp->next;   // Changed head 
 		free(temp);		// free old head 
 		n--;
-		if(temp->next == NULL)
+		if(temp->next == NULL) {
             wave++;
+            enemies1Dead = true;
+        }
 		return; 
 	} 
 

@@ -214,7 +214,7 @@ public:
     GLuint texid;
     int showCredits, showHighScores;
     int HighScore;
-    int getCTime = 1;
+    bool getCTime = true;
     int getBTime = 1;
     bool isPaused = true;
     struct timespec cTimeStart;
@@ -367,6 +367,7 @@ extern void printRain();
 extern void rainMovement();
 extern void cubePower(GLuint topTexture, GLuint sideTexture, GLuint bottomTexture);
 extern void makeCubeCoordsNull();
+extern bool getCubeCollision(int i);
 extern int getPointsX();
 extern int getPointsY();
 extern bool getPrintPoints();
@@ -1039,20 +1040,22 @@ void render()
     // Cube Powerup
     //=========================================================================
     if (!g.isPaused) {
-        if (g.getCTime == 1) {
+        if (g.getCTime == true || getCubeCollision(0) == true) {
             clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
-            g.getCTime = 0;
+            g.getCTime = false;
+            getCubeCollision(1);
+            makeCubeCoordsNull();
         }
 
         clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
 
         g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
-        if (g.cTime > 10.0) {
+        if (g.cTime > 3.0) {
             glPushMatrix();
             cubePower(g.minecraftTop, g.minecraftSide, g.minecraftBottom);
             glPopMatrix();
             if (g.cTime > 15.0){
-                g.getCTime = 1;
+                g.getCTime = true;
                 makeCubeCoordsNull();
             }
         }
@@ -1065,7 +1068,7 @@ void render()
     //=========================================================================
     // Alexis Enemies
     //=========================================================================
-    if (g.wave == 2) {
+    if (g.wave > 3 && g.wave % 2 == 0) {
         if (eLex.getNumEnemy() < eLex.getMAXENEMIES() && eLex.rDead) {
             eLex.makeTest();
             if (eLex.getNumEnemy() == eLex.getMAXENEMIES()) {
@@ -1073,13 +1076,14 @@ void render()
             }
         }
         if (eLex.getNumEnemy() == 0) {
-            g.wave++;
+            eLex.rDead = true;
         }
-        eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
-        glDisable(GL_ALPHA_TEST);
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
-    if (g.wave == 3) {
+    eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    if (g.wave == 2) {
         if (eLex.getVNumEnemy() < eLex.getMAXENEMIES() && eLex.vDead) {
             eLex.makeVEnem();
             if (eLex.getVNumEnemy() == eLex.getMAXENEMIES()) {
@@ -1088,13 +1092,15 @@ void render()
         }
         if (eLex.getVNumEnemy() == 0) {
             g.wave++;
+            eLex.vDead = true;
         }
-        eLex.printVEnem(img[11].width, img[11].height, g.enemy1Texture);
-        glDisable(GL_ALPHA_TEST);
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
+    eLex.printVEnem(img[11].width, img[11].height, g.enemy1Texture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
 
-    if (g.wave == 4) {
+    if (g.wave == 3 || (g.wave > 4 && g.wave % 2 == 1)) {
         if (eLex.getCNumEnemy() < eLex.getCHECKMAXENEM() && eLex.cDead) {
             eLex.makeCEnem();
             if (eLex.getCNumEnemy() == eLex.getCHECKMAXENEM()) {
@@ -1103,11 +1109,12 @@ void render()
         }
         if (eLex.getCNumEnemy() == 0) {
             g.wave++;
+            eLex.cDead = true;
         }
-        eLex.printCEnem(img[13].width, img[13].height, g.enemy3Texture);
-        glDisable(GL_ALPHA_TEST);
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
+    eLex.printCEnem(img[13].width, img[13].height, g.enemy3Texture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     //=========================================================================
     // Alexis Boss
@@ -1121,9 +1128,9 @@ void render()
     //=========================================================================
     // Diego Enemies
     //=========================================================================
-    if (g.wave == 1) {
-        Enemy1 e = g.enemy;
-        struct Node* temp = g.head;
+    Enemy1 e = g.enemy;
+    struct Node* temp = g.head;
+    if (g.wave == 1 || (g.wave > 3 && g.wave % 2 == 0)) {
         while( g.n < g.maxEnemy1 && g.enemies1Dead) {
             spawnEnemy(&g.head, e);
             temp = g.head;
@@ -1134,11 +1141,11 @@ void render()
 			    g.enemies1Dead = false;
 		    }
         }
-    
-        printEnemy(temp, g.n, img[11].width, img[11].height, g.enemy1Texture);
-        glDisable(GL_ALPHA_TEST);
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
+    printEnemy(temp, g.n, img[11].width, img[11].height, g.enemy1Texture);
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+        
     //=========================================================================
     // Screens
     //=========================================================================

@@ -529,9 +529,9 @@ void Enemy::testMovement(int &currentHealth)
 			p->velocity.y = -(p->velocity.y); 
 		}
 
-		if (p->e.center.x < 0.0) {
-			subtractPlayerHealth(currentHealth, 1);
-			p->e.center.x = 1920;
+		if (p->e.center.x < 0.0)
+			eLex.deleteEnemy(i);
+		  subtractPlayerHealth(currentHealth, 1);
 		}
 
 		enemyX[i] = p->e.center.x;
@@ -548,12 +548,12 @@ void Enemy::cEnemMovement(int &currentHealth)
 
 		f->e.center.x += f->velocity.x;
 		f->e.center.y += f->velocity.y;
-	if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
-		f->velocity.y = -(f->velocity.y);
-	}
+	  if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
+		  f->velocity.y = -(f->velocity.y);
+	  }
 		if (f->e.center.x < 0.0) {
+			eLex.deleteCEnemy(i);
 			subtractPlayerHealth(currentHealth, 1);
-			f->e.center.x = 1920;
 		}
 	}
 }

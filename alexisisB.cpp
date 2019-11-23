@@ -528,7 +528,7 @@ void Enemy::testMovement()
 		}
 
 		if (p->e.center.x < 0.0)
-			p->e.center.x = 1920;
+			eLex.deleteEnemy(i);
 
 		enemyX[i] = p->e.center.x;
 		enemyY[i] = p->e.center.y;
@@ -548,7 +548,7 @@ void Enemy::cEnemMovement()
 		f->velocity.y = -(f->velocity.y);
 	}
 		if (f->e.center.x < 0.0)
-			f->e.center.x = 1920;
+			eLex.deleteCEnemy(i);
 	}
 }
 

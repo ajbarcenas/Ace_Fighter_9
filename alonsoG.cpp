@@ -91,6 +91,7 @@ public:
     double winZ;
     bool printPoints = false;
     bool increasing = true;
+    bool cubeCollision = false;
 }ag;
 
 //=============================================================================
@@ -459,6 +460,7 @@ void bulletMovement()
             ag.power++;
             --ag.q;
             abG.incrementScore(100);
+            ag.cubeCollision = true;
         }
 
         //check collision of bullet with Alexis enemies
@@ -576,6 +578,7 @@ void missileMovement()
             ag.power++;
             --ag.p;
             abG.incrementScore(100);
+            ag.cubeCollision = true;
         }
 
         //check collision of missile with Alexis enemies
@@ -669,6 +672,15 @@ int getPointsY()
 int getPower()
 {
     return ag.power;
+}
+
+bool getCubeCollision(int i)
+{
+    if (i == 0)
+        return ag.cubeCollision;
+    else if (i == 1)
+        ag.cubeCollision = false;
+    return ag.cubeCollision;
 }
 
 //=============================================================================

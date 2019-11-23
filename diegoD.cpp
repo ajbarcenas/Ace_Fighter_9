@@ -74,6 +74,13 @@ void spawnPlayer(Player *p)
 	p->damage = 10;
 }
 
+void setPlayerHealth(Player *p, int maxHealth)
+{
+	p->maxHealth = maxHealth;
+	p->currentHealth = p->maxHealth;
+	cout << p->currentHealth << endl;
+}
+
 void printPlayer(Player *p, float w, float h, GLuint Texture)
 {
 	glPushMatrix();
@@ -100,17 +107,17 @@ void checkPlayerLocation(Player *p)
 	}
 }
 
-// =========================Enemy Functions =================================
+ void subtractPlayerHealth(int &currentHealth, int damage)
+ {
+	currentHealth -= damage;
+	cout << currentHealth << endl;
+	if(currentHealth <= 0) {
+   		cout << "Game Over!!!" << endl;
+   	}
+ }
 
-/*
-   void subtractPlayerHealth(Shape player, int damage)
-   {
-   player.health -= damage;
-   if(player.health <= 0) {
-   gameOver();
-   }
-   }
-   */
+
+// =========================Enemy Functions =================================
 
 void spawnEnemy(struct Node** head_ref, Enemy1 enemy) 
 {
@@ -247,8 +254,6 @@ void checkEnemyCollision(struct Node* enemy)
 			    y > enemy->data.s.center.y - enemy->data.s.height) {
 			    subtractEnemyHealth(enemy, damage);
                 deleteBullet(i);
-			    //enemy->data.removeEnemy = true;
-			    //abG.incrementScore(1000);
 	        }
 	    }
     }
@@ -263,18 +268,16 @@ void checkEnemyCollision(struct Node* enemy)
 			    y > enemy->data.s.center.y - enemy->data.s.height) {
 			    subtractEnemyHealth(enemy,damage);
                 deleteMissile(i);
-			    //enemy->data.removeEnemy = true;
-			    //abG.incrementScore(1000);
             }
         }
     }
 }
-//
 
-void checkEnemyLocation(struct Node* enemy)
+void checkEnemyLocation(struct Node* enemy, int &currentHealth)
 {
 	if(enemy->data.s.center.x < 0) {
 		enemy->data.removeEnemy = true;
+		subtractPlayerHealth(currentHealth, 1);
 	}
 }
 

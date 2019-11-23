@@ -204,6 +204,7 @@ public:
     GLuint diegoTexId;
     GLuint andrewTexId;
     int showLogo;
+    char keys[65536];
     int n = 0;
     int wave = 1;
     int maxEnemy1 = 5;
@@ -328,12 +329,14 @@ void render(void);
 extern void spawnPlayer(Player *p);
 extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
+extern void setPlayerHealth(Player *p, int maxHealth);
+extern void subtractPlayerHealth(int &currentHealth, int damage);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(struct Node* enemy);
+extern void checkEnemyLocation(struct Node* enemy, int &currentHealth);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void subtractEnemyHealth(struct Node* enemy, int damage);
@@ -765,26 +768,25 @@ int check_keys(XEvent *e)
         g.getBTime = 0;
     }
     //Was there input from the keyboard?
-    Player *p = &g.player;
+    static int shift = 0;
+    int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
+    if (e->type == KeyRelease) {
+        g.keys[key]=0;
+        if (key == XK_Shift_L || key == XK_Shift_R)
+            shift=0;
+        return 0;
+    }
     if (e->type == KeyPress) {
-        int key = XLookupKeysym(&e->xkey, 0);
+        g.keys[key] = 1;
+	if (key == XK_Shift_L || key == XK_Shift_R) {
+		shift = 1;
+		return 0;
+	}
+    } else {
+       return 0;
+    }    
+        if(shift) {}	
         switch(key) {
-            case XK_Left:
-                p->s.velocity.x = -15;
-                p->s.center.x += p->s.velocity.x;
-                break;
-            case XK_Right:
-                p->s.velocity.x = 15;
-                p->s.center.x += p->s.velocity.x;
-                break;
-            case XK_Up:
-                p->s.velocity.y = 15;
-                p->s.center.y += p->s.velocity.y;
-                break;
-            case XK_Down:
-                p->s.velocity.y = -15;
-                p->s.center.y += p->s.velocity.y;
-                break;
             case XK_t:
                 abG.incrementScore(1);
                 authScores();
@@ -812,39 +814,11 @@ int check_keys(XEvent *e)
 		g.isPaused = false;
                 cube ^= 1;
                 break;
-            case XK_space:
-                if (!g.isPaused) {
-                    clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
-                    g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
-                    if (g.bTime > 0.1) {
-                        if (getPower() == 1)
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 33);
-                        else if (getPower() == 2) {
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 29);
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 37);
-                        }
-                        else if (getPower() == 3) {
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 25);
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 33);
-                            makeBullet(p->s.center.x - 10, p->s.center.y - 41);
-                        }
-                        else if (getPower() == 4) {
-                            makeMissile(p->s.center.x - 10, p->s.center.y - 33);
-                        }
-                        else if (getPower() >= 5) {
-                            makeMissile(p->s.center.x - 10, p->s.center.y - 13);
-                            makeMissile(p->s.center.x - 10, p->s.center.y - 53);
-                        }
-                        g.getBTime = 1;
-                    }
-                }
-                break;
-		case XK_Escape:
+	    case XK_Escape:
                 return 1;
         }
         if (key == XK_Escape)
-            return 1;
-    }
+            return 1;  
     return 0;
 }
 
@@ -877,35 +851,77 @@ void physics()
     //=========================================================================
  
         struct Node* temp = g.head;
+	Player *p = &g.player;
         for(int i = 0; i < g.n; i++) {
             if(temp != NULL) {
 	            moveEnemy(temp);
 		        checkEnemyCollision(temp);
-                checkEnemyLocation(temp);
+		checkEnemyLocation(temp,p->currentHealth);
                 if(temp->data.removeEnemy) {
                     removeEnemy(&g.head, temp, g.n, g.enemies1Dead, g.wave);
                 }
                 temp = temp->next;
 	    }
         }
- 
-    /* 
-    if (bullet.center.x <= e[i].center.x + enemy[i].width/2 &&
-        bullet.center.x >= e[i].center.x - enemy[i].width/2 &&
-        bullet.center.y <= e[i].center.y + enemy[i].height/2 &&
-        bullet.center.y >= e[i].center.y - enemy[i].height/2 &&) {
-        cout << "collision" << endl;
-    }
-    */
+
+        if(g.keys[XK_Left]) {
+           p->s.velocity.x = -15;
+           p->s.center.x += p->s.velocity.x;
+        }
+
+        if(g.keys[XK_Right]) {
+            p->s.velocity.x = 15;
+            p->s.center.x += p->s.velocity.x;
+	}
+
+        if(g.keys[XK_Up]) {
+            p->s.velocity.y = 15;
+            p->s.center.y += p->s.velocity.y;
+	}
+
+        if(g.keys[XK_Down]) {
+            p->s.velocity.y = -15;
+            p->s.center.y += p->s.velocity.y;
+	}
+
+	// key press for bullets
+        if(g.keys[XK_space]) {
+            if (!g.isPaused) {
+                clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
+                g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
+                if (g.bTime > 0.1) {
+                    if (getPower() == 1)
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 33);
+                    else if (getPower() == 2) {
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 29);
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 37);
+                    }
+                    else if (getPower() == 3) {
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 25);
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 33);
+                        makeBullet(p->s.center.x - 10, p->s.center.y - 41);
+                    }
+                    else if (getPower() == 4) {
+                        makeMissile(p->s.center.x - 10, p->s.center.y - 33);
+                    }
+                    else if (getPower() >= 5) {
+                        makeMissile(p->s.center.x - 10, p->s.center.y - 13);
+                        makeMissile(p->s.center.x - 10, p->s.center.y - 53);
+                    }
+                    g.getBTime = 1;
+                }
+            }
+        }        
+
 
     smokeMovement();
     bulletMovement();
     missileMovement();
     confettiMovement();
     rainMovement();
-    eLex.testMovement();
-    eLex.vEnemMovement();
-    eLex.cEnemMovement();
+    eLex.testMovement(p->currentHealth);
+    eLex.vEnemMovement(p->currentHealth);
+    eLex.cEnemMovement(p->currentHealth);
     eLex.bossMovement();
     eLex.bulletMovement();
 }
@@ -991,6 +1007,7 @@ void render()
     Player *p = &g.player;
     if(!p->s.playerExists) {
         spawnPlayer(p);
+	setPlayerHealth(p, 3);
         p->s.playerExists = true;
     }
     checkPlayerLocation(p);

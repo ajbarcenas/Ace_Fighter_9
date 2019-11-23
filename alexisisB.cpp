@@ -529,7 +529,7 @@ void Enemy::testMovement(int &currentHealth)
 			p->velocity.y = -(p->velocity.y); 
 		}
 
-		if (p->e.center.x < 0.0)
+		if (p->e.center.x < 0.0) {
 			eLex.deleteEnemy(i);
 		  subtractPlayerHealth(currentHealth, 1);
 		}

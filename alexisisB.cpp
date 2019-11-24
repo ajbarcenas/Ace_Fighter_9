@@ -214,6 +214,18 @@ void ABarGlobal::printTempScreen(Rect r)
         ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
 	ggprint16(&r, 16, 0xff1919, "   Press S to Start the game");
 }
+void ABarGlobal::printInstructions(Rect r)
+{
+	r.bot = 600;
+	r.left = 900;
+	ggprint16(&r, 16, 0xff1919, "How to Play!!!");
+}
+void ABarGlobal::printCredits(Rect r)
+{
+	r.bot = 400;
+	r.left = 920;
+	ggprint16(&r, 16, 0xff1919, "Credits!!!");
+}
 void ABarGlobal::drawButton(int x_pos, int y_pos)
 {
 	glColor3f(1.0, 1.0, 1.0);
@@ -361,7 +373,9 @@ void ABarGlobal::condenseStart()
 	drawButton(960, 600);
 	drawButton(960, 400);
 	drawButton(960, 200);
-	printTempScreen(r);	
+	printTempScreen(r);
+	printInstructions(r);
+	printCredits(r);
 }
 void Enemy::makeTest()
 {

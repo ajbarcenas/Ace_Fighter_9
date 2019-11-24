@@ -144,6 +144,8 @@ class ABarGlobal {
 		void condenseCreds();
 		void condenseHigh();
 		void condenseStart();
+		void printInstructions(Rect r);
+		void printCredits(Rect r);
 };
 
 void printAlexisB(Rect r);

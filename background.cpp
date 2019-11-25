@@ -865,22 +865,22 @@ void physics()
         }
 
         if(g.keys[XK_Left]) {
-           p->s.velocity.x = -15;
+           p->s.velocity.x = -10;
            p->s.center.x += p->s.velocity.x;
         }
 
         if(g.keys[XK_Right]) {
-            p->s.velocity.x = 15;
+            p->s.velocity.x = 10;
             p->s.center.x += p->s.velocity.x;
 	}
 
         if(g.keys[XK_Up]) {
-            p->s.velocity.y = 15;
+            p->s.velocity.y = 10;
             p->s.center.y += p->s.velocity.y;
 	}
 
         if(g.keys[XK_Down]) {
-            p->s.velocity.y = -15;
+            p->s.velocity.y = -10;
             p->s.center.y += p->s.velocity.y;
 	}
 
@@ -908,7 +908,7 @@ void physics()
                         makeMissile(p->s.center.x - 10, p->s.center.y - 13);
                         makeMissile(p->s.center.x - 10, p->s.center.y - 53);
                     }
-                    g.getBTime = 1;
+                    g.getBTime = 2;
                 }
             }
         }        

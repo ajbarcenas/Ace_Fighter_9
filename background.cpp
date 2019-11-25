@@ -743,8 +743,14 @@ void check_mouse(XEvent *e)
     if (e->type == ButtonPress) {
         //cout << e->xbutton.button << endl;
         if (e->xbutton.button== 1) {
-            int q = g.yres - e->xbutton.y;
-            cout << "test: " << e->xbutton.x << " " << q << endl;
+	    
+	     int q = g.yres - e->xbutton.y;
+		if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
+			abG.showStartScreen();
+			g.isPaused = false;
+		 	cout << "test: " << e->xbutton.x << " " << q << endl;
+	     	}
+
         }
         if (e->xbutton.button== 3) {
         }

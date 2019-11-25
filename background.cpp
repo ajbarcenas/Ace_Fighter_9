@@ -1076,9 +1076,6 @@ void render()
                 eLex.rDead = false;
             }
         }
-        if (eLex.getNumEnemy() == 0) {
-            eLex.rDead = true;
-        }
     }
     eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
     glDisable(GL_ALPHA_TEST);
@@ -1111,6 +1108,7 @@ void render()
         if (eLex.getCNumEnemy() == 0) {
             g.wave++;
             eLex.cDead = true;
+            eLex.rDead = true;
         }
     }
     eLex.printCEnem(img[13].width, img[13].height, g.enemy3Texture);

@@ -859,23 +859,22 @@ void physics()
             temp = temp->next;
 	    }
     }
-
-    if (g.keys[XK_Left]) {
+    if (g.keys[XK_Left] && p->s.center.x > 10) {
        p->s.velocity.x = -15;
        p->s.center.x += p->s.velocity.x;
     }
 
-    if (g.keys[XK_Right]) {
+    if (g.keys[XK_Right] && p->s.center.x < 1910) {
         p->s.velocity.x = 15;
         p->s.center.x += p->s.velocity.x;
     }
 
-    if (g.keys[XK_Up]) {
+    if (g.keys[XK_Up] && p->s.center.y < 1070) {
         p->s.velocity.y = 15;
         p->s.center.y += p->s.velocity.y;
 	}
 
-    if (g.keys[XK_Down]) {
+    if (g.keys[XK_Down] && p->s.center.y > 10) {
         p->s.velocity.y = -15;
         p->s.center.y += p->s.velocity.y;
 	}

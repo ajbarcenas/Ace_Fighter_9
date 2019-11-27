@@ -386,8 +386,8 @@ int main()
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
             x11.check_resize(&e);
-            if(!g.isPaused)
-		    check_mouse(&e);
+            //if(!g.isPaused)
+		check_mouse(&e);
             done = check_keys(&e);
         }
     if(!g.isPaused)
@@ -743,28 +743,29 @@ void check_mouse(XEvent *e)
         return;
     if (e->type == ButtonPress) {
         //cout << e->xbutton.button << endl;
-        if (e->xbutton.button== 1) {
-	    
+        if (e->xbutton.button== 1) { 
 	     int q = g.yres - e->xbutton.y;
-		if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
+	     		if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
 			abG.showStartScreen();
 			g.isPaused = false;
 		 	cout << "test: " << e->xbutton.x << " " << q << endl;
-	     	}
+	     		}
+	}
 
-        }
         if (e->xbutton.button== 3) {
         }
     }
     if (e->type == MotionNotify) {
-        if (savex != e->xbutton.x || savey != e->xbutton.y) {
-            //Mouse moved
-            savex = e->xbutton.x;
-            savey = e->xbutton.y;
-            int y = g.yres - e->xbutton.y;
-            p->s.center.x = e->xbutton.x;
-            p->s.center.y = y;
-        }
+        if (!g.isPaused) {
+		if (savex != e->xbutton.x || savey != e->xbutton.y) {
+            		//Mouse moved
+            		savex = e->xbutton.x;
+            		savey = e->xbutton.y;
+            		int y = g.yres - e->xbutton.y;
+            		p->s.center.x = e->xbutton.x;
+            		p->s.center.y = y;
+        	}
+	}
     }
 }
 

@@ -130,18 +130,18 @@ struct Particle {
 };
 
 struct Enemy1 {
-	int maxHealth;
-	int currentHealth;
-	int damage;
-	Shape s;
-	bool removeEnemy = false;
+    int maxHealth;
+    int currentHealth;
+    int damage;
+    Shape s;
+    bool removeEnemy = false;
 };
 
 struct Player {
-	int currentHealth;
-	int maxHealth; 
-	int damage;
-	Shape s;
+    int currentHealth;
+    int maxHealth; 
+    int damage;
+    Shape s;
 };
 
 struct Node {
@@ -208,6 +208,7 @@ public:
     int n = 0;
     int wave = 1;
     int maxEnemy1 = 5;
+    bool mouseMovement = true;
     bool enemies1Dead = true;
     Enemy1 enemy;
     struct Node* head = NULL;
@@ -802,7 +803,13 @@ int check_keys(XEvent *e)
                 //g.showCredits ^= 1;
                 g.showLogo ^= 1;
                 break;
-	        case XK_p:
+	    case XK_m:
+		if(g.mouseMovement == true)
+		    g.mouseMovement = false;
+		else
+		    g.mouseMovement = true;
+		break;
+	    case XK_p:
                 if(g.isPaused)
                     g.isPaused = false;
                 else
@@ -865,25 +872,27 @@ void physics()
             temp = temp->next;
 	    }
     }
-    if (g.keys[XK_Left] && p->s.center.x > 10) {
-       p->s.velocity.x = -15;
-       p->s.center.x += p->s.velocity.x;
+    if(g.mouseMovement == false) {
+        if (g.keys[XK_Left] && p->s.center.x > 10) {
+            p->s.velocity.x = -15;
+            p->s.center.x += p->s.velocity.x;
+        }
+
+        if (g.keys[XK_Right] && p->s.center.x < 1910) {
+            p->s.velocity.x = 15;
+            p->s.center.x += p->s.velocity.x;
+        }
+
+        if (g.keys[XK_Up] && p->s.center.y < 1070) {
+            p->s.velocity.y = 15;
+            p->s.center.y += p->s.velocity.y;
+            }
+
+        if (g.keys[XK_Down] && p->s.center.y > 10) {
+            p->s.velocity.y = -15;
+            p->s.center.y += p->s.velocity.y;
+    	}
     }
-
-    if (g.keys[XK_Right] && p->s.center.x < 1910) {
-        p->s.velocity.x = 15;
-        p->s.center.x += p->s.velocity.x;
-    }
-
-    if (g.keys[XK_Up] && p->s.center.y < 1070) {
-        p->s.velocity.y = 15;
-        p->s.center.y += p->s.velocity.y;
-	}
-
-    if (g.keys[XK_Down] && p->s.center.y > 10) {
-        p->s.velocity.y = -15;
-        p->s.center.y += p->s.velocity.y;
-	}
     
     //key press for bullets
     if (g.getBTime == 1) {

@@ -756,7 +756,7 @@ void check_mouse(XEvent *e)
         }
     }
     if (e->type == MotionNotify) {
-        if (!g.isPaused) {
+        if (!g.isPaused && g.mouseMovement == true) {
 		if (savex != e->xbutton.x || savey != e->xbutton.y) {
             		//Mouse moved
             		savex = e->xbutton.x;

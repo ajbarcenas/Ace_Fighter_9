@@ -74,7 +74,6 @@ void ABarGlobal::printAceFighter9(Rect r)
 		}
 	}
 }
-
 // This code prints out the logo on our credits screen
 void ABarGlobal::printPicture(double x, double y, double z, GLuint texturecode) 
 {
@@ -229,6 +228,7 @@ void ABarGlobal::printCredits(Rect r)
 	r.left = 920;
 	ggprint16(&r, 16, 0xff1919, "Credits!!!");
 }
+//How to Screen
 void ABarGlobal::condenseHow()
 {
 	Rect r;

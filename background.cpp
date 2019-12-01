@@ -744,11 +744,24 @@ void check_mouse(XEvent *e)
         //cout << e->xbutton.button << endl;
         if (e->xbutton.button== 1) { 
 	     int q = g.yres - e->xbutton.y;
-	     		if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
-			abG.showStartScreen();
-			g.isPaused = false;
-		 	cout << "test: " << e->xbutton.x << " " << q << endl;
-	     		}
+	     		
+		cout << "test: " << e->xbutton.x << " " << q << endl;
+			if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
+			    abG.showStartScreen();
+			    g.isPaused = false;
+		 	    cout << "test: " << e->xbutton.x << " " << q << endl;
+	     		} 
+			if (!abG.showHow) {
+				if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 550 && q < 649) {
+			            abG.showHowTo();
+		 	           // cout << "test: " << e->xbutton.x << " " << q << endl;
+				}
+			}
+			if (abG.showHow) {    
+			    if (e->xbutton.x > 886 && e->xbutton.x < 1013 && q > 346 && q < 357) {
+			        abG.showHowTo();
+			    }
+			}
 	}
 
         if (e->xbutton.button== 3) {
@@ -1162,6 +1175,13 @@ void render()
     //=========================================================================
     if (abG.showStart) {
         abG.condenseStart();	
+    }
+
+    //=========================================================================
+    // How to Screen
+    //=========================================================================
+    if (abG.showHow) {
+        abG.condenseHow();	
     }
 
     //=========================================================================

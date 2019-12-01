@@ -121,6 +121,7 @@ class ABarGlobal {
 		int highscore;
 		int showHigh;
 		int showCreds;
+		int showHow;
 		int showStart = 1;
 		void printAceFighter9(Rect r);
 		void printPicture(double x, double y, double z, GLuint texturecode);
@@ -130,6 +131,7 @@ class ABarGlobal {
 		void showHighScores();
 		void showCredits();
 		void showStartScreen();
+		void showHowTo();
 		void drawTriangle(int width, int height, int x_pos, int y_pos,
 			int rColor, int gColor, int bColor);
 		void printTempScores(Rect r);
@@ -144,6 +146,7 @@ class ABarGlobal {
 		void condenseCreds();
 		void condenseHigh();
 		void condenseStart();
+		void condenseHow();
 		void printInstructions(Rect r);
 		void printCredits(Rect r);
 };

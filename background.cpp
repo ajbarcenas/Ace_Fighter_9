@@ -215,14 +215,18 @@ public:
     int showCredits, showHighScores;
     int HighScore;
     bool getCTime = true;
+    bool getPTime = true;
     int getBTime = 1;
     bool isPaused = true;
     struct timespec cTimeStart;
     struct timespec cTimeCurr;
     struct timespec bTimeStart;
     struct timespec bTimeCurr;
+    struct timespec pTimeStart;
+    struct timespec pTimeCurr;
     double cTime;
     double bTime;
+    double pTime;
     double billion = 1.0/1e9;
     Global() {
         //Pictures pic;
@@ -368,6 +372,9 @@ extern void rainMovement();
 extern void cubePower(GLuint topTexture, GLuint sideTexture, GLuint bottomTexture);
 extern void makeCubeCoordsNull();
 extern bool getCubeCollision(int i);
+extern bool getPyramidCollision(int i);
+extern void makePyramidCoordsNull();
+extern void pyramidPower();
 extern int getPointsX();
 extern int getPointsY();
 extern bool getPrintPoints();
@@ -1037,6 +1044,7 @@ void render()
         printMissile(img[9].width, img[9].height, g.missileTexture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
+    
     //=========================================================================
     // Cube Powerup
     //=========================================================================
@@ -1055,9 +1063,34 @@ void render()
             glPushMatrix();
             cubePower(g.minecraftTop, g.minecraftSide, g.minecraftBottom);
             glPopMatrix();
-            if (g.cTime > 15.0){
+            if (g.cTime > 8.0) {
                 g.getCTime = true;
                 makeCubeCoordsNull();
+            }
+        }
+    }
+    
+    //=========================================================================
+    // Pyramid Powerup
+    //=========================================================================
+    if (!g.isPaused) {
+        if (g.getPTime == true || getPyramidCollision(0) == true) {
+            clock_gettime(CLOCK_REALTIME, &g.pTimeStart);
+            g.getPTime = false;
+            getPyramidCollision(1);
+            makePyramidCoordsNull();
+        }
+
+        clock_gettime(CLOCK_REALTIME, &g.pTimeCurr);
+
+        g.pTime = timeDiff(&g.pTimeStart, &g.pTimeCurr);
+        if (g.pTime > 9.0) {
+            glPushMatrix();
+            pyramidPower();
+            glPopMatrix();
+            if (g.pTime > 14.0) {
+                g.getPTime = true;
+                makePyramidCoordsNull();
             }
         }
     }

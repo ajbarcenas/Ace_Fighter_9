@@ -86,13 +86,95 @@ public:
     float cx = 1.0;
     float cy = 0.0;
     float cz = 0.1;
+    float px = 0.0;
+    float py = 0.0;
+    float pz = 0.1;
+    float xrp = 1.0;
+    float zrp = 1.0;
     double winX;
     double winY;
     double winZ;
+    double winPX;
+    double winPY;
+    double winPZ;
     bool printPoints = false;
     bool increasing = true;
     bool cubeCollision = false;
+    bool pyramidCollision = false;
 }ag;
+
+//=============================================================================
+// Pyramid Functions
+//=============================================================================
+void pyramidPower()
+{
+    ag.xrp = ag.xrp + 1;
+    ag.zrp = ag.zrp + 6;
+
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(ag.px, ag.py, ag.pz);
+
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    GLdouble modelview[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+
+    gluProject(ag.px, ag.py, ag.pz,
+               modelview, projection, viewport,
+               &ag.winPX, &ag.winPY, &ag.winPZ);
+
+    ag.winPX = (ag.winPX/2) + (956/2) + 2;
+    ag.winPY = (ag.winPY/2) + (545/2);
+
+    glRotatef(ag.xrp, 1.0, 0.0, 0.0);
+    glRotatef(ag.zrp, 0.0, 1.0, 0.0);
+
+        //glTexCoord2f(0.0f, 0.0f); 
+        //glTexCoord2f(0.5f, 0.5f); 
+        //glTexCoord2f(1.0f, 1.0f); 
+    //Front
+    glBegin(GL_TRIANGLES);
+        glColor3f(0.0f, 1.0f, 0.0f);
+        glVertex3f(-0.05f, 0.0f, 0.05f);
+        glVertex3f(0.0f, 0.05f, 0.0f);
+        glVertex3f(0.05f, 0.0f, 0.05f);
+    glEnd();
+    //Right
+    glBegin(GL_TRIANGLES);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glVertex3f(0.05f, 0.0f, 0.05f);
+        glVertex3f(0.0f, 0.05f, 0.0f);
+        glVertex3f(0.05f, 0.0f, -0.05f);
+    glEnd();
+    //Back
+    glBegin(GL_TRIANGLES);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex3f(0.05f, 0.0f, -0.05f);
+        glVertex3f(0.0f, 0.05f, 0.0f);
+        glVertex3f(-0.05f, 0.0f, -0.05f);
+    glEnd();
+    //Left
+    glBegin(GL_TRIANGLES);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glVertex3f(-0.05f, 0.0f, -0.05f);
+        glVertex3f(0.0f, 0.05f, 0.0f);
+        glVertex3f(-0.05f, 0.0f, 0.05f);
+    glEnd();
+    //Bottom
+    glBegin(GL_QUADS);
+        glColor3f(0.0f, 1.0f, 1.0f);
+        glVertex3f(-0.05f, 0.0f, 0.05f);
+        glVertex3f(-0.05f, 0.0f, -0.05f);
+        glVertex3f(0.05f, 0.0f, -0.05f);
+        glVertex3f(0.05f, 0.0f, 0.05f);
+    glEnd();
+    glFlush();
+}
 
 //=============================================================================
 // Cube Functions
@@ -463,6 +545,16 @@ void bulletMovement()
             ag.cubeCollision = true;
         }
 
+        //check collision of bullet with pyramid powerup 
+        if (b->s.center.y < ag.winPY + 36 && b->s.center.y > ag.winPY - 36 &&
+            b->s.center.x > ag.winPX + 36 && b->s.center.x > ag.winPX - 36) {
+            ag.bullet[i] = ag.bullet[ag.q - 1];
+            cout << "pyramid hit" << endl;
+            --ag.q;
+            abG.incrementScore(100);
+            ag.pyramidCollision = true;
+        }
+        
         //check collision of bullet with Alexis enemies
         for (int j = 0; j < eLex.getNumEnemy(); j++) {
             if (b->s.center.y < eLex.getEY(j) + 30 &&
@@ -683,6 +775,15 @@ bool getCubeCollision(int i)
     return ag.cubeCollision;
 }
 
+bool getPyramidCollision(int i)
+{
+    if (i == 0)
+        return ag.pyramidCollision;
+    else if (i == 1)
+        ag.pyramidCollision = false;
+    return ag.pyramidCollision;
+}
+
 //=============================================================================
 //This is my friday code
 int getBulletDamage()
@@ -741,6 +842,11 @@ void getMissileXY(int &missileX, int &missileY, int i)
 void makeCubeCoordsNull()
 {
     ag.winX = ag.winY = ag.winZ = 9999;
+}
+
+void makePyramidCoordsNull()
+{
+    ag.winPX = ag.winPY = ag.winPZ = 9999;
 }
 
 double timeDiff(struct timespec *start, struct timespec *end)

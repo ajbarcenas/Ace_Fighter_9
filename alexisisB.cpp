@@ -74,7 +74,6 @@ void ABarGlobal::printAceFighter9(Rect r)
 		}
 	}
 }
-
 // This code prints out the logo on our credits screen
 void ABarGlobal::printPicture(double x, double y, double z, GLuint texturecode) 
 {
@@ -205,13 +204,16 @@ void ABarGlobal::showStartScreen()
 {
 	showStart ^= 1;
 }
-
+void ABarGlobal::showHowTo()
+{
+	showHow ^= 1;
+}
 void ABarGlobal::printTempScreen(Rect r)
 {
-        glColor3f(1.0, 1.0, 1.0);
+		glColor3f(1.0, 1.0, 1.0);
 	r.bot = 800;
 	r.left = 825;
-        ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
+		ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
 	ggprint16(&r, 16, 0xff1919, "   Press S to Start the game");
 }
 void ABarGlobal::printInstructions(Rect r)
@@ -225,6 +227,29 @@ void ABarGlobal::printCredits(Rect r)
 	r.bot = 400;
 	r.left = 920;
 	ggprint16(&r, 16, 0xff1919, "Credits!!!");
+}
+//How to Screen
+void ABarGlobal::condenseHow()
+{
+	Rect r;
+	colorBlendBorder(200, 200, 960,540,0,0,0,
+			255,255,255,
+			0,0,0,
+			255,255,255);
+	r.bot = 687;
+	r.left = 948;
+	ggprint16(&r, 16, 0x66ffcc, "How to Play");
+	r.left = 950;
+	r.bot = 625;
+	ggprint13(&r, 30, 0x66ffcc, "[Mouse]------Control Plane Movement");
+	ggprint13(&r, 30, 0x66ffcc, "[M]------Toggle Between Mouse & K/B Controls");
+	ggprint13(&r, 30, 0x66ffcc, "[Up Arrow]------Moves Player Up");
+	ggprint13(&r, 30, 0x66ffcc, "[Down Arrow]------Moves Player Down");
+	ggprint13(&r, 30, 0x66ffcc, "[Left Arrow]------Moves Player Left");
+	ggprint13(&r, 30, 0x66ffcc, "[Right Arrow]------Moves Player Right");
+	ggprint13(&r, 100, 0x66ffcc, "[Spacebar]------Shoots bullet/missile");
+
+	ggprint13(&r, 30, 0x66ffcc, "Click here to close");
 }
 void ABarGlobal::drawButton(int x_pos, int y_pos)
 {
@@ -242,9 +267,9 @@ void ABarGlobal::drawButton(int x_pos, int y_pos)
 	h = box.height;
 	glBegin(GL_QUADS);
 	glVertex2i(-w, -h);
-        glVertex2i(-w, h);
-        glVertex2i(w, h);
-        glVertex2i(w, -h);
+		glVertex2i(-w, h);
+		glVertex2i(w, h);
+		glVertex2i(w, -h);
 	glEnd();
 	glPopMatrix();
 }
@@ -352,7 +377,7 @@ void ABarGlobal::condenseCreds()
 
 void ABarGlobal::condenseHigh()
 {
-    	showCreditsBorder(1920, 1080, 960, 540);
+		showCreditsBorder(1920, 1080, 960, 540);
 	printCredBoxes(960, 540);
 	showCreditsBorder(210, 210, 960, 540, 1, 1, 1);
 	colorBlendBorder(200, 200, 960,540,0,0,0,
@@ -562,9 +587,9 @@ void Enemy::cEnemMovement(int &currentHealth)
 
 		f->e.center.x += f->velocity.x;
 		f->e.center.y += f->velocity.y;
-	  if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
+	if (f->e.center.y < 0.0 || f->e.center.y > 1080) {
 		  f->velocity.y = -(f->velocity.y);
-	  }
+	}
 		if (f->e.center.x < 0.0) {
 			eLex.deleteCEnemy(i);
 			subtractPlayerHealth(currentHealth, 1);
@@ -594,9 +619,9 @@ void Enemy::printTest(float w, float h, GLuint Texture)
 {
 	for (int i = 0; i < numEnemy; i++) {
 		glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, Texture);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor3ub(255,255,255);
 		Vec1 *c = &test[i].e.center;
 		glBegin(GL_QUADS);
@@ -613,9 +638,9 @@ void Enemy::printCEnem(float w, float h, GLuint Texture)
 {
 	for (int i = 0; i < numCEnemy; i++) {
 		glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, Texture);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor3ub(255,255,255);
 		Vec1 *g = &cEnemy[i].e.center;
 		glBegin(GL_QUADS);
@@ -631,9 +656,9 @@ void Enemy::printVEnem(float w, float h, GLuint Texture)
 {
 	for (int i = 0; i < numVEnemy; i++) {
 		glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, Texture);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor3ub(255,255,255);
 		Vec1 *q = &vEnemy[i].e.center;
 		glBegin(GL_QUADS);
@@ -681,7 +706,7 @@ int Enemy::getNumEnemy()
 void Enemy::deleteVEnemy(int i)
 {
 	vEnemy[i] = vEnemy[numVEnemy - 1];
-    --numVEnemy;
+	--numVEnemy;
 }
 
 int Enemy::getVX(int i) 
@@ -703,7 +728,7 @@ int Enemy::getVNumEnemy()
 void Enemy::deleteCEnemy(int i)
 {
 	cEnemy[i] = cEnemy[numCEnemy - 1];
-    --numCEnemy;
+	--numCEnemy;
 }
 
 int Enemy::getCX(int i) 

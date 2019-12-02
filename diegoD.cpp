@@ -117,6 +117,30 @@ void subtractPlayerHealth(int &currentHealth, int damage)
 	}
 }
 
+void movePlayerUp(Player *p) 
+{
+	p->s.velocity.y = 15;
+	p->s.center.y += p->s.velocity.y;
+}
+
+void movePlayerDown(Player *p)
+{
+        p->s.velocity.y = -15;
+        p->s.center.y += p->s.velocity.y;
+}
+
+void movePlayerLeft(Player *p)
+{
+        p->s.velocity.x = -15;
+        p->s.center.x += p->s.velocity.x;
+}
+
+void movePlayerRight(Player *p)
+{
+        p->s.velocity.x = 15;
+        p->s.center.x += p->s.velocity.x;
+}
+
 
 // =========================Enemy Functions =================================
 

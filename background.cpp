@@ -332,6 +332,10 @@ extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
 extern void setPlayerHealth(Player *p, int maxHealth);
 extern void subtractPlayerHealth(int &currentHealth, int damage);
+extern void movePlayerUp(Player *p);
+extern void movePlayerDown(Player *p);
+extern void movePlayerLeft(Player *p);
+extern void movePlayerRight(Player *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
@@ -875,23 +879,16 @@ void physics()
     }
     if(g.mouseMovement == false) {
         if (g.keys[XK_Left] && p->s.center.x > 10) {
-            p->s.velocity.x = -15;
-            p->s.center.x += p->s.velocity.x;
+            movePlayerLeft(p);
         }
-
         if (g.keys[XK_Right] && p->s.center.x < 1910) {
-            p->s.velocity.x = 15;
-            p->s.center.x += p->s.velocity.x;
+            movePlayerRight(p);
         }
-
         if (g.keys[XK_Up] && p->s.center.y < 1070) {
-            p->s.velocity.y = 15;
-            p->s.center.y += p->s.velocity.y;
-            }
-
+            movePlayerUp(p);
+        }
         if (g.keys[XK_Down] && p->s.center.y > 10) {
-            p->s.velocity.y = -15;
-            p->s.center.y += p->s.velocity.y;
+	    movePlayerDown(p);
     	}
     }
     

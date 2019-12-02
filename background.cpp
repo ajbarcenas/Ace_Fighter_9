@@ -1267,9 +1267,15 @@ void render()
     ggprint16(&r, 16, 0x00ffff44, "Press H to go to High Score screen");
     ggprint16(&r, 16, 0x00ffff44, "Press R for rain");
     r.bot = 1050;
-    r.left = 40;
+    r.left = 10;
+    if (g.mouseMovement)
+        ggprint16(&r, 0, 0x00ffff44, "Mouse");
+    else
+	ggprint16(&r, 0, 0x00ffff44, "Keys");
+    r.bot = 1050;
+    r.left = 80;
     ggprint16(&r,  0, 0x00ffff44, "SCORE: ");
-    r.left = 120;
+    r.left = 160;
     ggprint16(&r, 16, 0x00ffff44, to_string(abG.highscore).c_str());
 }
 

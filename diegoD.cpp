@@ -84,37 +84,62 @@ void setPlayerHealth(Player *p, int maxHealth)
 void printPlayer(Player *p, float w, float h, GLuint Texture)
 {
 	glPushMatrix();
-    glBindTexture(GL_TEXTURE_2D, Texture);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor3ub(255,255,255);
 	glTranslatef(p->s.center.x, p->s.center.y, p->s.center.z);
 	glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex2i(-w*.5,-h*.5);
-        glTexCoord2f(0.0f, 0.0f); glVertex2i(-w*.5, h*.5);
-        glTexCoord2f(1.0f, 0.0f); glVertex2i( w*.5, h*.5);
-        glTexCoord2f(1.0f, 1.0f); glVertex2i( w*.5,-h*.5);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(-w*.5,-h*.5);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(-w*.5, h*.5);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i( w*.5, h*.5);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i( w*.5,-h*.5);
 	glEnd();
 	glPopMatrix();
 }
 
 void checkPlayerLocation(Player *p)
 {
-	if(p->s.center.x - p->s.width < -25 || p->s.center.x + p->s.width > 1945 ||
+	if(p->s.center.x - p->s.width < -25 || 
+			p->s.center.x + p->s.width > 1945 ||
 			p->s.center.y - p->s.height < -25 || 
 			p->s.center.y + p->s.height > 1105) {
 		spawnPlayer(p);
 	}
 }
 
- void subtractPlayerHealth(int &currentHealth, int damage)
- {
+void subtractPlayerHealth(int &currentHealth, int damage)
+{
 	currentHealth -= damage;
 	cout << currentHealth << endl;
 	if(currentHealth <= 0) {
-   		cout << "Game Over!!!" << endl;
-   	}
- }
+		cout << "Game Over!!!" << endl;
+	}
+}
+
+void movePlayerUp(Player *p) 
+{
+	p->s.velocity.y = 15;
+	p->s.center.y += p->s.velocity.y;
+}
+
+void movePlayerDown(Player *p)
+{
+        p->s.velocity.y = -15;
+        p->s.center.y += p->s.velocity.y;
+}
+
+void movePlayerLeft(Player *p)
+{
+        p->s.velocity.x = -15;
+        p->s.center.x += p->s.velocity.x;
+}
+
+void movePlayerRight(Player *p)
+{
+        p->s.velocity.x = 15;
+        p->s.center.x += p->s.velocity.x;
+}
 
 
 // =========================Enemy Functions =================================
@@ -169,9 +194,9 @@ void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture)
 
 	for (int i = 0; i < n; i++) {
 		glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, Texture);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor3ub(255,255,255);
 		we[i] = w;
 		he[i] = h;
@@ -196,7 +221,6 @@ void moveEnemy(struct Node* enemy)
 
 void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave)
 {
-
 	struct Node* temp = *head;
 	struct Node* prev = *head;
 	// If head node itself holds the key to be deleted 
@@ -205,9 +229,9 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 		free(temp);		// free old head 
 		n--;
 		if(temp->next == NULL) {
-            wave++;
-            enemies1Dead = true;
-        }
+			wave++;
+			enemies1Dead = true;
+		}
 		return; 
 	} 
 
@@ -233,7 +257,7 @@ void subtractEnemyHealth(struct Node* enemy, int damage)
 {
 	enemy->data.currentHealth -= damage;
 	cout << enemy->data.currentHealth << endl;
-    if(enemy->data.currentHealth <= 0){
+	if(enemy->data.currentHealth <= 0){
 		enemy->data.removeEnemy = true;
 		abG.incrementScore(1000);
 	}
@@ -242,35 +266,35 @@ void subtractEnemyHealth(struct Node* enemy, int damage)
 //This is my friday code
 void checkEnemyCollision(struct Node* enemy)
 {
-    int x, y, tot, damage;
-    damage = getBulletDamage();
-    if (getPower() < 4) {
-	    getTotalBullets(tot);
-	    for(int i = 0; i < tot; i++) {
-		    getBulletXY(x,y,i);
-		    if(x > enemy->data.s.center.x - enemy->data.s.width && 
-			    x < enemy->data.s.center.x + enemy->data.s.width &&
-			    y < enemy->data.s.center.y + enemy->data.s.height &&
-			    y > enemy->data.s.center.y - enemy->data.s.height) {
-			    subtractEnemyHealth(enemy, damage);
-                deleteBullet(i);
-	        }
-	    }
-    }
-    else {
-        damage = getMissileDamage();
-        getTotalMissiles(tot);
-	    for(int i = 0; i < tot; i++) {
-		    getMissileXY(x,y,i);
-		    if(x > enemy->data.s.center.x - enemy->data.s.width && 
-			    x < enemy->data.s.center.x + enemy->data.s.width &&
-			    y < enemy->data.s.center.y + enemy->data.s.height &&
-			    y > enemy->data.s.center.y - enemy->data.s.height) {
-			    subtractEnemyHealth(enemy,damage);
-                deleteMissile(i);
-            }
-        }
-    }
+	int x, y, tot, damage;
+	damage = getBulletDamage();
+	if (getPower() < 4) {
+		getTotalBullets(tot);
+		for(int i = 0; i < tot; i++) {
+			getBulletXY(x,y,i);
+			if(x > enemy->data.s.center.x - enemy->data.s.width && 
+					x < enemy->data.s.center.x + enemy->data.s.width &&
+					y < enemy->data.s.center.y + enemy->data.s.height &&
+					y > enemy->data.s.center.y - enemy->data.s.height) {
+				subtractEnemyHealth(enemy, damage);
+				deleteBullet(i);
+			}
+		}
+	}
+	else {
+		damage = getMissileDamage();
+		getTotalMissiles(tot);
+		for(int i = 0; i < tot; i++) {
+			getMissileXY(x,y,i);
+			if(x > enemy->data.s.center.x - enemy->data.s.width && 
+					x < enemy->data.s.center.x + enemy->data.s.width &&
+					y < enemy->data.s.center.y + enemy->data.s.height &&
+					y > enemy->data.s.center.y - enemy->data.s.height) {
+				subtractEnemyHealth(enemy,damage);
+				deleteMissile(i);
+			}
+		}
+	}
 }
 
 void checkEnemyLocation(struct Node* enemy, int &currentHealth)
@@ -340,8 +364,8 @@ int authScores()
 	addr.sin_port = htons(port);
 	addr.sin_addr.s_addr = *(long*)(host->h_addr);
 	if (connect(sd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-		BIO_printf(outbio, "%s: Cannot connect to host %s [%s] on port %d.\n","highscore.cpp", hostname, 
-				inet_ntoa(addr.sin_addr), port);
+		BIO_printf(outbio, "%s: Cannot connect to host %s [%s] on port %d.\n", "highscore.cpp"
+				,hostname, inet_ntoa(addr.sin_addr), port);
 	}
 	//Connect using the SSL certificate.
 	ssl = SSL_new(ctx);
@@ -377,7 +401,7 @@ int authScores()
 	//A successful priming read was accomplished.
 	//Now read all the data.
 	nreads = 1;
-	//Allow for some read errors to happen, while getting the complete data.
+	//Allow for some read errors to happen,while getting the complete data.
 	nerrs = 0;
 	while(bytes >= 0 && nerrs < MAX_READ_ERRORS) {
 		write(STDOUT_FILENO, buf, bytes);

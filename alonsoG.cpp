@@ -140,38 +140,38 @@ void pyramidPower()
     //Front
     glBegin(GL_TRIANGLES);
         glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex3f(-0.05f, 0.0f, 0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.5f, 1.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(0.05f, 0.0f, 0.05f);
     glEnd();
     //Right
     glBegin(GL_TRIANGLES);
         glColor3f(0.0f, 0.0f, 1.0f);
-        glVertex3f(0.05f, 0.0f, 0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(0.05f, 0.0f, -0.05f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.5f, 1.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(0.05f, 0.0f, -0.05f);
     glEnd();
     //Back
     glBegin(GL_TRIANGLES);
         glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f(0.05f, 0.0f, -0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(-0.05f, 0.0f, -0.05f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(0.05f, 0.0f, -0.05f);
+        glTexCoord2f(0.5f, 1.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(-0.05f, 0.0f, -0.05f);
     glEnd();
     //Left
     glBegin(GL_TRIANGLES);
         glColor3f(1.0f, 1.0f, 1.0f);
-        glVertex3f(-0.05f, 0.0f, -0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(-0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.05f, 0.0f, -0.05f);
+        glTexCoord2f(0.5f, 1.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(-0.05f, 0.0f, 0.05f);
     glEnd();
     //Bottom
     glBegin(GL_QUADS);
         glColor3f(0.0f, 1.0f, 1.0f);
-        glVertex3f(-0.05f, 0.0f, 0.05f);
-        glVertex3f(-0.05f, 0.0f, -0.05f);
-        glVertex3f(0.05f, 0.0f, -0.05f);
-        glVertex3f(0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.05f, 0.0f, -0.05f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(0.05f, 0.0f, -0.05f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(0.05f, 0.0f, 0.05f);
     glEnd();
     glFlush();
 }
@@ -673,6 +673,14 @@ void missileMovement()
             ag.cubeCollision = true;
         }
 
+        //check collision of missile with pyramid powerup
+        if (m->s.center.y < ag.winPY + 36 && m->s.center.y > ag.winPY - 36 &&
+            m->s.center.x < ag.winPX + 36 && m->s.center.x > ag.winPX - 36) {
+            ag.missile[i] = ag.missile[ag.p - 1];
+            --ag.p;
+            abG.incrementScore(100);
+            ag.pyramidCollision = true;
+        }
         //check collision of missile with Alexis enemies
         for (int j = 0; j < eLex.getNumEnemy(); j++) {
             if (m->s.center.y < eLex.getEY(j) + 30 &&

@@ -106,7 +106,7 @@ public:
 //=============================================================================
 // Pyramid Functions
 //=============================================================================
-void pyramidPower()
+void pyramidPower(GLuint frontTexture, GLuint backTexture, GLuint bottomTexture)
 {
     ag.xrp = ag.xrp + 1;
     ag.zrp = ag.zrp + 6;
@@ -134,45 +134,57 @@ void pyramidPower()
     glRotatef(ag.xrp, 1.0, 0.0, 0.0);
     glRotatef(ag.zrp, 0.0, 1.0, 0.0);
 
-        //glTexCoord2f(0.0f, 0.0f); 
-        //glTexCoord2f(0.5f, 0.5f); 
-        //glTexCoord2f(1.0f, 1.0f); 
     //Front
+    glBindTexture(GL_TEXTURE_2D, frontTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glBegin(GL_TRIANGLES);
-        glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex3f(-0.05f, 0.0f, 0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(0.05f, 0.0f, 0.05f);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(-0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.5f, 0.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(0.05f, 0.0f, 0.05f);
     glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
     //Right
+    glBindTexture(GL_TEXTURE_2D, backTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glBegin(GL_TRIANGLES);
-        glColor3f(0.0f, 0.0f, 1.0f);
-        glVertex3f(0.05f, 0.0f, 0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(0.05f, 0.0f, -0.05f);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.5f, 0.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(0.05f, 0.0f, -0.05f);
     glEnd();
     //Back
     glBegin(GL_TRIANGLES);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f(0.05f, 0.0f, -0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(-0.05f, 0.0f, -0.05f);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(0.05f, 0.0f, -0.05f);
+        glTexCoord2f(0.5f, 0.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.05f, 0.0f, -0.05f);
     glEnd();
     //Left
     glBegin(GL_TRIANGLES);
         glColor3f(1.0f, 1.0f, 1.0f);
-        glVertex3f(-0.05f, 0.0f, -0.05f);
-        glVertex3f(0.0f, 0.05f, 0.0f);
-        glVertex3f(-0.05f, 0.0f, 0.05f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(-0.05f, 0.0f, -0.05f);
+        glTexCoord2f(0.5f, 0.0f); glVertex3f(0.0f, 0.05f, 0.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.05f, 0.0f, 0.05f);
     glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
     //Bottom
+    glBindTexture(GL_TEXTURE_2D, bottomTexture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glBegin(GL_QUADS);
-        glColor3f(0.0f, 1.0f, 1.0f);
-        glVertex3f(-0.05f, 0.0f, 0.05f);
-        glVertex3f(-0.05f, 0.0f, -0.05f);
-        glVertex3f(0.05f, 0.0f, -0.05f);
-        glVertex3f(0.05f, 0.0f, 0.05f);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(-0.05f, 0.0f, 0.05f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.05f, 0.0f, -0.05f);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(0.05f, 0.0f, -0.05f);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(0.05f, 0.0f, 0.05f);
     glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glFlush();
 }
 
@@ -547,7 +559,7 @@ void bulletMovement()
 
         //check collision of bullet with pyramid powerup 
         if (b->s.center.y < ag.winPY + 36 && b->s.center.y > ag.winPY - 36 &&
-            b->s.center.x > ag.winPX + 36 && b->s.center.x > ag.winPX - 36) {
+            b->s.center.x < ag.winPX + 36 && b->s.center.x > ag.winPX - 36) {
             ag.bullet[i] = ag.bullet[ag.q - 1];
             cout << "pyramid hit" << endl;
             --ag.q;
@@ -671,6 +683,15 @@ void missileMovement()
             --ag.p;
             abG.incrementScore(100);
             ag.cubeCollision = true;
+        }
+
+        //check collision of missile with pyramid powerup
+        if (m->s.center.y < ag.winPY + 36 && m->s.center.y > ag.winPY - 36 &&
+            m->s.center.x < ag.winPX + 36 && m->s.center.x > ag.winPX - 36) {
+            ag.missile[i] = ag.missile[ag.p - 1];
+            --ag.p;
+            abG.incrementScore(100);
+            ag.pyramidCollision = true;
         }
 
         //check collision of missile with Alexis enemies

@@ -693,6 +693,7 @@ void missileMovement()
             abG.incrementScore(100);
             ag.pyramidCollision = true;
         }
+
         //check collision of missile with Alexis enemies
         for (int j = 0; j < eLex.getNumEnemy(); j++) {
             if (m->s.center.y < eLex.getEY(j) + 30 &&

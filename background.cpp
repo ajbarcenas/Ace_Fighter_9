@@ -86,7 +86,7 @@ class Image {
     }
 };
 
-Image img[17] = {"./Images/MountainLayer.png",
+Image img[20] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
@@ -102,7 +102,10 @@ Image img[17] = {"./Images/MountainLayer.png",
                  "./Images/EnemyJet3.png",
                  "./Images/MinecraftCubeTop.png",
                  "./Images/MinecraftCubeSide.png",
-                 "./Images/MinecraftCubeBottom.png"};
+                 "./Images/MinecraftCubeBottom.png",
+                 "./Images/yugiohFront.png",
+                 "./Images/yugiohBack.png",
+                 "./Images/yugiohBottom.png"};
 
 class Texture {
 public:
@@ -195,6 +198,9 @@ public:
     GLuint minecraftTop;
     GLuint minecraftSide;
     GLuint minecraftBottom;
+    GLuint yugiohFront;
+    GLuint yugiohBack;
+    GLuint yugiohBottom;
     Player player;
     Texture tex;
     Shape box;
@@ -379,7 +385,7 @@ extern void makeCubeCoordsNull();
 extern bool getCubeCollision(int i);
 extern bool getPyramidCollision(int i);
 extern void makePyramidCoordsNull();
-extern void pyramidPower();
+extern void pyramidPower(GLuint frontTexture, GLuint backTexture, GLuint bottomTexture);
 extern int getPointsX();
 extern int getPointsY();
 extern bool getPrintPoints();
@@ -466,6 +472,9 @@ void init_opengl(void)
     glGenTextures(1, &g.minecraftTop);
     glGenTextures(1, &g.minecraftSide);
     glGenTextures(1, &g.minecraftBottom);
+    glGenTextures(1, &g.yugiohFront);
+    glGenTextures(1, &g.yugiohBack);
+    glGenTextures(1, &g.yugiohBottom);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -650,6 +659,50 @@ void init_opengl(void)
             GL_RGBA, GL_UNSIGNED_BYTE, minecraftBottomData);
     free(minecraftBottomData);
 
+    //=========================================================================
+    // Yugioh Front
+    //=========================================================================
+    w = img[17].width;
+    h = img[17].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.yugiohFront);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *yugiohFrontData = buildAlphaData(&img[17]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, yugiohFrontData);
+    free(yugiohFrontData);
+
+    //=========================================================================
+    // Yugioh Back
+    //=========================================================================
+    w = img[18].width;
+    h = img[18].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.yugiohBack);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *yugiohBackData = buildAlphaData(&img[18]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, yugiohBackData);
+    free(yugiohBackData);
+
+    //=========================================================================
+    // Yugioh Bottom
+    //=========================================================================
+    w = img[19].width;
+    h = img[19].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.yugiohBottom);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *yugiohBottomData = buildAlphaData(&img[19]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, yugiohBottomData);
+    free(yugiohBottomData);
 
     //=========================================================================
     // Change view area of image
@@ -758,7 +811,7 @@ void check_mouse(XEvent *e)
 	     int q = g.yres - e->xbutton.y;
 	     		
 		cout << "test: " << e->xbutton.x << " " << q << endl;
-			if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
+            if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
 			    abG.showStartScreen();
 			    g.isPaused = false;
 		 	    cout << "test: " << e->xbutton.x << " " << q << endl;
@@ -1074,50 +1127,50 @@ void render()
     // Cube Powerup
     //=========================================================================
     if (!g.isPaused) {
-        if (g.getCTime == true || getCubeCollision(0) == true) {
-            clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
-            g.getCTime = false;
-            getCubeCollision(1);
-            makeCubeCoordsNull();
-        }
-
-        clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
-
-        g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
-        if (g.cTime > 3.0) {
-            glPushMatrix();
-            cubePower(g.minecraftTop, g.minecraftSide, g.minecraftBottom);
-            glPopMatrix();
-            if (g.cTime > 8.0) {
-                g.getCTime = true;
+            if (g.getCTime == true || getCubeCollision(0) == true) {
+                clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
+                g.getCTime = false;
+                getCubeCollision(1);
                 makeCubeCoordsNull();
             }
-        }
+
+            clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
+
+            g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
+            if (g.cTime > 2.0) {
+                glPushMatrix();
+                cubePower(g.minecraftTop, g.minecraftSide, g.minecraftBottom);
+                glPopMatrix();
+                if (g.cTime > 7.0) {
+                    g.getCTime = true;
+                    makeCubeCoordsNull();
+                }
+            }
     }
-    
+
     //=========================================================================
     // Pyramid Powerup
     //=========================================================================
     if (!g.isPaused) {
-        if (g.getPTime == true || getPyramidCollision(0) == true) {
-            clock_gettime(CLOCK_REALTIME, &g.pTimeStart);
-            g.getPTime = false;
-            getPyramidCollision(1);
-            makePyramidCoordsNull();
-        }
-
-        clock_gettime(CLOCK_REALTIME, &g.pTimeCurr);
-
-        g.pTime = timeDiff(&g.pTimeStart, &g.pTimeCurr);
-        if (g.pTime > 9.0) {
-            glPushMatrix();
-            pyramidPower();
-            glPopMatrix();
-            if (g.pTime > 14.0) {
-                g.getPTime = true;
+            if (g.getPTime == true || getPyramidCollision(0) == true) {
+                clock_gettime(CLOCK_REALTIME, &g.pTimeStart);
+                g.getPTime = false;
+                getPyramidCollision(1);
                 makePyramidCoordsNull();
             }
-        }
+
+            clock_gettime(CLOCK_REALTIME, &g.pTimeCurr);
+
+            g.pTime = timeDiff(&g.pTimeStart, &g.pTimeCurr);
+            if (g.pTime > 3.0) {
+                glPushMatrix();
+                pyramidPower(g.yugiohFront, g.yugiohBack, g.yugiohBottom);
+                glPopMatrix();
+                if (g.pTime > 8.0) {
+                    g.getPTime = true;
+                    makePyramidCoordsNull();
+                }
+            }
     }
 
     //=========================================================================

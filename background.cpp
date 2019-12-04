@@ -240,7 +240,7 @@ public:
         xres=1920, yres=1080;
         picture.pos[0] = 480,   picture.pos[1] = 800;
         picture2.pos[0] = 1440, picture2.pos[1] = 800;
-        picture3.pos[0] = 480,  picture3.pos[1] = 300;
+        picture3.pos[0] = 960,  picture3.pos[1] = 200;
         picture4.pos[0] = 1440, picture4.pos[1] = 300;
         showCredits = 0;
         showLogo = 0;
@@ -1285,7 +1285,7 @@ void render()
         abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
         abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
         abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
-        abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
+        //abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
         showAlonsoText(r);
     }
 

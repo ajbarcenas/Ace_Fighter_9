@@ -86,7 +86,7 @@ class Image {
     }
 };
 
-Image img[20] = {"./Images/MountainLayer.png",
+Image img[26] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
@@ -105,7 +105,13 @@ Image img[20] = {"./Images/MountainLayer.png",
                  "./Images/MinecraftCubeBottom.png",
                  "./Images/yugiohFront.png",
                  "./Images/yugiohBack.png",
-                 "./Images/yugiohBottom.png"};
+                 "./Images/yugiohBottom.png",
+                 "./Images/Random1.png",
+                 "./Images/Random2.png",
+                 "./Images/Random3.png",
+                 "./Images/Random4.png",
+                 "./Images/Random5.png",
+                 "./Images/Random6.png"};
 
 class Texture {
 public:
@@ -201,6 +207,12 @@ public:
     GLuint yugiohFront;
     GLuint yugiohBack;
     GLuint yugiohBottom;
+    GLuint random1;
+    GLuint random2;
+    GLuint random3;
+    GLuint random4;
+    GLuint random5;
+    GLuint random6;
     Player player;
     Texture tex;
     Shape box;
@@ -475,6 +487,12 @@ void init_opengl(void)
     glGenTextures(1, &g.yugiohFront);
     glGenTextures(1, &g.yugiohBack);
     glGenTextures(1, &g.yugiohBottom);
+    glGenTextures(1, &g.random1);
+    glGenTextures(1, &g.random2);
+    glGenTextures(1, &g.random3);
+    glGenTextures(1, &g.random4);
+    glGenTextures(1, &g.random5);
+    glGenTextures(1, &g.random6);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -703,6 +721,97 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, yugiohBottomData);
     free(yugiohBottomData);
+
+    //=========================================================================
+    // Random 1
+    //=========================================================================
+    w = img[20].width;
+    h = img[20].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random1Data = buildAlphaData(&img[20]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random1Data);
+    free(random1Data);
+
+    //=========================================================================
+    // Random 2
+    //=========================================================================
+    w = img[21].width;
+    h = img[21].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random2Data = buildAlphaData(&img[21]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random2Data);
+    free(random2Data);
+
+    //=========================================================================
+    // Random 3
+    //=========================================================================
+    w = img[22].width;
+    h = img[22].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random3);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random3Data = buildAlphaData(&img[22]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random3Data);
+    free(random3Data);
+
+    //=========================================================================
+    // Random 4
+    //=========================================================================
+    w = img[23].width;
+    h = img[23].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random4);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random4Data = buildAlphaData(&img[23]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random4Data);
+    free(random4Data);
+
+    //=========================================================================
+    // Random 5
+    //=========================================================================
+    w = img[24].width;
+    h = img[24].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random5);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random5Data = buildAlphaData(&img[24]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random5Data);
+    free(random5Data);
+
+    //=========================================================================
+    // Random 6
+    //=========================================================================
+    w = img[25].width;
+    h = img[25].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random6);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random6Data = buildAlphaData(&img[25]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random6Data);
+    free(random6Data);
+
 
     //=========================================================================
     // Change view area of image
@@ -1127,6 +1236,7 @@ void render()
     // Cube Powerup
     //=========================================================================
     if (!g.isPaused) {
+        if (getPower() < 5) {
             if (g.getCTime == true || getCubeCollision(0) == true) {
                 clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
                 g.getCTime = false;
@@ -1137,17 +1247,18 @@ void render()
             clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
 
             g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
-            if (g.cTime > 2.0) {
+            if (g.cTime > 5.0) {
                 glPushMatrix();
                 cubePower(g.minecraftTop, g.minecraftSide, g.minecraftBottom);
                 glPopMatrix();
-                if (g.cTime > 7.0) {
+                if (g.cTime > 10.0) {
                     g.getCTime = true;
                     makeCubeCoordsNull();
                 }
             }
+        }
     }
-
+/*
     //=========================================================================
     // Pyramid Powerup
     //=========================================================================
@@ -1162,17 +1273,17 @@ void render()
             clock_gettime(CLOCK_REALTIME, &g.pTimeCurr);
 
             g.pTime = timeDiff(&g.pTimeStart, &g.pTimeCurr);
-            if (g.pTime > 3.0) {
+            if (g.pTime > 15.0) {
                 glPushMatrix();
                 pyramidPower(g.yugiohFront, g.yugiohBack, g.yugiohBottom);
                 glPopMatrix();
-                if (g.pTime > 8.0) {
+                if (g.pTime > 18.0) {
                     g.getPTime = true;
                     makePyramidCoordsNull();
                 }
             }
     }
-
+*/
     //=========================================================================
     // Creating Enemies
     //=========================================================================
@@ -1188,7 +1299,9 @@ void render()
             }
         }
     }
-    eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
+    eLex.printTest(img[12].width, img[12].height,
+                   g.random1, g.random2, g.random3, 
+                   g.random4, g.random5, g.random6);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -1204,7 +1317,7 @@ void render()
             eLex.vDead = true;
         }
     }
-    eLex.printVEnem(img[11].width, img[11].height, g.enemy1Texture);
+    eLex.printVEnem(img[11].width, img[11].height, g.enemy2Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
     

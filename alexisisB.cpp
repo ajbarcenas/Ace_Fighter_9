@@ -615,11 +615,25 @@ void Enemy::vEnemMovement(int &currentHealth)
 	}
 }
 
-void Enemy::printTest(float w, float h, GLuint Texture)
+void Enemy::printTest(float w, float h, GLuint Texture1,
+                      GLuint Texture2, GLuint Texture3, GLuint Texture4,
+                      GLuint Texture5, GLuint Texture6)
 {
 	for (int i = 0; i < numEnemy; i++) {
-		glPushMatrix();
-		glBindTexture(GL_TEXTURE_2D, Texture);
+        if (i == 0)
+            test[i].texture = Texture1;
+        if (i == 1)
+            test[i].texture = Texture2;
+        if (i == 2)
+            test[i].texture = Texture3;
+        if (i == 3)
+            test[i].texture = Texture4;
+        if (i == 4)
+            test[i].texture = Texture5;
+        if (i == 5)
+            test[i].texture = Texture6;
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, test[i].texture);
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 		glColor3ub(255,255,255);

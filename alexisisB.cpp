@@ -379,12 +379,13 @@ void ABarGlobal::condenseStart(GLuint play, GLuint help,
 {
 	colorBlendBorder(980, 1920, 960,540,230,0,0,
 			25,255,255,
-			34,204,0,
+    		34,204,0,
 			204,230,255);
 	drawButton(960, 800, play);
 	drawButton(960, 600, help);
 	drawButton(960, 400, creds);
 	drawButton(960, 200, score);
+    glColor3f(1.0, 1.0, 1.0);
 }
 void Enemy::makeTest()
 {

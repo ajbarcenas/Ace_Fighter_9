@@ -22,6 +22,7 @@ be receiving updates.
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
+const int MAXRANDOM = 6;
 const int MAXENEMIES = 5;
 const int CHECKMAXENEM = 20;
 const float GF = 0.0;
@@ -55,6 +56,7 @@ struct Model {
 };
 
 struct Dot {
+    GLuint texture;
 	Color c;
 	Model e;
 	Vec1 velocity;
@@ -63,7 +65,7 @@ struct Dot {
 class Enemy {
 	public:
 		
-		Dot test[MAXENEMIES];
+		Dot test[MAXRANDOM];
 		Dot vEnemy[MAXENEMIES];
 		Dot cEnemy[CHECKMAXENEM];
 		int getCHECKMAXENEM();
@@ -96,7 +98,9 @@ class Enemy {
 		Dot bullets[20];
 		void makeTest();
 		void testMovement(int &currentHealth);
-		void printTest(float w, float h, GLuint Texture);
+		void printTest(float w, float h, GLuint Texture1, GLuint Texture2,
+                       GLuint Texutre3, GLuint Texture4, GLuint Texture5,
+                       GLuint Texture6);
 		void makeVEnem();
 		void vEnemMovement(int &currentHealth);
 		void printVEnem(float w, float h, GLuint Texture);

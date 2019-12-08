@@ -86,7 +86,7 @@ class Image {
     }
 };
 
-Image img[20] = {"./Images/MountainLayer.png",
+Image img[32] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
@@ -95,7 +95,6 @@ Image img[20] = {"./Images/MountainLayer.png",
                  "./Images/GameOver.png",
                  "./Images/PineTreeLayer.png",
                  "./Images/BulletGray.png",
-                 "./Images/MissileRed.png",
                  "./Images/PlayerJet.png",
                  "./Images/EnemyJet1.png",
                  "./Images/EnemyJet2.png",
@@ -105,7 +104,20 @@ Image img[20] = {"./Images/MountainLayer.png",
                  "./Images/MinecraftCubeBottom.png",
                  "./Images/yugiohFront.png",
                  "./Images/yugiohBack.png",
-                 "./Images/yugiohBottom.png"};
+                 "./Images/yugiohBottom.png",
+                 "./Images/Random1.png",
+                 "./Images/Random2.png",
+                 "./Images/Random3.png",
+                 "./Images/Random4.png",
+                 "./Images/Random5.png",
+                 "./Images/Random6.png",
+                 "./Images/missile1.png",
+                 "./Images/missile2.png",
+                 "./Images/missile3.png",
+                 "./Images/missile4.png",
+                 "./Images/missile5.png",
+                 "./Images/missile6.png",
+                 "./Images/missile7.png"};
 
 class Texture {
 public:
@@ -190,7 +202,7 @@ public:
     GLuint cloudTexture;
     GLuint pineTexture;
     GLuint bulletTexture;
-    GLuint missileTexture;
+    GLuint missileTexture[8];
     GLuint playerTexture;
     GLuint enemy1Texture;
     GLuint enemy2Texture;
@@ -201,6 +213,19 @@ public:
     GLuint yugiohFront;
     GLuint yugiohBack;
     GLuint yugiohBottom;
+    GLuint random1;
+    GLuint random2;
+    GLuint random3;
+    GLuint random4;
+    GLuint random5;
+    GLuint random6;
+    GLuint missile1;
+    GLuint missile2;
+    GLuint missile3;
+    GLuint missile4;
+    GLuint missile5;
+    GLuint missile6;
+    GLuint missile7;
     Player player;
     Texture tex;
     Shape box;
@@ -372,7 +397,7 @@ extern void bulletMovement(int &currentHealth);
 extern void getBulletXY(int &bulletX, int &bulletY, int i);
 extern void getTotalBullets(int &tot);
 extern void makeMissile(int x, int y);
-extern void printMissile(float w, float h, GLuint Texture);
+extern void printMissile(float w, float h, GLuint Texture[]);
 extern void missileMovement(int &currentHealth);
 extern void makeConfetti();
 extern void printConfetti();
@@ -464,7 +489,6 @@ void init_opengl(void)
     glGenTextures(1, &g.cloudTexture);
     glGenTextures(1, &g.pineTexture);
     glGenTextures(1, &g.bulletTexture);
-    glGenTextures(1, &g.missileTexture);
     glGenTextures(1, &g.playerTexture);
     glGenTextures(1, &g.enemy1Texture);
     glGenTextures(1, &g.enemy2Texture);
@@ -475,6 +499,19 @@ void init_opengl(void)
     glGenTextures(1, &g.yugiohFront);
     glGenTextures(1, &g.yugiohBack);
     glGenTextures(1, &g.yugiohBottom);
+    glGenTextures(1, &g.random1);
+    glGenTextures(1, &g.random2);
+    glGenTextures(1, &g.random3);
+    glGenTextures(1, &g.random4);
+    glGenTextures(1, &g.random5);
+    glGenTextures(1, &g.random6);
+    glGenTextures(1, &g.missile1);
+    glGenTextures(1, &g.missile2);
+    glGenTextures(1, &g.missile3);
+    glGenTextures(1, &g.missile4);
+    glGenTextures(1, &g.missile5);
+    glGenTextures(1, &g.missile6);
+    glGenTextures(1, &g.missile7);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -542,6 +579,7 @@ void init_opengl(void)
     //=========================================================================
     // Missile Layer
     //=========================================================================
+/*
     w = img[9].width;
     h = img[9].height;
 
@@ -553,18 +591,18 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, missileData);
     free(missileData);
-
+*/
     //=========================================================================
     // Player Jet
     //=========================================================================
-    w = img[10].width;
-    h = img[10].height;
+    w = img[9].width;
+    h = img[9].height;
 
     glBindTexture(GL_TEXTURE_2D, g.playerTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *playerData = buildAlphaData(&img[10]);
+    unsigned char *playerData = buildAlphaData(&img[9]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, playerData);
     free(playerData);
@@ -572,14 +610,14 @@ void init_opengl(void)
     //=========================================================================
     // Enemy1 Jet
     //=========================================================================
-    w = img[11].width;
-    h = img[11].height;
+    w = img[10].width;
+    h = img[10].height;
     
     glBindTexture(GL_TEXTURE_2D, g.enemy1Texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *enemy1Data = buildAlphaData(&img[11]);
+    unsigned char *enemy1Data = buildAlphaData(&img[10]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, enemy1Data);
     free(enemy1Data);
@@ -587,14 +625,14 @@ void init_opengl(void)
     //=========================================================================
     // Enemy2 Jet
     //=========================================================================
-    w = img[12].width;
-    h = img[12].height;
+    w = img[11].width;
+    h = img[11].height;
 
     glBindTexture(GL_TEXTURE_2D, g.enemy2Texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *enemy2Data = buildAlphaData(&img[12]);
+    unsigned char *enemy2Data = buildAlphaData(&img[11]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, enemy2Data);
     free(enemy2Data);
@@ -602,14 +640,14 @@ void init_opengl(void)
     //=========================================================================
     // Enemy 3 Jet
     //=========================================================================
-    w = img[13].width;
-    h = img[13].height;
+    w = img[12].width;
+    h = img[12].height;
 
     glBindTexture(GL_TEXTURE_2D, g.enemy3Texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *enemy3Data = buildAlphaData(&img[13]);
+    unsigned char *enemy3Data = buildAlphaData(&img[12]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, enemy3Data);
     free(enemy3Data);
@@ -617,14 +655,14 @@ void init_opengl(void)
     //=========================================================================
     // Minecraft Top
     //=========================================================================
-    w = img[14].width;
-    h = img[14].height;
+    w = img[13].width;
+    h = img[13].height;
 
     glBindTexture(GL_TEXTURE_2D, g.minecraftTop);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *minecraftTopData = buildAlphaData(&img[14]);
+    unsigned char *minecraftTopData = buildAlphaData(&img[13]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, minecraftTopData);
     free(minecraftTopData);
@@ -632,14 +670,14 @@ void init_opengl(void)
     //=========================================================================
     // Minecraft Side
     //=========================================================================
-    w = img[15].width;
-    h = img[15].height;
+    w = img[14].width;
+    h = img[14].height;
 
     glBindTexture(GL_TEXTURE_2D, g.minecraftSide);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *minecraftSideData = buildAlphaData(&img[15]);
+    unsigned char *minecraftSideData = buildAlphaData(&img[14]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, minecraftSideData);
     free(minecraftSideData);
@@ -647,14 +685,14 @@ void init_opengl(void)
     //=========================================================================
     // Minecraft Bottom
     //=========================================================================
-    w = img[16].width;
-    h = img[16].height;
+    w = img[15].width;
+    h = img[15].height;
 
     glBindTexture(GL_TEXTURE_2D, g.minecraftBottom);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *minecraftBottomData = buildAlphaData(&img[16]);
+    unsigned char *minecraftBottomData = buildAlphaData(&img[15]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, minecraftBottomData);
     free(minecraftBottomData);
@@ -662,14 +700,14 @@ void init_opengl(void)
     //=========================================================================
     // Yugioh Front
     //=========================================================================
-    w = img[17].width;
-    h = img[17].height;
+    w = img[16].width;
+    h = img[16].height;
 
     glBindTexture(GL_TEXTURE_2D, g.yugiohFront);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *yugiohFrontData = buildAlphaData(&img[17]);
+    unsigned char *yugiohFrontData = buildAlphaData(&img[16]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, yugiohFrontData);
     free(yugiohFrontData);
@@ -677,14 +715,14 @@ void init_opengl(void)
     //=========================================================================
     // Yugioh Back
     //=========================================================================
-    w = img[18].width;
-    h = img[18].height;
+    w = img[17].width;
+    h = img[17].height;
 
     glBindTexture(GL_TEXTURE_2D, g.yugiohBack);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *yugiohBackData = buildAlphaData(&img[18]);
+    unsigned char *yugiohBackData = buildAlphaData(&img[17]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, yugiohBackData);
     free(yugiohBackData);
@@ -692,17 +730,220 @@ void init_opengl(void)
     //=========================================================================
     // Yugioh Bottom
     //=========================================================================
-    w = img[19].width;
-    h = img[19].height;
+    w = img[18].width;
+    h = img[18].height;
 
     glBindTexture(GL_TEXTURE_2D, g.yugiohBottom);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    unsigned char *yugiohBottomData = buildAlphaData(&img[19]);
+    unsigned char *yugiohBottomData = buildAlphaData(&img[18]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, yugiohBottomData);
     free(yugiohBottomData);
+
+    //=========================================================================
+    // Random 1
+    //=========================================================================
+    w = img[19].width;
+    h = img[19].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random1Data = buildAlphaData(&img[19]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random1Data);
+    free(random1Data);
+
+    //=========================================================================
+    // Random 2
+    //=========================================================================
+    w = img[20].width;
+    h = img[20].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random2Data = buildAlphaData(&img[20]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random2Data);
+    free(random2Data);
+
+    //=========================================================================
+    // Random 3
+    //=========================================================================
+    w = img[21].width;
+    h = img[21].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random3);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random3Data = buildAlphaData(&img[21]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random3Data);
+    free(random3Data);
+
+    //=========================================================================
+    // Random 4
+    //=========================================================================
+    w = img[22].width;
+    h = img[22].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random4);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random4Data = buildAlphaData(&img[22]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random4Data);
+    free(random4Data);
+
+    //=========================================================================
+    // Random 5
+    //=========================================================================
+    w = img[23].width;
+    h = img[23].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random5);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random5Data = buildAlphaData(&img[23]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random5Data);
+    free(random5Data);
+
+    //=========================================================================
+    // Random 6
+    //=========================================================================
+    w = img[24].width;
+    h = img[24].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.random6);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *random6Data = buildAlphaData(&img[24]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, random6Data);
+    free(random6Data);
+
+    //=========================================================================
+    // Missile 1
+    //=========================================================================
+    w = img[25].width;
+    h = img[25].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile1Data = buildAlphaData(&img[25]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile1Data);
+    free(missile1Data);
+    g.missileTexture[0] = g.missile1;
+    
+    //=========================================================================
+    // Missile 2
+    //=========================================================================
+    w = img[26].width;
+    h = img[26].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile2Data = buildAlphaData(&img[26]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile2Data);
+    free(missile2Data);
+    g.missileTexture[1] = g.missile2;
+
+    //=========================================================================
+    // Missile 3
+    //=========================================================================
+    w = img[27].width;
+    h = img[27].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile3);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile3Data = buildAlphaData(&img[27]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile3Data);
+    free(missile3Data);
+    g.missileTexture[2] = g.missile3;
+
+    //=========================================================================
+    // Missile 4
+    //=========================================================================
+    w = img[28].width;
+    h = img[28].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile4);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile4Data = buildAlphaData(&img[28]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile4Data);
+    free(missile4Data);
+    g.missileTexture[3] = g.missile4;
+
+    //=========================================================================
+    // Missile 5
+    //=========================================================================
+    w = img[29].width;
+    h = img[29].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile5);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile5Data = buildAlphaData(&img[29]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile5Data);
+    free(missile5Data);
+    g.missileTexture[4] = g.missile5;
+
+    //=========================================================================
+    // Missile 6
+    //=========================================================================
+    w = img[30].width;
+    h = img[30].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile6);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile6Data = buildAlphaData(&img[30]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile6Data);
+    free(missile6Data);
+    g.missileTexture[5] = g.missile6;
+    g.missileTexture[7] = g.missile6;
+
+    //=========================================================================
+    // Missile 7
+    //=========================================================================
+    w = img[31].width;
+    h = img[31].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.missile7);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *missile7Data = buildAlphaData(&img[31]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, missile7Data);
+    free(missile7Data);
+    g.missileTexture[6] = g.missile7;
 
     //=========================================================================
     // Change view area of image
@@ -1109,7 +1350,7 @@ void render()
     	makeSmoke(p->s.center.x, p->s.center.y);
     }
     printSmoke();
-    printPlayer(p, img[10].width, img[10].height, g.playerTexture);
+    printPlayer(p, img[9].width, img[9].height, g.playerTexture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -1119,7 +1360,7 @@ void render()
     if (getPower() < 4)
         printBullet(img[8].width, img[8].height, g.bulletTexture);
     if (getPower() >= 4)
-        printMissile(img[9].width, img[9].height, g.missileTexture);
+        printMissile(img[25].width, img[25].height, g.missileTexture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -1127,6 +1368,7 @@ void render()
     // Cube Powerup
     //=========================================================================
     if (!g.isPaused) {
+        if (getPower() < 5) {
             if (g.getCTime == true || getCubeCollision(0) == true) {
                 clock_gettime(CLOCK_REALTIME, &g.cTimeStart);
                 g.getCTime = false;
@@ -1137,15 +1379,16 @@ void render()
             clock_gettime(CLOCK_REALTIME, &g.cTimeCurr);
 
             g.cTime = timeDiff(&g.cTimeStart, &g.cTimeCurr);
-            if (g.cTime > 2.0) {
+            if (g.cTime > 5.0) {
                 glPushMatrix();
                 cubePower(g.minecraftTop, g.minecraftSide, g.minecraftBottom);
                 glPopMatrix();
-                if (g.cTime > 7.0) {
+                if (g.cTime > 10.0) {
                     g.getCTime = true;
                     makeCubeCoordsNull();
                 }
             }
+        }
     }
 
     //=========================================================================
@@ -1162,11 +1405,11 @@ void render()
             clock_gettime(CLOCK_REALTIME, &g.pTimeCurr);
 
             g.pTime = timeDiff(&g.pTimeStart, &g.pTimeCurr);
-            if (g.pTime > 3.0) {
+            if (g.pTime > 15.0) {
                 glPushMatrix();
                 pyramidPower(g.yugiohFront, g.yugiohBack, g.yugiohBottom);
                 glPopMatrix();
-                if (g.pTime > 8.0) {
+                if (g.pTime > 18.0) {
                     g.getPTime = true;
                     makePyramidCoordsNull();
                 }
@@ -1188,7 +1431,9 @@ void render()
             }
         }
     }
-    eLex.printTest(img[12].width, img[12].height, g.enemy2Texture);
+    eLex.printTest(img[11].width, img[11].height,
+                   g.random1, g.random2, g.random3, 
+                   g.random4, g.random5, g.random6);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -1204,7 +1449,7 @@ void render()
             eLex.vDead = true;
         }
     }
-    eLex.printVEnem(img[11].width, img[11].height, g.enemy1Texture);
+    eLex.printVEnem(img[11].width, img[11].height, g.enemy2Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -1222,7 +1467,7 @@ void render()
             eLex.rDead = true;
         }
     }
-    eLex.printCEnem(img[13].width, img[13].height, g.enemy3Texture);
+    eLex.printCEnem(img[12].width, img[12].height, g.enemy3Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -1252,7 +1497,7 @@ void render()
 		    }
         }
     }
-    printEnemy(temp, g.n, img[11].width, img[11].height, g.enemy1Texture);
+    printEnemy(temp, g.n, img[10].width, img[10].height, g.enemy1Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
         

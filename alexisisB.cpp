@@ -213,26 +213,6 @@ void ABarGlobal::showHowTo()
 {
 	showHow ^= 1;
 }
-void ABarGlobal::printTempScreen(Rect r)
-{
-		glColor3f(1.0, 1.0, 1.0);
-	r.bot = 800;
-	r.left = 825;
-		ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
-	ggprint16(&r, 16, 0xff1919, "   Press S to Start the game");
-}
-void ABarGlobal::printInstructions(Rect r)
-{
-	r.bot = 600;
-	r.left = 900;
-	ggprint16(&r, 16, 0xff1919, "How to Play!!!");
-}
-void ABarGlobal::printCredits(Rect r)
-{
-	r.bot = 400;
-	r.left = 920;
-	ggprint16(&r, 16, 0xff1919, "Credits!!!");
-}
 //How to Screen
 void ABarGlobal::condenseHow()
 {
@@ -256,7 +236,7 @@ void ABarGlobal::condenseHow()
 
 	ggprint13(&r, 30, 0x66ffcc, "Click here to close");
 }
-void ABarGlobal::drawButton(int x_pos, int y_pos)
+void ABarGlobal::drawButton(int x_pos, int y_pos, GLuint texture)
 {
 	glColor3f(1.0, 1.0, 1.0);
 	Box box;
@@ -265,16 +245,19 @@ void ABarGlobal::drawButton(int x_pos, int y_pos)
 	box.center.x  = x_pos;
 	box.center.y = y_pos;
 	float h, w; 
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
 	glColor3ub(255, 255, 255);
-	glPushMatrix();
 	glTranslatef(box.center.x, box.center.y, 0);
 	w = box.width;
 	h = box.height;
 	glBegin(GL_QUADS);
-	glVertex2i(-w, -h);
-		glVertex2i(-w, h);
-		glVertex2i(w, h);
-		glVertex2i(w, -h);
+	    glTexCoord2f(0.0f, 1.0f); glVertex2i(-w, -h);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-w, h);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(w, h);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(w, -h);
 	glEnd();
 	glPopMatrix();
 }
@@ -391,19 +374,17 @@ void ABarGlobal::condenseHigh()
 	printTempScores(r);
 }
 
-void ABarGlobal::condenseStart()
+void ABarGlobal::condenseStart(GLuint play, GLuint help,
+                               GLuint creds, GLuint score)
 {
 	colorBlendBorder(980, 1920, 960,540,230,0,0,
 			25,255,255,
 			34,204,0,
 			204,230,255);
-	drawButton(960, 800);
-	drawButton(960, 600);
-	drawButton(960, 400);
-	drawButton(960, 200);
-	printTempScreen(r);
-	printInstructions(r);
-	printCredits(r);
+	drawButton(960, 800, play);
+	drawButton(960, 600, help);
+	drawButton(960, 400, creds);
+	drawButton(960, 200, score);
 }
 void Enemy::makeTest()
 {

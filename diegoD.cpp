@@ -109,7 +109,9 @@ void checkPlayerLocation(Player *p)
 }
 
 void incrementPlayerHealth(int &currentHealth, int increase) {
-	currentHealth += increase;
+	if(currentHealth < 3)
+		currentHealth += increase;
+	cout << currentHealth << endl;
 }
 
 void subtractPlayerHealth(int &currentHealth, int damage)

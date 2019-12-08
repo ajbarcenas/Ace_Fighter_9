@@ -368,12 +368,12 @@ extern void printSmoke();
 extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet(float w, float h, GLuint Texture);
-extern void bulletMovement();
+extern void bulletMovement(int &currentHealth);
 extern void getBulletXY(int &bulletX, int &bulletY, int i);
 extern void getTotalBullets(int &tot);
 extern void makeMissile(int x, int y);
 extern void printMissile(float w, float h, GLuint Texture);
-extern void missileMovement();
+extern void missileMovement(int &currentHealth);
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
@@ -1001,8 +1001,8 @@ void physics()
 
 
     smokeMovement();
-    bulletMovement();
-    missileMovement();
+    bulletMovement(p->currentHealth);
+    missileMovement(p->currentHealth);
     confettiMovement();
     rainMovement();
     eLex.testMovement(p->currentHealth);

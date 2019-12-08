@@ -255,7 +255,7 @@ public:
     struct Node* head = NULL;
     GLuint texid;
     int showCredits, showHighScores;
-    int HighScore;
+    int HighScore[5] = {0};
     bool getCTime = true;
     bool getPTime = true;
     int getBTime = 1;
@@ -282,7 +282,6 @@ public:
         showHighScores = 0;
         logo.pos[0] = 960;
         logo.pos[1] = 540;
-        HighScore = 0;
     }
 } g;
 
@@ -1626,9 +1625,18 @@ void render()
     }
 
     //=========================================================================
-    // Credit Screen
+    // Game Over Screen
     //=========================================================================
     if (abG.showGameIsOver) {
+        for (int i = 0; i < 5; i++) {
+            if (abG.highscore > g.HighScore[i]) {
+                for (int j = 4; j > i; j--) {
+                    g.HighScore[j] = g.HighScore[j - 1];
+                }
+                g.HighScore[i] = abG.highscore;
+            }
+            break;
+        }
         glBindTexture(GL_TEXTURE_2D, g.andrewTexId);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0, 1.0); glVertex2i(0, 0);
@@ -1642,7 +1650,7 @@ void render()
     // High Score Screen
     //=========================================================================
     if (abG.showHigh) {
-        abG.condenseHigh();
+        abG.condenseHigh(g.HighScore);
         if (!g.isPaused)
             makeConfetti();
         printConfetti();

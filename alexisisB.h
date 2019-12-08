@@ -140,7 +140,7 @@ class ABarGlobal {
 		void showHowTo();
 		void drawTriangle(int width, int height, int x_pos, int y_pos,
 			int rColor, int gColor, int bColor);
-		void printTempScores(Rect r);
+		void printTempScores(Rect r, int arr[]);
 		void drawCircle();
         void drawButton(int x_pos, int y_pos, GLuint texture);
 		void colorBlendBorder(int width, int height, int x_pos,
@@ -149,7 +149,7 @@ class ABarGlobal {
 				int rColor3, int gColor3, int bColor3,
 				int rColor4, int gColor4, int bColor4);
 		void condenseCreds();
-		void condenseHigh();
+		void condenseHigh(int arr[]);
 		void condenseStart(GLuint play, GLuint help,
                            GLuint creds, GLuint score);
 		void condenseHow();

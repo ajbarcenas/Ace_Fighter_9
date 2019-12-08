@@ -28,6 +28,7 @@ Goals:
 #include "fonts.h"
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 #include "alexisisB.h"
 
 using namespace std;
@@ -36,6 +37,9 @@ extern ABarGlobal abG;
 extern Enemy eLex;
 extern void incrementScore(int points);
 
+double timeDiff(struct timespec *, struct timespec *);
+
+const int MAXFRAME = 7;
 const int MAX_PARTICLES = 8000;
 const float GRAVITY = .05;
 
@@ -81,6 +85,7 @@ public:
     int power = 1;
     int pointsX;
     int pointsY;
+    int frame = 0;
     float xr = 1.0;
     float yr = 1.0;
     float cx = 1.0;
@@ -101,6 +106,10 @@ public:
     bool increasing = true;
     bool cubeCollision = false;
     bool pyramidCollision = false;
+    double mTime;
+    struct timespec mAnimateStart;
+    struct timespec mAnimateCurr;
+    bool getMTime = true;
 }ag;
 
 //=============================================================================
@@ -650,7 +659,7 @@ void makeMissile(int x, int y)
     m->s.center.x = x;
     m->s.center.y = y;
     m->velocity.y = 0;
-    m->velocity.x = ((double)rand() / (double)RAND_MAX) + 20;
+    m->velocity.x = ((double)rand() / (double)RAND_MAX) + 3;
     ++ag.p;
 }
 
@@ -745,11 +754,24 @@ void missileMovement()
     }
 }
 
-void printMissile(float w, float h, GLuint Texture)
+void printMissile(float w, float h, GLuint animation[])
 {
+    if (ag.getMTime == true) {
+        clock_gettime(CLOCK_REALTIME, &ag.mAnimateStart);
+        ag.getMTime = false;
+    }
     for (int i = 0; i < ag.p; i++) {
+        clock_gettime(CLOCK_REALTIME, &ag.mAnimateCurr);
+        ag.mTime = timeDiff(&ag.mAnimateStart, &ag.mAnimateCurr);
+        
+        if (ag.mTime > 0.1) {
+            ag.frame++;
+            ag.getMTime = true;
+            if (ag.frame >= MAXFRAME)
+                ag.frame = 4;
+        }
         glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, Texture);
+        glBindTexture(GL_TEXTURE_2D, animation[ag.frame]);
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, 0.0f);
         glColor3ub(255,255,255);

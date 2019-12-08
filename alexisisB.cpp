@@ -259,6 +259,8 @@ void ABarGlobal::drawButton(int x_pos, int y_pos, GLuint texture)
 		glTexCoord2f(1.0f, 0.0f); glVertex2i(w, h);
 		glTexCoord2f(1.0f, 1.0f); glVertex2i(w, -h);
 	glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 }
 

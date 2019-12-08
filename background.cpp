@@ -1540,7 +1540,8 @@ void render()
     // Credit Screen
     //=========================================================================
     if (abG.showGameIsOver) {
-        glBindTexture(GL_TEXTURE_2D, g.andrewTexId);
+        g.isPaused = true;
+	glBindTexture(GL_TEXTURE_2D, g.andrewTexId);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0, 1.0); glVertex2i(0, 0);
             glTexCoord2f(0.0, 0.0); glVertex2i(0, g.yres);

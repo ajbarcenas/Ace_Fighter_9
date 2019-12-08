@@ -92,7 +92,7 @@ Image img[20] = {"./Images/MountainLayer.png",
                  "./Images/Alexis.jpg",
                  "./Images/freeRealEstate.jpg",
                  "./Images/DiegoPic.jpg",
-                 "./Images/andrew.jpg",
+                 "./Images/GameOver.png",
                  "./Images/PineTreeLayer.png",
                  "./Images/BulletGray.png",
                  "./Images/MissileRed.png",
@@ -241,7 +241,7 @@ public:
         picture.pos[0] = 480,   picture.pos[1] = 800;
         picture2.pos[0] = 1440, picture2.pos[1] = 800;
         picture3.pos[0] = 960,  picture3.pos[1] = 200;
-        picture4.pos[0] = 1440, picture4.pos[1] = 300;
+        picture4.pos[0] = 960, picture4.pos[1] = 540;
         showCredits = 0;
         showLogo = 0;
         showHighScores = 0;
@@ -999,7 +999,7 @@ void physics()
         }
     }        
 
-
+    abG.showGameOver(p->currentHealth);
     smokeMovement();
     bulletMovement(p->currentHealth);
     missileMovement(p->currentHealth);
@@ -1289,6 +1289,19 @@ void render()
         showAlonsoText(r);
     }
 
+    //=========================================================================
+    // Credit Screen
+    //=========================================================================
+    if (abG.showGameIsOver) {
+        glBindTexture(GL_TEXTURE_2D, g.andrewTexId);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0, 1.0); glVertex2i(0, 0);
+            glTexCoord2f(0.0, 0.0); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0, 0.0); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0, 1.0); glVertex2i(g.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
     //=========================================================================
     // High Score Screen
     //=========================================================================

@@ -86,7 +86,7 @@ class Image {
     }
 };
 
-Image img[36] = {"./Images/MountainLayer.png",
+Image img[37] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
@@ -121,7 +121,8 @@ Image img[36] = {"./Images/MountainLayer.png",
                  "./Images/playbutton.png",
                  "./Images/credsbutton.png",
                  "./Images/scorebutton.png",
-                 "./Images/helpbutton.png"};
+                 "./Images/helpbutton.png",
+                 "./Images/title.png"};
 
 class Texture {
 public:
@@ -234,6 +235,7 @@ public:
     GLuint credsbutton;
     GLuint scorebutton;
     GLuint helpbutton;
+    GLuint title;
     Player player;
     Texture tex;
     Shape box;
@@ -524,6 +526,7 @@ void init_opengl(void)
     glGenTextures(1, &g.credsbutton);
     glGenTextures(1, &g.scorebutton);
     glGenTextures(1, &g.helpbutton);
+    glGenTextures(1, &g.title);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -588,22 +591,6 @@ void init_opengl(void)
             GL_RGBA, GL_UNSIGNED_BYTE, bulletData);
     free(bulletData);
 
-    //=========================================================================
-    // Missile Layer
-    //=========================================================================
-/*
-    w = img[9].width;
-    h = img[9].height;
-
-    glBindTexture(GL_TEXTURE_2D, g.missileTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    unsigned char *missileData = buildAlphaData(&img[9]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, missileData);
-    free(missileData);
-*/
     //=========================================================================
     // Player Jet
     //=========================================================================
@@ -1015,6 +1002,21 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, helpbuttonData);
     free(helpbuttonData);
+
+    //=========================================================================
+    // Title
+    //=========================================================================
+    w = img[36].width;
+    h = img[36].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.title);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *titleData = buildAlphaData(&img[36]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, titleData);
+    free(titleData);
 
     //=========================================================================
     // Change view area of image
@@ -1585,14 +1587,29 @@ void render()
     //=========================================================================
     if (abG.showStart) {
         abG.condenseStart(g.playbutton, g.helpbutton,
-                          g.credsbutton, g.scorebutton);	
+                          g.credsbutton, g.scorebutton);
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, g.title);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor3ub(255, 255, 255);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glPopMatrix();
+        //glColor3f(1.0,1.0,1.0);
     }
 
     //=========================================================================
     // How to Screen
     //=========================================================================
     if (abG.showHow) {
-        abG.condenseHow();	
+        abG.condenseHow();
     }
 
     //=========================================================================

@@ -364,15 +364,13 @@ void ABarGlobal::condenseCreds()
 	showCreditsBorder(130, 130, 960, 540);
 	showCreditsBorder(130, 130, 480, 800);
 	showCreditsBorder(130, 130, 1440, 800);
-	showCreditsBorder(130, 130, 480, 300);
-	showCreditsBorder(130, 130, 1440, 300);
+	showCreditsBorder(130, 130, 960, 200);
+	//showCreditsBorder(130, 130, 1440, 300);
 	printAlexisB(r);
 	glColor3f(1.0, 1.0, 1.0);
-	r.bot = 145, r.left = 340;
+	r.bot = 335; 
+	r.left = 820;
 	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
-	r.bot = 145, r.left = 1300;
-	ggprint16(&r, 16, 0xcf13ac,
-		"Andrew Oliveros- HUD Creation/Sprites/Menu");
 }
 
 void ABarGlobal::condenseHigh()
@@ -500,13 +498,34 @@ void Enemy::makeCEnem()
 	// speed.
 	if (abG.highscore >= 15000) {
 		f->velocity.y = 0; 
-		f->velocity.x = -6;
-	} if (abG.highscore >= 50000) {	
+		f->velocity.x = -4.5;
+	} if (abG.highscore >= 30000) {	
 		f->velocity.y = 0; 
-		f->velocity.x = -8;
-	} if (abG.highscore >= 100000) {
+		f->velocity.x = -5.0;
+	} if (abG.highscore >= 45000) {
 		f->velocity.y = 0;
-		f->velocity.x = -10;
+		f->velocity.x = -5.5;
+	} if (abG.highscore >= 60000) {
+		f->velocity.y = 0;
+		f->velocity.x = -6.0;
+	} if (abG.highscore >= 75000) {
+		f->velocity.y = 0;
+		f->velocity.x = -6.5;
+	} if (abG.highscore >= 90000) {
+		f->velocity.y = 0;
+		f->velocity.x = -7.0;
+	} if (abG.highscore >= 105000) {
+		f->velocity.y = 0;
+		f->velocity.x = -7.5;
+	} if (abG.highscore >= 120000) {
+		f->velocity.y = 0;
+		f->velocity.x = -8.00;
+	} if (abG.highscore >= 135000) {
+		f->velocity.y = 0;
+		f->velocity.x = -8.5;
+	} if (abG.highscore >= 150000) {
+		f->velocity.y = 0;
+		f->velocity.x = -9.0;
 	} else {
 		f->velocity.y = 0; 
 		f->velocity.x = -4;
@@ -541,13 +560,34 @@ void Enemy::makeVEnem()
 	// speed.
 	if (abG.highscore >= 15000) {
 		v->velocity.y = 0; 
-		v->velocity.x = -6;
-	} if (abG.highscore >= 50000) {	
+		v->velocity.x = -4.5;
+	} if (abG.highscore >= 30000) {	
 		v->velocity.y = 0; 
-		v->velocity.x = -8;
-	} if (abG.highscore >= 100000) {
+		v->velocity.x = -5.0;
+	} if (abG.highscore >= 45000) {
 		v->velocity.y = 0;
-		v->velocity.x = -10;
+		v->velocity.x = -5.5;
+	} if (abG.highscore >= 60000) {
+		v->velocity.y = 0;
+		v->velocity.x = -6.0;
+	} if (abG.highscore >= 75000) {
+		v->velocity.y = 0;
+		v->velocity.x = -6.5;
+	} if (abG.highscore >= 90000) {
+		v->velocity.y = 0;
+		v->velocity.x = -7.0;
+	} if (abG.highscore >= 105000) {
+		v->velocity.y = 0;
+		v->velocity.x = -7.5;
+	} if (abG.highscore >= 120000) {
+		v->velocity.y = 0;
+		v->velocity.x = -8.0;
+	} if (abG.highscore >= 135000) {
+		v->velocity.y = 0;
+		v->velocity.x = -8.5;
+	} if (abG.highscore >= 150000) {
+		v->velocity.y = 0;
+		v->velocity.x = -9.0;
 	} else {
 		v->velocity.y = 0; 
 		v->velocity.x = -4;

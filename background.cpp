@@ -265,7 +265,7 @@ public:
         xres=1920, yres=1080;
         picture.pos[0] = 480,   picture.pos[1] = 800;
         picture2.pos[0] = 1440, picture2.pos[1] = 800;
-        picture3.pos[0] = 480,  picture3.pos[1] = 300;
+        picture3.pos[0] = 960,  picture3.pos[1] = 200;
         picture4.pos[0] = 1440, picture4.pos[1] = 300;
         showCredits = 0;
         showLogo = 0;
@@ -393,12 +393,12 @@ extern void printSmoke();
 extern void smokeMovement();
 extern void makeBullet(int x, int y);
 extern void printBullet(float w, float h, GLuint Texture);
-extern void bulletMovement();
+extern void bulletMovement(int &currentHealth);
 extern void getBulletXY(int &bulletX, int &bulletY, int i);
 extern void getTotalBullets(int &tot);
 extern void makeMissile(int x, int y);
 extern void printMissile(float w, float h, GLuint Texture[]);
-extern void missileMovement();
+extern void missileMovement(int &currentHealth);
 extern void makeConfetti();
 extern void printConfetti();
 extern void confettiMovement();
@@ -1242,8 +1242,8 @@ void physics()
 
 
     smokeMovement();
-    bulletMovement();
-    missileMovement();
+    bulletMovement(p->currentHealth);
+    missileMovement(p->currentHealth);
     confettiMovement();
     rainMovement();
     eLex.testMovement(p->currentHealth);
@@ -1530,7 +1530,7 @@ void render()
         abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
         abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
         abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
-        abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
+        //abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
         showAlonsoText(r);
     }
 

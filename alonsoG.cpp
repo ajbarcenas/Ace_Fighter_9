@@ -36,6 +36,7 @@ using namespace std;
 extern ABarGlobal abG;
 extern Enemy eLex;
 extern void incrementScore(int points);
+extern void incrementPlayerHealth(int &currentHealth, int increase);
 
 double timeDiff(struct timespec *, struct timespec *);
 
@@ -535,7 +536,7 @@ void makeBullet(int x, int y)
     ++ag.q;
 }
 
-void bulletMovement()
+void bulletMovement(int &currentHealth)
 {
     Rect r;
 
@@ -573,6 +574,7 @@ void bulletMovement()
             cout << "pyramid hit" << endl;
             --ag.q;
             abG.incrementScore(100);
+	    incrementPlayerHealth(currentHealth, 1);
             ag.pyramidCollision = true;
         }
         
@@ -663,7 +665,7 @@ void makeMissile(int x, int y)
     ++ag.p;
 }
 
-void missileMovement()
+void missileMovement(int &currentHealth)
 {
     Rect r;
 
@@ -700,6 +702,7 @@ void missileMovement()
             ag.missile[i] = ag.missile[ag.p - 1];
             --ag.p;
             abG.incrementScore(100);
+            incrementPlayerHealth(currentHealth, 1);
             ag.pyramidCollision = true;
         }
 

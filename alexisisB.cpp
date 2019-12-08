@@ -290,7 +290,7 @@ void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 	glPopMatrix();
 }
 
-void ABarGlobal::printTempScores(Rect r)
+void ABarGlobal::printTempScores(Rect r, int arr[])
 {
 	glColor3f(1.0, 1.0, 1.0);
 	r.left = 800;
@@ -299,6 +299,14 @@ void ABarGlobal::printTempScores(Rect r)
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 2");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 3");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 4");
+    ggprint16(&r, 50, 0xcf13ac, "Test Person 5");
+    r.left = 1000;
+    r.bot = 575;
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[0]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[1]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[2]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[3]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[4]).c_str());
 }
 void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 		int rColor, int gColor, int bColor, int rColor2, int gColor2,
@@ -363,7 +371,7 @@ void ABarGlobal::condenseCreds()
 	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
 }
 
-void ABarGlobal::condenseHigh()
+void ABarGlobal::condenseHigh(int arr[])
 {
 		showCreditsBorder(1920, 1080, 960, 540);
 	printCredBoxes(960, 540);
@@ -373,7 +381,7 @@ void ABarGlobal::condenseHigh()
 			0,0,0,
 			255,255,255);
 	printHighScore(r);
-	printTempScores(r);
+	printTempScores(r, arr);
 }
 
 void ABarGlobal::condenseStart(GLuint play, GLuint help,

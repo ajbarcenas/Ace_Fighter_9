@@ -92,7 +92,7 @@ public:
     float cx = 1.0;
     float cy = 0.0;
     float cz = 0.1;
-    float px = 0.0;
+    float px = 1.0;
     float py = 0.0;
     float pz = 0.1;
     float xrp = 1.0;
@@ -105,6 +105,7 @@ public:
     double winPZ;
     bool printPoints = false;
     bool increasing = true;
+    bool pincreasing = true;
     bool cubeCollision = false;
     bool pyramidCollision = false;
     double mTime;
@@ -120,6 +121,24 @@ void pyramidPower(GLuint frontTexture, GLuint backTexture, GLuint bottomTexture)
 {
     ag.xrp = ag.xrp + 1;
     ag.zrp = ag.zrp + 6;
+    
+    //pyramid goes up and down
+    if (ag.pincreasing) {
+        ag.py = ag.py + 0.005;
+        if (ag.py >= 0.5)
+            ag.pincreasing = false;
+    } else {
+        ag.py = ag.py - 0.005;
+        if (ag.py <= -0.5)
+            ag.pincreasing = true;
+    }
+
+    //Pyramid moves from right to left
+    if (ag.px > -1.0)
+        ag.px = ag.px - 0.002;
+    if (ag.px <= -1.0)
+        ag.px = 1.0;
+
 
     glClear(GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -559,7 +578,7 @@ void bulletMovement(int &currentHealth)
         if (b->s.center.y < ag.winY + 36 && b->s.center.y > ag.winY - 36 &&
             b->s.center.x < ag.winX + 36 && b->s.center.x > ag.winX - 36) {
             ag.cy = ((float)rand() / (float)RAND_MAX);
-            ag.cx = ((float)rand() / (float)RAND_MAX);
+            ag.cx = 1.0;
             ag.bullet[i] = ag.bullet[ag.q - 1];
             ag.power++;
             --ag.q;
@@ -570,11 +589,13 @@ void bulletMovement(int &currentHealth)
         //check collision of bullet with pyramid powerup 
         if (b->s.center.y < ag.winPY + 36 && b->s.center.y > ag.winPY - 36 &&
             b->s.center.x < ag.winPX + 36 && b->s.center.x > ag.winPX - 36) {
+            ag.py = ((float)rand() / (float)RAND_MAX);
+            ag.px = 1.0;
             ag.bullet[i] = ag.bullet[ag.q - 1];
             cout << "pyramid hit" << endl;
             --ag.q;
             abG.incrementScore(100);
-	    incrementPlayerHealth(currentHealth, 1);
+            incrementPlayerHealth(currentHealth, 1);
             ag.pyramidCollision = true;
         }
         

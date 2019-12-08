@@ -1395,6 +1395,7 @@ void render()
     // Pyramid Powerup
     //=========================================================================
     if (!g.isPaused) {
+        if (p->currentHealth < 3) {
             if (g.getPTime == true || getPyramidCollision(0) == true) {
                 clock_gettime(CLOCK_REALTIME, &g.pTimeStart);
                 g.getPTime = false;
@@ -1414,6 +1415,7 @@ void render()
                     makePyramidCoordsNull();
                 }
             }
+        }
     }
 
     //=========================================================================
@@ -1569,11 +1571,17 @@ void render()
     if (g.mouseMovement)
         ggprint16(&r, 0, 0x00ffff44, "Mouse");
     else
-	ggprint16(&r, 0, 0x00ffff44, "Keys");
+	    ggprint16(&r, 0, 0x00ffff44, "Keys");
+    r.bot = 1050;
+    r.left = 200;
+    ggprint16(&r,  0, 0x00ffff44, "SCORE: ");
+    r.left = 280;
+    ggprint16(&r, 16, 0x00ffff44, to_string(abG.highscore).c_str());
     r.bot = 1050;
     r.left = 80;
-    ggprint16(&r,  0, 0x00ffff44, "SCORE: ");
-    r.left = 160;
-    ggprint16(&r, 16, 0x00ffff44, to_string(abG.highscore).c_str());
+    ggprint16(&r, 16, 0x00ffff44, "HEALTH: ");
+    r.bot = 1050;
+    r.left = 170;
+    ggprint16(&r, 16, 0x00ffff44, to_string(p->currentHealth).c_str());
 }
 

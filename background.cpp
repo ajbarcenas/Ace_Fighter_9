@@ -443,6 +443,7 @@ int main()
         }
     if(!g.isPaused)
 	    physics();
+    confettiMovement();
     render();
     x11.swapBuffers();
     }
@@ -1316,7 +1317,7 @@ void physics()
     smokeMovement();
     bulletMovement(p->currentHealth);
     missileMovement(p->currentHealth);
-    confettiMovement();
+    //confettiMovement();
     rainMovement();
     eLex.testMovement(p->currentHealth);
     eLex.vEnemMovement(p->currentHealth);
@@ -1652,7 +1653,7 @@ void render()
     //=========================================================================
     if (abG.showHigh) {
         abG.condenseHigh(g.HighScore);
-        if (!g.isPaused)
+        //if (!g.isPaused)
             makeConfetti();
         printConfetti();
     }

@@ -661,40 +661,27 @@ void Enemy::printTest(float w, float h, GLuint Texture1,
                       GLuint Texture2, GLuint Texture3, GLuint Texture4,
                       GLuint Texture5, GLuint Texture6)
 {
-    test[0].texture = Texture1;
-    test[1].texture = Texture2;
-    test[2].texture = Texture3;
-    test[3].texture = Texture4;
-    test[4].texture = Texture5;
-    test[5].texture = Texture6;
+	test[0].texture = Texture1;
+	test[1].texture = Texture2;
+	test[2].texture = Texture3;
+	test[3].texture = Texture4;
+	test[4].texture = Texture5;
+	test[5].texture = Texture6;
+	
 	for (int i = 0; i < numEnemy; i++) {
-/*
-        if (i == 0)
-            test[i].texture = Texture1;
-        if (i == 1)
-            test[i].texture = Texture2;
-        if (i == 2)
-            test[i].texture = Texture3;
-        if (i == 3)
-            test[i].texture = Texture4;
-        if (i == 4)
-            test[i].texture = Texture5;
-        if (i == 5)
-            test[i].texture = Texture6;
-*/
-        glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, test[i].texture);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glColor3ub(255,255,255);
-		Vec1 *c = &test[i].e.center;
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2i(c->x-w*.5, c->y-h*.5);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(c->x-w*.5, c->y+h*.5);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(c->x+w*.5, c->y+h*.5);
-			glTexCoord2f(1.0f, 1.0f); glVertex2i(c->x+w*.5, c->y-h*.5);
-		glEnd();
-		glPopMatrix();
+	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, test[i].texture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor3ub(255,255,255);
+	Vec1 *c = &test[i].e.center;
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(c->x-w*.5, c->y-h*.5);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(c->x-w*.5, c->y+h*.5);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(c->x+w*.5, c->y+h*.5);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(c->x+w*.5, c->y-h*.5);
+	glEnd();
+	glPopMatrix();
 	}
 }
 

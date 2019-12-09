@@ -1612,19 +1612,6 @@ void render()
     }
 
     //=========================================================================
-    // Credit Screen
-    //=========================================================================
-    if (abG.showCreds) {
-        abG.condenseCreds();
-        abG.printPicture(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
-        abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
-        abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
-        abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
-        //abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
-        showAlonsoText(r);
-    }
-
-    //=========================================================================
     // Game Over Screen
     //=========================================================================
     if (abG.showGameIsOver) {
@@ -1646,6 +1633,18 @@ void render()
             glTexCoord2f(1.0, 1.0); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    //=========================================================================
+    // Credit Screen
+    //=========================================================================
+    if (abG.showCreds) {
+        abG.condenseCreds();
+        abG.printPicture(logo.pos[0], logo.pos[1], logo.pos[2], g.logoTexture);
+        abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
+        abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
+        abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
+        //abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
+        showAlonsoText(r);
     }
     //=========================================================================
     // High Score Screen

@@ -69,10 +69,10 @@ class Enemy {
 		Dot vEnemy[MAXENEMIES];
 		Dot cEnemy[CHECKMAXENEM];
 		int getCHECKMAXENEM();
-        void deleteEnemy(int i);
-        int getMAXENEMIES();
-        int getEX(int i);
-        int getEY(int i);
+		void deleteEnemy(int i);
+		int getMAXENEMIES();
+		int getEX(int i);
+		int getEY(int i);
 		void deleteVEnemy(int i);
 		int getVX(int i);
 		int getVY(int i);
@@ -112,9 +112,9 @@ class Enemy {
 		int getCNumEnemy();
 		void deleteCEnemy(int i);		
 		bool increasing = true;
-        bool rDead = true;
-        bool vDead = true;
-        bool cDead = true;
+		bool rDead = true;
+		bool vDead = true;
+		bool cDead = true;
 		float cx = 1.0;
 		float cy = 0.0;
 };
@@ -136,13 +136,14 @@ class ABarGlobal {
 		void showHighScores();
 		void showCredits();
 		void showGameOver(int health);
+		void returnStart();
 		void showStartScreen();
 		void showHowTo();
 		void drawTriangle(int width, int height, int x_pos, int y_pos,
 			int rColor, int gColor, int bColor);
 		void printTempScores(Rect r, int arr[]);
 		void drawCircle();
-        void drawButton(int x_pos, int y_pos, GLuint texture);
+		void drawButton(int x_pos, int y_pos, GLuint texture);
 		void colorBlendBorder(int width, int height, int x_pos,
 			       	int y_pos, int rColor, int gColor, int bColor,
 				int rColor2, int gColor2, int bColor2,

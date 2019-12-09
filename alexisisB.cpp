@@ -209,6 +209,11 @@ void ABarGlobal::showGameOver(int health)
 	if (health <= 0)
 		showGameIsOver = 1;
 }
+
+void ABarGlobal::returnStart()
+{
+	showGameIsOver = 0;
+}
 void ABarGlobal::showHowTo()
 {
 	showHow ^= 1;

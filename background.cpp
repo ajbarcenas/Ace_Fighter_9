@@ -1127,8 +1127,23 @@ void check_mouse(XEvent *e)
             if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
 			    abG.showStartScreen();
 			    g.isPaused = false;
-		 	    cout << "test: " << e->xbutton.x << " " << q << endl;
-	     		} 
+	     		}
+            if (e->xbutton.x > 823 && e->xbutton.x < 1094 && q > 360 && q < 436) {
+			    abG.showCredits();
+	     		}
+
+            if (e->xbutton.x > 823 && e->xbutton.x < 1094 && q > 159 && q < 236) {
+			    abG.showHighScores();
+	     		}
+
+            if (e->xbutton.x > 328 && e->xbutton.x < 597 && q > 159 && q < 237) {
+			    abG.returnStart();
+			    abG.showStartScreen();
+	     		}
+
+            if (e->xbutton.x > 1325 && e->xbutton.x < 1595 && q > 159 && q < 237) {
+                            abG.showHighScores();
+	     		}
 			if (!abG.showHow) {
 				if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 550 && q < 649) {
 			            abG.showHowTo();
@@ -1633,6 +1648,8 @@ void render()
             glTexCoord2f(1.0, 1.0); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
+	abG.drawButton(460, 200, g.playbutton);
+	abG.drawButton(1460, 200, g.scorebutton);
     }
     //=========================================================================
     // Credit Screen

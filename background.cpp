@@ -86,7 +86,7 @@ class Image {
     }
 };
 
-Image img[32] = {"./Images/MountainLayer.png",
+Image img[37] = {"./Images/MountainLayer.png",
                  "./Images/CloudLayer.png",
                  "./Images/AceFighter9.png",
                  "./Images/Alexis.jpg",
@@ -117,7 +117,12 @@ Image img[32] = {"./Images/MountainLayer.png",
                  "./Images/missile4.png",
                  "./Images/missile5.png",
                  "./Images/missile6.png",
-                 "./Images/missile7.png"};
+                 "./Images/missile7.png",
+                 "./Images/playbutton.png",
+                 "./Images/credsbutton.png",
+                 "./Images/scorebutton.png",
+                 "./Images/helpbutton.png",
+                 "./Images/title.png"};
 
 class Texture {
 public:
@@ -226,6 +231,11 @@ public:
     GLuint missile5;
     GLuint missile6;
     GLuint missile7;
+    GLuint playbutton;
+    GLuint credsbutton;
+    GLuint scorebutton;
+    GLuint helpbutton;
+    GLuint title;
     Player player;
     Texture tex;
     Shape box;
@@ -245,7 +255,7 @@ public:
     struct Node* head = NULL;
     GLuint texid;
     int showCredits, showHighScores;
-    int HighScore;
+    int HighScore[5] = {0};
     bool getCTime = true;
     bool getPTime = true;
     int getBTime = 1;
@@ -272,7 +282,6 @@ public:
         showHighScores = 0;
         logo.pos[0] = 960;
         logo.pos[1] = 540;
-        HighScore = 0;
     }
 } g;
 
@@ -512,6 +521,11 @@ void init_opengl(void)
     glGenTextures(1, &g.missile5);
     glGenTextures(1, &g.missile6);
     glGenTextures(1, &g.missile7);
+    glGenTextures(1, &g.playbutton);
+    glGenTextures(1, &g.credsbutton);
+    glGenTextures(1, &g.scorebutton);
+    glGenTextures(1, &g.helpbutton);
+    glGenTextures(1, &g.title);
     glGenTextures(1, &g.logoTexture);
     glGenTextures(1, &g.alexisTexId);
     glGenTextures(1, &g.alonsoTexId);
@@ -576,22 +590,6 @@ void init_opengl(void)
             GL_RGBA, GL_UNSIGNED_BYTE, bulletData);
     free(bulletData);
 
-    //=========================================================================
-    // Missile Layer
-    //=========================================================================
-/*
-    w = img[9].width;
-    h = img[9].height;
-
-    glBindTexture(GL_TEXTURE_2D, g.missileTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    unsigned char *missileData = buildAlphaData(&img[9]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, missileData);
-    free(missileData);
-*/
     //=========================================================================
     // Player Jet
     //=========================================================================
@@ -944,6 +942,80 @@ void init_opengl(void)
             GL_RGBA, GL_UNSIGNED_BYTE, missile7Data);
     free(missile7Data);
     g.missileTexture[6] = g.missile7;
+    //=========================================================================
+    // Play Button
+    //=========================================================================
+    w = img[32].width;
+    h = img[32].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.playbutton);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *playbuttonData = buildAlphaData(&img[32]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, playbuttonData);
+    free(playbuttonData);
+
+    //=========================================================================
+    // Creds Button
+    //=========================================================================
+    w = img[33].width;
+    h = img[33].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.credsbutton);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *credsbuttonData = buildAlphaData(&img[33]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, credsbuttonData);
+    free(credsbuttonData);
+
+    //=========================================================================
+    // Score Button
+    //=========================================================================
+    w = img[34].width;
+    h = img[34].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.scorebutton);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *scorebuttonData = buildAlphaData(&img[34]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, scorebuttonData);
+    free(scorebuttonData);
+
+    //=========================================================================
+    // Help Button
+    //=========================================================================
+    w = img[35].width;
+    h = img[35].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.helpbutton);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *helpbuttonData = buildAlphaData(&img[35]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, helpbuttonData);
+    free(helpbuttonData);
+
+    //=========================================================================
+    // Title
+    //=========================================================================
+    w = img[36].width;
+    h = img[36].height;
+
+    glBindTexture(GL_TEXTURE_2D, g.title);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    unsigned char *titleData = buildAlphaData(&img[36]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, titleData);
+    free(titleData);
 
     //=========================================================================
     // Change view area of image
@@ -1513,14 +1585,30 @@ void render()
     // Start Screen
     //=========================================================================
     if (abG.showStart) {
-        abG.condenseStart();	
+        abG.condenseStart(g.playbutton, g.helpbutton,
+                          g.credsbutton, g.scorebutton);
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, g.title);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0.0f);
+        glColor3ub(255, 255, 255);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glDisable(GL_ALPHA_TEST);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glPopMatrix();
+        //glColor3f(1.0,1.0,1.0);
     }
 
     //=========================================================================
     // How to Screen
     //=========================================================================
     if (abG.showHow) {
-        abG.condenseHow();	
+        abG.condenseHow();
     }
 
     //=========================================================================
@@ -1537,11 +1625,20 @@ void render()
     }
 
     //=========================================================================
-    // Credit Screen
+    // Game Over Screen
     //=========================================================================
     if (abG.showGameIsOver) {
         g.isPaused = true;
-	glBindTexture(GL_TEXTURE_2D, g.andrewTexId);
+        for (int i = 0; i < 5; i++) {
+            if (abG.highscore > g.HighScore[i]) {
+                for (int j = 4; j > i; j--) {
+                    g.HighScore[j] = g.HighScore[j - 1];
+                }
+                g.HighScore[i] = abG.highscore;
+            }
+            break;
+        }
+        glBindTexture(GL_TEXTURE_2D, g.andrewTexId);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0, 1.0); glVertex2i(0, 0);
             glTexCoord2f(0.0, 0.0); glVertex2i(0, g.yres);
@@ -1554,7 +1651,7 @@ void render()
     // High Score Screen
     //=========================================================================
     if (abG.showHigh) {
-        abG.condenseHigh();
+        abG.condenseHigh(g.HighScore);
         if (!g.isPaused)
             makeConfetti();
         printConfetti();

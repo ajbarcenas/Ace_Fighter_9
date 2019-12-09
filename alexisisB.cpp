@@ -213,26 +213,6 @@ void ABarGlobal::showHowTo()
 {
 	showHow ^= 1;
 }
-void ABarGlobal::printTempScreen(Rect r)
-{
-		glColor3f(1.0, 1.0, 1.0);
-	r.bot = 800;
-	r.left = 825;
-		ggprint16(&r, 16, 0xff1919, "TEMPORARY START SCREEN");
-	ggprint16(&r, 16, 0xff1919, "   Press S to Start the game");
-}
-void ABarGlobal::printInstructions(Rect r)
-{
-	r.bot = 600;
-	r.left = 900;
-	ggprint16(&r, 16, 0xff1919, "How to Play!!!");
-}
-void ABarGlobal::printCredits(Rect r)
-{
-	r.bot = 400;
-	r.left = 920;
-	ggprint16(&r, 16, 0xff1919, "Credits!!!");
-}
 //How to Screen
 void ABarGlobal::condenseHow()
 {
@@ -256,7 +236,7 @@ void ABarGlobal::condenseHow()
 
 	ggprint13(&r, 30, 0x66ffcc, "Click here to close");
 }
-void ABarGlobal::drawButton(int x_pos, int y_pos)
+void ABarGlobal::drawButton(int x_pos, int y_pos, GLuint texture)
 {
 	glColor3f(1.0, 1.0, 1.0);
 	Box box;
@@ -265,17 +245,22 @@ void ABarGlobal::drawButton(int x_pos, int y_pos)
 	box.center.x  = x_pos;
 	box.center.y = y_pos;
 	float h, w; 
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.0f);
 	glColor3ub(255, 255, 255);
-	glPushMatrix();
 	glTranslatef(box.center.x, box.center.y, 0);
 	w = box.width;
 	h = box.height;
 	glBegin(GL_QUADS);
-	glVertex2i(-w, -h);
-		glVertex2i(-w, h);
-		glVertex2i(w, h);
-		glVertex2i(w, -h);
+	    glTexCoord2f(0.0f, 1.0f); glVertex2i(-w, -h);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(-w, h);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(w, h);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(w, -h);
 	glEnd();
+    glDisable(GL_ALPHA_TEST);
+    glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 }
 
@@ -305,7 +290,7 @@ void ABarGlobal::drawTriangle(int width, int height, int x_pos, int y_pos,
 	glPopMatrix();
 }
 
-void ABarGlobal::printTempScores(Rect r)
+void ABarGlobal::printTempScores(Rect r, int arr[])
 {
 	glColor3f(1.0, 1.0, 1.0);
 	r.left = 800;
@@ -314,6 +299,14 @@ void ABarGlobal::printTempScores(Rect r)
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 2");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 3");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 4");
+    ggprint16(&r, 50, 0xcf13ac, "Test Person 5");
+    r.left = 1000;
+    r.bot = 575;
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[0]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[1]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[2]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[3]).c_str());
+    ggprint16(&r, 50, 0xcf13ac, to_string(arr[4]).c_str());
 }
 void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 		int rColor, int gColor, int bColor, int rColor2, int gColor2,
@@ -378,7 +371,7 @@ void ABarGlobal::condenseCreds()
 	ggprint16(&r, 16, 0xcf13ac, "Diego Diaz- Player and Enemy Movement");
 }
 
-void ABarGlobal::condenseHigh()
+void ABarGlobal::condenseHigh(int arr[])
 {
 		showCreditsBorder(1920, 1080, 960, 540);
 	printCredBoxes(960, 540);
@@ -388,22 +381,21 @@ void ABarGlobal::condenseHigh()
 			0,0,0,
 			255,255,255);
 	printHighScore(r);
-	printTempScores(r);
+	printTempScores(r, arr);
 }
 
-void ABarGlobal::condenseStart()
+void ABarGlobal::condenseStart(GLuint play, GLuint help,
+                               GLuint creds, GLuint score)
 {
 	colorBlendBorder(980, 1920, 960,540,230,0,0,
 			25,255,255,
-			34,204,0,
+    		34,204,0,
 			204,230,255);
-	drawButton(960, 800);
-	drawButton(960, 600);
-	drawButton(960, 400);
-	drawButton(960, 200);
-	printTempScreen(r);
-	printInstructions(r);
-	printCredits(r);
+	drawButton(960, 800, play);
+	drawButton(960, 600, help);
+	drawButton(960, 400, creds);
+	drawButton(960, 200, score);
+    glColor3f(1.0, 1.0, 1.0);
 }
 void Enemy::makeTest()
 {

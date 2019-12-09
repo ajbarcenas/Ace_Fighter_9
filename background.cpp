@@ -1628,6 +1628,7 @@ void render()
     // Game Over Screen
     //=========================================================================
     if (abG.showGameIsOver) {
+        g.isPaused = true;
         for (int i = 0; i < 5; i++) {
             if (abG.highscore > g.HighScore[i]) {
                 for (int j = 4; j > i; j--) {

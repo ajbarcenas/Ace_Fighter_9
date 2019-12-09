@@ -375,7 +375,7 @@ extern void spawnPlayer(Player *p);
 extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
 extern void setPlayerHealth(Player *p, int maxHealth);
-extern void subtractPlayerHealth(int &currentHealth, int damage);
+extern void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused);
 extern void movePlayerUp(Player *p);
 extern void movePlayerDown(Player *p);
 extern void movePlayerLeft(Player *p);
@@ -385,7 +385,7 @@ extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
 extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(struct Node* enemy, int &currentHealth);
+extern void checkEnemyLocation(struct Node* enemy, int &currentHealth, bool &isPaused);
 extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void subtractEnemyHealth(struct Node* enemy, int damage);
@@ -1256,7 +1256,7 @@ void physics()
         if (temp != NULL) {
 	        moveEnemy(temp);
 		    checkEnemyCollision(temp);
-		    checkEnemyLocation(temp,p->currentHealth);
+		    checkEnemyLocation(temp,p->currentHealth,g.isPaused);
             if (temp->data.removeEnemy) {
                 removeEnemy(&g.head, temp, g.n, g.enemies1Dead, g.wave);
             }
@@ -1318,9 +1318,9 @@ void physics()
     missileMovement(p->currentHealth);
     confettiMovement();
     rainMovement();
-    eLex.testMovement(p->currentHealth);
-    eLex.vEnemMovement(p->currentHealth);
-    eLex.cEnemMovement(p->currentHealth);
+    eLex.testMovement(p->currentHealth, g.isPaused);
+    eLex.vEnemMovement(p->currentHealth, g.isPaused);
+    eLex.cEnemMovement(p->currentHealth, g.isPaused);
     eLex.bossMovement();
     eLex.bulletMovement();
 }

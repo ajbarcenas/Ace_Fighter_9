@@ -21,7 +21,7 @@ be receiving updates.
 using namespace std;
 ABarGlobal abG;
 Enemy eLex;
-extern void subtractPlayerHealth(int &currentHealth, int damage);
+extern void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused);
 extern int getCurrentHealth();
 //Prints out my name on the credits Screen
 void printAlexisB(Rect r)
@@ -592,7 +592,7 @@ void Enemy::makeVEnem()
 	++numVEnemy;
 }
 
-void Enemy::testMovement(int &currentHealth)
+void Enemy::testMovement(int &currentHealth, bool &isPaused)
 {
 	if (numEnemy <= 0)
 		return;
@@ -607,7 +607,7 @@ void Enemy::testMovement(int &currentHealth)
 
 		if (p->e.center.x < 0.0) {
 			eLex.deleteEnemy(i);
-		  subtractPlayerHealth(currentHealth, 1);
+		  subtractPlayerHealth(currentHealth, 1, isPaused);
 		}
 
 		enemyX[i] = p->e.center.x;
@@ -615,7 +615,7 @@ void Enemy::testMovement(int &currentHealth)
 	}
 }
 
-void Enemy::cEnemMovement(int &currentHealth)
+void Enemy::cEnemMovement(int &currentHealth, bool &isPaused)
 {
 	if (numCEnemy <= 0)
 		return;
@@ -629,12 +629,12 @@ void Enemy::cEnemMovement(int &currentHealth)
 	}
 		if (f->e.center.x < 0.0) {
 			eLex.deleteCEnemy(i);
-			subtractPlayerHealth(currentHealth, 1);
+			subtractPlayerHealth(currentHealth, 1, isPaused);
 		}
 	}
 }
 
-void Enemy::vEnemMovement(int &currentHealth)
+void Enemy::vEnemMovement(int &currentHealth, bool &isPaused)
 {
 	if (numVEnemy <= 0)
 		return;
@@ -646,7 +646,7 @@ void Enemy::vEnemMovement(int &currentHealth)
 			v->velocity.y = -(v->velocity.y);
 		}
 		if (v->e.center.x < 0.0) {
-			subtractPlayerHealth(currentHealth, 1);
+			subtractPlayerHealth(currentHealth, 1, isPaused);
 			eLex.deleteVEnemy(i);
 		}
 	}

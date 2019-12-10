@@ -2,7 +2,8 @@
 // Date: 9/17/2019
 // Game: Ace Fighter 9
 // Program: alexisisB.cpp
-// Goals: Have hitboxes work correctly for player and enemy models
+// Goals: Create Enemy Patterns and Enemies, Create interface
+// such as the start menu, credits, and high score screen 
 /*=============[Notes]=================
 Current class in my source file is ABarGlobal
 which currently holds general functions that
@@ -10,6 +11,9 @@ print out basic information. Current functions are being used to create
 the features of the credits page.
 Credits page is still a WIP and will continually
 be receiving updates.
+I have an enemy class that has everything that is related to
+the enemies. I can control their velocities and the positions
+they spawn in.
 ===============[End]===================
 */
 //The four steps to debugging are to identify it, isolate it, fix it and then to
@@ -41,6 +45,9 @@ void ABarGlobal::printHighScore(Rect r)
 	ggprint16(&r, 16, 0xcf13ac, "         HIGH SCORES");
 	ggprint16(&r, 16, 0xcf13ac, " Press T to increment scores");
 }
+//==================================================================
+//======================Beginning of ABarGlobal=====================
+//==================================================================
 /*Prints out "Ace Fighter 9" in a cross format across the screen
 Not sure whether I like it, so might be commented out for progress report
 */
@@ -402,6 +409,13 @@ void ABarGlobal::condenseStart(GLuint play, GLuint help,
 	drawButton(960, 200, score);
 	glColor3f(1.0, 1.0, 1.0);
 }
+//==================================================================
+//=======================END OF ABARGLOBAL==========================
+//==================================================================
+
+//==================================================================
+//=======================Beginning of Enemy=========================
+//==================================================================
 void Enemy::makeTest()
 {
 	if (numEnemy >= 5)
@@ -416,6 +430,12 @@ void Enemy::makeTest()
 	} if (abG.highscore >= 50000) {	
 		p->velocity.y = rand() % 15 + (-6); 
 		p->velocity.x = rand () % 4 + (-17);
+	} if (abG.highscore >= 150000) {
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-22);
+	} if (abG.highscore >= 250000) {
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-28);
 	} else {
 		p->velocity.y = rand() % 15 + (-6); 
 		p->velocity.x = rand () % 4 + (-5);
@@ -528,6 +548,9 @@ void Enemy::makeCEnem()
 	} if (abG.highscore >= 150000) {
 		f->velocity.y = 0;
 		f->velocity.x = -9.0;
+	} if (abG.highscore >= 200000) {
+		f->velocity.y = 0;
+		f->velocity.x = -14.0;
 	} else {
 		f->velocity.y = 0; 
 		f->velocity.x = -4;
@@ -590,6 +613,9 @@ void Enemy::makeVEnem()
 	} if (abG.highscore >= 150000) {
 		v->velocity.y = 0;
 		v->velocity.x = -9.0;
+	} if (abG.highscore >= 200000) {
+		v->velocity.y = 0;
+		v->velocity.x = -14.0;
 	} else {
 		v->velocity.y = 0; 
 		v->velocity.x = -4;
@@ -895,4 +921,7 @@ void Enemy::printEBullet()
 		glPopMatrix();
 	}
 }
+//==================================================================
+//=======================END OF ENEMY===============================
+//==================================================================
 #endif

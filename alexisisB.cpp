@@ -34,7 +34,8 @@ void printAlexisB(Rect r)
 	r.left = 340;
 	r.bot = 645;
 	r.center = 0;
-	ggprint16(&r, 16, 0xcf13ac, "Alexisis Barcenas - Hitbox Specialist");
+	ggprint16(&r, 16, 0xcf13ac,
+	"Alexisis Barcenas - Interface & Enemy Creation");
 }
 
 void ABarGlobal::printHighScore(Rect r)

@@ -250,22 +250,22 @@ void ABarGlobal::drawButton(int x_pos, int y_pos, GLuint texture)
 	box.center.x  = x_pos;
 	box.center.y = y_pos;
 	float h, w; 
-    glPushMatrix();
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0.0f);
+	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor3ub(255, 255, 255);
 	glTranslatef(box.center.x, box.center.y, 0);
 	w = box.width;
 	h = box.height;
 	glBegin(GL_QUADS);
-	    glTexCoord2f(0.0f, 1.0f); glVertex2i(-w, -h);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(-w, -h);
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(-w, h);
 		glTexCoord2f(1.0f, 0.0f); glVertex2i(w, h);
 		glTexCoord2f(1.0f, 1.0f); glVertex2i(w, -h);
 	glEnd();
-    glDisable(GL_ALPHA_TEST);
-    glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 }
 
@@ -300,18 +300,18 @@ void ABarGlobal::printTempScores(Rect r, int arr[])
 	glColor3f(1.0, 1.0, 1.0);
 	r.left = 800;
 	r.bot = 575;
-	ggprint16(&r, 50, 0xcf13ac, "Test Person");
+	ggprint16(&r, 50, 0xcf13ac, "Test Person 1");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 2");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 3");
 	ggprint16(&r, 50, 0xcf13ac, "Test Person 4");
-    ggprint16(&r, 50, 0xcf13ac, "Test Person 5");
-    r.left = 1000;
-    r.bot = 575;
-    ggprint16(&r, 50, 0xcf13ac, to_string(arr[0]).c_str());
-    ggprint16(&r, 50, 0xcf13ac, to_string(arr[1]).c_str());
-    ggprint16(&r, 50, 0xcf13ac, to_string(arr[2]).c_str());
-    ggprint16(&r, 50, 0xcf13ac, to_string(arr[3]).c_str());
-    ggprint16(&r, 50, 0xcf13ac, to_string(arr[4]).c_str());
+	ggprint16(&r, 50, 0xcf13ac, "Test Person 5");
+	r.left = 1000;
+	r.bot = 575;
+	ggprint16(&r, 50, 0xcf13ac, to_string(arr[0]).c_str());
+	ggprint16(&r, 50, 0xcf13ac, to_string(arr[1]).c_str());
+	ggprint16(&r, 50, 0xcf13ac, to_string(arr[2]).c_str());
+	ggprint16(&r, 50, 0xcf13ac, to_string(arr[3]).c_str());
+	ggprint16(&r, 50, 0xcf13ac, to_string(arr[4]).c_str());
 }
 void ABarGlobal::colorBlendBorder(int height, int width, int x_pos, int y_pos,
 		int rColor, int gColor, int bColor, int rColor2, int gColor2,
@@ -390,17 +390,17 @@ void ABarGlobal::condenseHigh(int arr[])
 }
 
 void ABarGlobal::condenseStart(GLuint play, GLuint help,
-                               GLuint creds, GLuint score)
+				GLuint creds, GLuint score)
 {
 	colorBlendBorder(980, 1920, 960,540,230,0,0,
 			25,255,255,
-    		34,204,0,
+			34,204,0,
 			204,230,255);
 	drawButton(960, 800, play);
 	drawButton(960, 600, help);
 	drawButton(960, 400, creds);
 	drawButton(960, 200, score);
-    glColor3f(1.0, 1.0, 1.0);
+	glColor3f(1.0, 1.0, 1.0);
 }
 void Enemy::makeTest()
 {
@@ -658,8 +658,8 @@ void Enemy::vEnemMovement(int &currentHealth)
 }
 
 void Enemy::printTest(float w, float h, GLuint Texture1,
-                      GLuint Texture2, GLuint Texture3, GLuint Texture4,
-                      GLuint Texture5, GLuint Texture6)
+			GLuint Texture2, GLuint Texture3, GLuint Texture4,
+			GLuint Texture5, GLuint Texture6)
 {
 	test[0].texture = Texture1;
 	test[1].texture = Texture2;
@@ -695,10 +695,10 @@ void Enemy::printCEnem(float w, float h, GLuint Texture)
 		glColor3ub(255,255,255);
 		Vec1 *g = &cEnemy[i].e.center;
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2i(g->x-w*.1, g->y-h*.1);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(g->x-w*.1, g->y+h*.1);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(g->x+w*.1, g->y+h*.1);
-			glTexCoord2f(1.0f, 1.0f); glVertex2i(g->x+w*.1, g->y-h*.1);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(g->x-w*.1, g->y-h*.1);
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(g->x-w*.1, g->y+h*.1);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(g->x+w*.1, g->y+h*.1);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(g->x+w*.1, g->y-h*.1);
 		glEnd();
 		glPopMatrix();
 	}
@@ -713,10 +713,10 @@ void Enemy::printVEnem(float w, float h, GLuint Texture)
 		glColor3ub(255,255,255);
 		Vec1 *q = &vEnemy[i].e.center;
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2i(q->x-w*.5, q->y-h*.5);	
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(q->x-w*.5, q->y+h*.5);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(q->x+w*.5, q->y+h*.5);
-			glTexCoord2f(1.0f, 1.0f); glVertex2i(q->x+w*.5, q->y-h*.5);
+		glTexCoord2f(0.0f, 1.0f); glVertex2i(q->x-w*.5, q->y-h*.5);	
+		glTexCoord2f(0.0f, 0.0f); glVertex2i(q->x-w*.5, q->y+h*.5);
+		glTexCoord2f(1.0f, 0.0f); glVertex2i(q->x+w*.5, q->y+h*.5);
+		glTexCoord2f(1.0f, 1.0f); glVertex2i(q->x+w*.5, q->y-h*.5);
 		glEnd();
 		glPopMatrix();
 	}
@@ -725,17 +725,6 @@ void Enemy::deleteEnemy(int i)
 {
 	test[i] = test[numEnemy - 1];
 	--numEnemy;
-}
-
-int Enemy::getMAXENEMIES()
-{
-	return MAXENEMIES;
-}
-// This is my Friday code.
-// Finishing adding my get functions for Alonso's deletion.
-int Enemy::getCHECKMAXENEM()
-{
-	return CHECKMAXENEM;
 }
 int Enemy::getEX(int i)
 {
@@ -754,6 +743,17 @@ int Enemy::getNumEnemy()
 	return numEnemy;
 }
 
+
+int Enemy::getMAXENEMIES()
+{
+	return MAXENEMIES;
+}
+// This is my Friday code.
+// Finishing adding my get functions for Alonso's deletion.
+int Enemy::getCHECKMAXENEM()
+{
+	return CHECKMAXENEM;
+}
 void Enemy::deleteVEnemy(int i)
 {
 	vEnemy[i] = vEnemy[numVEnemy - 1];

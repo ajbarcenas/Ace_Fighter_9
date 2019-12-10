@@ -117,9 +117,9 @@ void incrementPlayerHealth(int &currentHealth, int increase) {
 void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused)
 {
 	currentHealth -= damage;
-	if(currentHealth <= 0) {
-		isPaused = true;
-	}
+	//if(currentHealth <= 0) {
+	//	isPaused = true;
+	//}
 }
 
 void movePlayerUp(Player *p) 

@@ -78,7 +78,6 @@ void setPlayerHealth(Player *p, int maxHealth)
 {
 	p->maxHealth = maxHealth;
 	p->currentHealth = p->maxHealth;
-	cout << p->currentHealth << endl;
 }
 
 void printPlayer(Player *p, float w, float h, GLuint Texture)
@@ -111,7 +110,6 @@ void checkPlayerLocation(Player *p)
 void incrementPlayerHealth(int &currentHealth, int increase) {
 	if(currentHealth < 3)
 		currentHealth += increase;
-	cout << currentHealth << endl;
 }
 
 void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused)
@@ -261,7 +259,6 @@ void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1D
 void subtractEnemyHealth(struct Node* enemy, int damage)
 {
 	enemy->data.currentHealth -= damage;
-	cout << enemy->data.currentHealth << endl;
 	if(enemy->data.currentHealth <= 0){
 		enemy->data.removeEnemy = true;
 		abG.incrementScore(1000);

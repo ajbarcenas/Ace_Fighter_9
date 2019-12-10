@@ -16,6 +16,9 @@ Goals:
 2.Add smoke particles to follow the player
 3.Rain and Confetti paricles
 4.3D cube powerup
+5.3D pyramid powerup
+6.Animated missile projecticle
+7.Textures for Player, Enemies, Powerups, and Buttons
 */
 
 #include <stdio.h>
@@ -578,7 +581,7 @@ void bulletMovement(int &currentHealth)
         if (b->s.center.y < ag.winY + 36 && b->s.center.y > ag.winY - 36 &&
             b->s.center.x < ag.winX + 36 && b->s.center.x > ag.winX - 36) {
             ag.cy = ((float)rand() / (float)RAND_MAX);
-            ag.cx = 1.0;
+            ag.cx = ((float)rand() / (float)RAND_MAX);
             ag.bullet[i] = ag.bullet[ag.q - 1];
             ag.power++;
             --ag.q;
@@ -590,9 +593,8 @@ void bulletMovement(int &currentHealth)
         if (b->s.center.y < ag.winPY + 36 && b->s.center.y > ag.winPY - 36 &&
             b->s.center.x < ag.winPX + 36 && b->s.center.x > ag.winPX - 36) {
             ag.py = ((float)rand() / (float)RAND_MAX);
-            ag.px = 1.0;
+            ag.px = ((float)rand() / (float)RAND_MAX);
             ag.bullet[i] = ag.bullet[ag.q - 1];
-            cout << "pyramid hit" << endl;
             --ag.q;
             abG.incrementScore(100);
             incrementPlayerHealth(currentHealth, 1);
@@ -720,6 +722,8 @@ void missileMovement(int &currentHealth)
         //check collision of missile with pyramid powerup
         if (m->s.center.y < ag.winPY + 36 && m->s.center.y > ag.winPY - 36 &&
             m->s.center.x < ag.winPX + 36 && m->s.center.x > ag.winPX - 36) {
+            ag.py = ((float)rand() / (float)RAND_MAX);
+            ag.px = ((float)rand() / (float)RAND_MAX);
             ag.missile[i] = ag.missile[ag.p - 1];
             --ag.p;
             abG.incrementScore(100);

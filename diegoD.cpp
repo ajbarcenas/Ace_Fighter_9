@@ -114,11 +114,11 @@ void incrementPlayerHealth(int &currentHealth, int increase) {
 	cout << currentHealth << endl;
 }
 
-void subtractPlayerHealth(int &currentHealth, int damage)
+void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused)
 {
 	currentHealth -= damage;
 	if(currentHealth <= 0) {
-		cout << "Game Over!!!" << endl;
+		isPaused = true;
 	}
 }
 
@@ -302,11 +302,11 @@ void checkEnemyCollision(struct Node* enemy)
 	}
 }
 
-void checkEnemyLocation(struct Node* enemy, int &currentHealth)
+void checkEnemyLocation(struct Node* enemy, int &currentHealth, bool &isPaused)
 {
 	if(enemy->data.s.center.x < 0) {
 		enemy->data.removeEnemy = true;
-		subtractPlayerHealth(currentHealth, 1);
+		subtractPlayerHealth(currentHealth, 1, isPaused);
 	}
 }
 

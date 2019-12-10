@@ -97,15 +97,15 @@ class Enemy {
 		void printEBullet();
 		Dot bullets[20];
 		void makeTest();
-		void testMovement(int &currentHealth);
+		void testMovement(int &currentHealth, bool &isPaused);
 		void printTest(float w, float h, GLuint Texture1, GLuint Texture2,
 				GLuint Texutre3, GLuint Texture4, GLuint Texture5,
 				GLuint Texture6);
 		void makeVEnem();
-		void vEnemMovement(int &currentHealth);
+		void vEnemMovement(int &currentHealth, bool &isPaused);
 		void printVEnem(float w, float h, GLuint Texture);
 		void makeCEnem();
-		void cEnemMovement(int &currentHealth);
+		void cEnemMovement(int &currentHealth, bool &isPaused);
 		void printCEnem(float w, float h, GLuint Texture);
 		int getCX(int i);
 		int getCY(int i);

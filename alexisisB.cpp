@@ -416,6 +416,12 @@ void Enemy::makeTest()
 	} if (abG.highscore >= 50000) {	
 		p->velocity.y = rand() % 15 + (-6); 
 		p->velocity.x = rand () % 4 + (-17);
+	} if (abG.highscore >= 150000) {
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-22);
+	} if (abG.highscore >= 250000) {
+		p->velocity.y = rand() % 15 + (-6); 
+		p->velocity.x = rand () % 4 + (-28);
 	} else {
 		p->velocity.y = rand() % 15 + (-6); 
 		p->velocity.x = rand () % 4 + (-5);
@@ -528,6 +534,9 @@ void Enemy::makeCEnem()
 	} if (abG.highscore >= 150000) {
 		f->velocity.y = 0;
 		f->velocity.x = -9.0;
+	} if (abG.highscore >= 200000) {
+		f->velocity.y = 0;
+		f->velocity.x = -14.0;
 	} else {
 		f->velocity.y = 0; 
 		f->velocity.x = -4;
@@ -590,6 +599,9 @@ void Enemy::makeVEnem()
 	} if (abG.highscore >= 150000) {
 		v->velocity.y = 0;
 		v->velocity.x = -9.0;
+	} if (abG.highscore >= 200000) {
+		v->velocity.y = 0;
+		v->velocity.x = -14.0;
 	} else {
 		v->velocity.y = 0; 
 		v->velocity.x = -4;

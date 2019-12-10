@@ -56,7 +56,7 @@ struct Model {
 };
 
 struct Dot {
-    GLuint texture;
+	GLuint texture;
 	Color c;
 	Model e;
 	Vec1 velocity;
@@ -99,8 +99,8 @@ class Enemy {
 		void makeTest();
 		void testMovement(int &currentHealth);
 		void printTest(float w, float h, GLuint Texture1, GLuint Texture2,
-                       GLuint Texutre3, GLuint Texture4, GLuint Texture5,
-                       GLuint Texture6);
+				GLuint Texutre3, GLuint Texture4, GLuint Texture5,
+				GLuint Texture6);
 		void makeVEnem();
 		void vEnemMovement(int &currentHealth);
 		void printVEnem(float w, float h, GLuint Texture);
@@ -110,7 +110,7 @@ class Enemy {
 		int getCX(int i);
 		int getCY(int i);
 		int getCNumEnemy();
-		void deleteCEnemy(int i);		
+		void deleteCEnemy(int i);
 		bool increasing = true;
 		bool rDead = true;
 		bool vDead = true;
@@ -129,7 +129,8 @@ class ABarGlobal {
 		int showGameIsOver;
 		int showStart = 1;
 		void printAceFighter9(Rect r);
-		void printPicture(double x, double y, double z, GLuint texturecode);
+		void printPicture(double x, double y, double z,
+		GLuint texturecode);
 		void printCredBoxes(int x_pos, int y_pos);
 		void printHighScore(Rect r);
 		void incrementScore(int points);
@@ -145,14 +146,14 @@ class ABarGlobal {
 		void drawCircle();
 		void drawButton(int x_pos, int y_pos, GLuint texture);
 		void colorBlendBorder(int width, int height, int x_pos,
-			       	int y_pos, int rColor, int gColor, int bColor,
+				int y_pos, int rColor, int gColor, int bColor,
 				int rColor2, int gColor2, int bColor2,
 				int rColor3, int gColor3, int bColor3,
 				int rColor4, int gColor4, int bColor4);
 		void condenseCreds();
 		void condenseHigh(int arr[]);
 		void condenseStart(GLuint play, GLuint help,
-                           GLuint creds, GLuint score);
+				GLuint creds, GLuint score);
 		void condenseHow();
 };
 

@@ -682,7 +682,7 @@ void makeMissile(int x, int y)
     m->s.center.x = x;
     m->s.center.y = y;
     m->velocity.y = 0;
-    m->velocity.x = ((double)rand() / (double)RAND_MAX) + 3;
+    m->velocity.x = ((double)rand() / (double)RAND_MAX) + 25;
     ++ag.p;
 }
 
@@ -881,14 +881,14 @@ void deleteMissile(int i)
 
 void getTotalBullets(int &tot)
 {
-	tot = ag.q;
+    tot = ag.q;
 }
 
 void getBulletXY(int &bulletX, int &bulletY, int i)
 {
-	Particle *c = &ag.bullet[i];
-	bulletX = c->s.center.x;
-	bulletY = c->s.center.y;
+    Particle *c = &ag.bullet[i];
+    bulletX = c->s.center.x;
+    bulletY = c->s.center.y;
 }
 
 void getTotalMissiles(int &tot)

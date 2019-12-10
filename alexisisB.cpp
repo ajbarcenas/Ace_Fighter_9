@@ -25,7 +25,8 @@ they spawn in.
 using namespace std;
 ABarGlobal abG;
 Enemy eLex;
-extern void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused);
+extern void subtractPlayerHealth(int &currentHealth, int damage,
+       	bool &isPaused);
 extern int getCurrentHealth();
 //Prints out my name on the credits Screen
 void printAlexisB(Rect r)
@@ -96,8 +97,10 @@ void ABarGlobal::printPicture(double x, double y, double z, GLuint texturecode)
 		-wid * image_scale);
 	glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid * image_scale,
 		wid * image_scale);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(wid * image_scale, wid * image_scale);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(wid * image_scale, -wid * image_scale);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(wid * image_scale,
+	       	wid * image_scale);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(wid * image_scale,
+	       	-wid * image_scale);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEnd();
 	glPopMatrix();
@@ -240,7 +243,8 @@ void ABarGlobal::condenseHow()
 	r.left = 950;
 	r.bot = 625;
 	ggprint13(&r, 30, 0x66ffcc, "[Mouse]------Control Plane Movement");
-	ggprint13(&r, 30, 0x66ffcc, "[M]------Toggle Between Mouse & K/B Controls");
+	ggprint13(&r, 30, 0x66ffcc,
+	       	"[M]------Toggle Between Mouse & K/B Controls");
 	ggprint13(&r, 30, 0x66ffcc, "[Up Arrow]------Moves Player Up");
 	ggprint13(&r, 30, 0x66ffcc, "[Down Arrow]------Moves Player Down");
 	ggprint13(&r, 30, 0x66ffcc, "[Left Arrow]------Moves Player Left");

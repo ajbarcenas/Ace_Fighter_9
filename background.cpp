@@ -35,55 +35,55 @@ typedef double Vect[3];
 
 class Image {
     public:
-    int width, height;
-    unsigned char *data;
-    ~Image() { delete [] data; }
-    Image(const char *fname) {
-        if (fname[0] == '\0')
-            return;
-        //printf("fname **%s**\n", fname);
-        int ppmFlag = 0;
-        char name[40];
-        strcpy(name, fname);
-        int slen = strlen(name);
-        char ppmname[80];
-        if (strncmp(name+(slen-4), ".ppm", 4) == 0)
-            ppmFlag = 1;
-        if (ppmFlag)
-            strcpy(ppmname, name);
-        else {
-            name[slen-4] = '\0';
-            //printf("name **%s**\n", name);
-            sprintf(ppmname,"%s.ppm", name);
-            //printf("ppmname **%s**\n", ppmname);
-            char ts[100];
-            //system("convert eball.jpg eball.ppm");
-            sprintf(ts, "convert %s %s", fname, ppmname);
-            system(ts);
-        }
-        FILE *fpi = fopen(ppmname, "r");
-        if (fpi) {
-            char line[200];
-            fgets(line, 200, fpi);
-            fgets(line, 200, fpi);
-            //skip comments and blank lines
-            while (line[0] == '#' || strlen(line) < 2)
+        int width, height;
+        unsigned char *data;
+        ~Image() { delete [] data; }
+        Image(const char *fname) {
+            if (fname[0] == '\0')
+                return;
+            //printf("fname **%s**\n", fname);
+            int ppmFlag = 0;
+            char name[40];
+            strcpy(name, fname);
+            int slen = strlen(name);
+            char ppmname[80];
+            if (strncmp(name+(slen-4), ".ppm", 4) == 0)
+                ppmFlag = 1;
+            if (ppmFlag)
+                strcpy(ppmname, name);
+            else {
+                name[slen-4] = '\0';
+                //printf("name **%s**\n", name);
+                sprintf(ppmname,"%s.ppm", name);
+                //printf("ppmname **%s**\n", ppmname);
+                char ts[100];
+                //system("convert eball.jpg eball.ppm");
+                sprintf(ts, "convert %s %s", fname, ppmname);
+                system(ts);
+            }
+            FILE *fpi = fopen(ppmname, "r");
+            if (fpi) {
+                char line[200];
                 fgets(line, 200, fpi);
-            sscanf(line, "%i %i", &width, &height);
-            fgets(line, 200, fpi);
-            //get pixel data
-            int n = width * height * 3;
-            data = new unsigned char[n];
-            for (int i=0; i<n; i++)
-                data[i] = fgetc(fpi);
-            fclose(fpi);
-        } else {
-            printf("ERROR opening image: %s\n",ppmname);
-            exit(0);
+                fgets(line, 200, fpi);
+                //skip comments and blank lines
+                while (line[0] == '#' || strlen(line) < 2)
+                    fgets(line, 200, fpi);
+                sscanf(line, "%i %i", &width, &height);
+                fgets(line, 200, fpi);
+                //get pixel data
+                int n = width * height * 3;
+                data = new unsigned char[n];
+                for (int i=0; i<n; i++)
+                    data[i] = fgetc(fpi);
+                fclose(fpi);
+            } else {
+                printf("ERROR opening image: %s\n",ppmname);
+                exit(0);
+            }
+            if(!ppmFlag)
+                unlink(ppmname);
         }
-        if(!ppmFlag)
-            unlink(ppmname);
-    }
 };
 
 Image img[37] = {"./Images/MountainLayer.png",
@@ -125,10 +125,10 @@ Image img[37] = {"./Images/MountainLayer.png",
                  "./Images/title.png"};
 
 class Texture {
-public:
-    Image *backImage;
-    float xc[12];
-    float yc[12];
+    public:
+        Image *backImage;
+        float xc[12];
+        float yc[12];
 };
 
 struct Vec {
@@ -171,199 +171,200 @@ struct Node {
 
 
 class Logo {
-public:
-    Vect pos;
-    Vect vel;
+    public:
+        Vect pos;
+        Vect vel;
 } logo;
 
 class Pictures {
-public: 
-    Vect pos;
-    Vect vel;
+    public: 
+        Vect pos;
+        Vect vel;
 } picture;
 
 class Picturetwo {
-public:
-    Vect pos;
-    Vect vel;
+    public:
+        Vect pos;
+        Vect vel;
 } picture2;
 
 class Picturethree {
-public:
-    Vect pos;
-    Vect vel;
+    public:
+        Vect pos;
+        Vect vel;
 } picture3;
 
 class Picturefour {
-public:
-    Vect pos;
-    Vect vel;
+    public:
+        Vect pos;
+        Vect vel;
 } picture4;
 
 class Global {
-public:
-    int xres, yres;
-    GLuint mountainTexture;
-    GLuint cloudTexture;
-    GLuint pineTexture;
-    GLuint bulletTexture;
-    GLuint missileTexture[8];
-    GLuint playerTexture;
-    GLuint enemy1Texture;
-    GLuint enemy2Texture;
-    GLuint enemy3Texture;
-    GLuint minecraftTop;
-    GLuint minecraftSide;
-    GLuint minecraftBottom;
-    GLuint yugiohFront;
-    GLuint yugiohBack;
-    GLuint yugiohBottom;
-    GLuint random1;
-    GLuint random2;
-    GLuint random3;
-    GLuint random4;
-    GLuint random5;
-    GLuint random6;
-    GLuint missile1;
-    GLuint missile2;
-    GLuint missile3;
-    GLuint missile4;
-    GLuint missile5;
-    GLuint missile6;
-    GLuint missile7;
-    GLuint playbutton;
-    GLuint credsbutton;
-    GLuint scorebutton;
-    GLuint helpbutton;
-    GLuint title;
-    Player player;
-    Texture tex;
-    Shape box;
-    GLuint logoTexture;
-    GLuint alexisTexId;
-    GLuint alonsoTexId;
-    GLuint diegoTexId;
-    GLuint andrewTexId;
-    int showLogo;
-    char keys[65536];
-    int n = 0;
-    int wave = 1;
-    int maxEnemy1 = 5;
-    bool mouseMovement = true;
-    bool enemies1Dead = true;
-    Enemy1 enemy;
-    struct Node* head = NULL;
-    GLuint texid;
-    int showCredits, showHighScores;
-    int HighScore[5] = {0};
-    bool getCTime = true;
-    bool getPTime = true;
-    int getBTime = 1;
-    bool isPaused = true;
-    struct timespec cTimeStart;
-    struct timespec cTimeCurr;
-    struct timespec bTimeStart;
-    struct timespec bTimeCurr;
-    struct timespec pTimeStart;
-    struct timespec pTimeCurr;
-    double cTime;
-    double bTime;
-    double pTime;
-    double billion = 1.0/1e9;
-    Global() {
-        //Pictures pic;
-        xres=1920, yres=1080;
-        picture.pos[0] = 480,   picture.pos[1] = 800;
-        picture2.pos[0] = 1440, picture2.pos[1] = 800;
-        picture3.pos[0] = 960,  picture3.pos[1] = 200;
-        picture4.pos[0] = 960, picture4.pos[1] = 540;
-        showCredits = 0;
-        showLogo = 0;
-        showHighScores = 0;
-        logo.pos[0] = 960;
-        logo.pos[1] = 540;
-    }
+    public:
+        int xres, yres;
+        GLuint mountainTexture;
+        GLuint cloudTexture;
+        GLuint pineTexture;
+        GLuint bulletTexture;
+        GLuint missileTexture[8];
+        GLuint playerTexture;
+        GLuint enemy1Texture;
+        GLuint enemy2Texture;
+        GLuint enemy3Texture;
+        GLuint minecraftTop;
+        GLuint minecraftSide;
+        GLuint minecraftBottom;
+        GLuint yugiohFront;
+        GLuint yugiohBack;
+        GLuint yugiohBottom;
+        GLuint random1;
+        GLuint random2;
+        GLuint random3;
+        GLuint random4;
+        GLuint random5;
+        GLuint random6;
+        GLuint missile1;
+        GLuint missile2;
+        GLuint missile3;
+        GLuint missile4;
+        GLuint missile5;
+        GLuint missile6;
+        GLuint missile7;
+        GLuint playbutton;
+        GLuint credsbutton;
+        GLuint scorebutton;
+        GLuint helpbutton;
+        GLuint title;
+        Player player;
+        Texture tex;
+        Shape box;
+        GLuint logoTexture;
+        GLuint alexisTexId;
+        GLuint alonsoTexId;
+        GLuint diegoTexId;
+        GLuint andrewTexId;
+        int showLogo;
+        char keys[65536];
+        int n = 0;
+        int wave = 1;
+        int maxEnemy1 = 5;
+        bool mouseMovement = true;
+        bool enemies1Dead = true;
+        Enemy1 enemy;
+        struct Node* head = NULL;
+        GLuint texid;
+        int showCredits, showHighScores;
+        int HighScore[5] = {0};
+        bool getCTime = true;
+        bool getPTime = true;
+        int getBTime = 1;
+        bool isPaused = true;
+        struct timespec cTimeStart;
+        struct timespec cTimeCurr;
+        struct timespec bTimeStart;
+        struct timespec bTimeCurr;
+        struct timespec pTimeStart;
+        struct timespec pTimeCurr;
+        double cTime;
+        double bTime;
+        double pTime;
+        double billion = 1.0/1e9;
+        Global() {
+            //Pictures pic;
+            xres=1920, yres=1080;
+            picture.pos[0] = 480,   picture.pos[1] = 800;
+            picture2.pos[0] = 1440, picture2.pos[1] = 800;
+            picture3.pos[0] = 960,  picture3.pos[1] = 200;
+            picture4.pos[0] = 960, picture4.pos[1] = 540;
+            showCredits = 0;
+            showLogo = 0;
+            showHighScores = 0;
+            logo.pos[0] = 960;
+            logo.pos[1] = 540;
+        }
 } g;
 
 class X11_wrapper {
-private:
-    Display *dpy;
-    Window win;
-    GLXContext glc;
-public:
-    X11_wrapper() {
-        GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-        //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
-        setup_screen_res(1920, 1080);
-        dpy = XOpenDisplay(NULL);
-        if(dpy == NULL) {
-            printf("\n\tcannot connect to X server\n\n");
-            exit(EXIT_FAILURE);
+    private:
+        Display *dpy;
+        Window win;
+        GLXContext glc;
+    public:
+        X11_wrapper() {
+            GLint att[] = {GLX_RGBA, GLX_DEPTH_SIZE, 24,
+                           GLX_DOUBLEBUFFER, None};
+            //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
+            setup_screen_res(1920, 1080);
+            dpy = XOpenDisplay(NULL);
+            if(dpy == NULL) {
+                printf("\n\tcannot connect to X server\n\n");
+                exit(EXIT_FAILURE);
+            }
+            Window root = DefaultRootWindow(dpy);
+            XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
+            if(vi == NULL) {
+                printf("\n\tno appropriate visual found\n\n");
+                exit(EXIT_FAILURE);
+            }
+            Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
+            XSetWindowAttributes swa;
+            swa.colormap = cmap;
+            swa.event_mask =
+                ExposureMask | KeyPressMask | KeyReleaseMask |
+                PointerMotionMask | ButtonPressMask | ButtonReleaseMask |
+                StructureNotifyMask | SubstructureNotifyMask;
+            win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
+                    vi->depth, InputOutput, vi->visual,
+                    CWColormap | CWEventMask, &swa);
+            set_title();
+            glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
+            glXMakeCurrent(dpy, win, glc);
         }
-        Window root = DefaultRootWindow(dpy);
-        XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
-        if(vi == NULL) {
-            printf("\n\tno appropriate visual found\n\n");
-            exit(EXIT_FAILURE);
+        void cleanupXWindows() {
+            XDestroyWindow(dpy, win);
+            XCloseDisplay(dpy);
         }
-        Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
-        XSetWindowAttributes swa;
-        swa.colormap = cmap;
-        swa.event_mask =
-            ExposureMask | KeyPressMask | KeyReleaseMask | PointerMotionMask |
-            ButtonPressMask | ButtonReleaseMask |
-            StructureNotifyMask | SubstructureNotifyMask;
-        win = XCreateWindow(dpy, root, 0, 0, g.xres, g.yres, 0,
-            vi->depth, InputOutput, vi->visual,
-            CWColormap | CWEventMask, &swa);
-        set_title();
-        glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
-        glXMakeCurrent(dpy, win, glc);
-    }
-    void cleanupXWindows() {
-        XDestroyWindow(dpy, win);
-        XCloseDisplay(dpy);
-    }
-    void setup_screen_res(const int w, const int h) {
-        g.xres = w;
-        g.yres = h;
-    }
-    void reshape_window(int width, int height) {
-        //window has been resized.
-        setup_screen_res(width, height);
-        glViewport(0, 0, (GLint)width, (GLint)height);
-        glMatrixMode(GL_PROJECTION); glLoadIdentity();
-        glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-        glOrtho(0, g.xres, 0, g.yres, -1, 1);
-        set_title();
-    }
-    void set_title() {
-        //Set the window title bar.
-        XMapWindow(dpy, win);
-        XStoreName(dpy, win, "ACE FIGHTER 9 - BY GROUP #9");
-    }
-    bool getXPending() {
-        return XPending(dpy);
-    }
-    XEvent getXNextEvent() {
-        XEvent e;
-        XNextEvent(dpy, &e);
-        return e;
-    }
-    void swapBuffers() {
-        glXSwapBuffers(dpy, win);
-    }
-    void check_resize(XEvent *e) {
-        //The ConfigureNotify is sent by the
-        //server if the window is resized.
-        if (e->type != ConfigureNotify)
-            return;
-        XConfigureEvent xce = e->xconfigure;
-        if (xce.width != g.xres || xce.height != g.yres) {
-            //Window size did change.
-            reshape_window(xce.width, xce.height);
+        void setup_screen_res(const int w, const int h) {
+            g.xres = w;
+            g.yres = h;
         }
-    }
+        void reshape_window(int width, int height) {
+            //window has been resized.
+            setup_screen_res(width, height);
+            glViewport(0, 0, (GLint)width, (GLint)height);
+            glMatrixMode(GL_PROJECTION); glLoadIdentity();
+            glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+            glOrtho(0, g.xres, 0, g.yres, -1, 1);
+            set_title();
+        }
+        void set_title() {
+            //Set the window title bar.
+            XMapWindow(dpy, win);
+            XStoreName(dpy, win, "ACE FIGHTER 9 - BY GROUP #9");
+        }
+        bool getXPending() {
+            return XPending(dpy);
+        }
+        XEvent getXNextEvent() {
+            XEvent e;
+            XNextEvent(dpy, &e);
+            return e;
+        }
+        void swapBuffers() {
+            glXSwapBuffers(dpy, win);
+        }
+        void check_resize(XEvent *e) {
+            //The ConfigureNotify is sent by the
+            //server if the window is resized.
+            if (e->type != ConfigureNotify)
+                return;
+            XConfigureEvent xce = e->xconfigure;
+            if (xce.width != g.xres || xce.height != g.yres) {
+                //Window size did change.
+                reshape_window(xce.width, xce.height);
+            }
+        }
 } x11;
 
 void init_opengl(void);
@@ -375,7 +376,8 @@ extern void spawnPlayer(Player *p);
 extern void printPlayer(Player *p, float w, float h, GLuint Texture);
 extern void checkPlayerLocation(Player *p);
 extern void setPlayerHealth(Player *p, int maxHealth);
-extern void subtractPlayerHealth(int &currentHealth, int damage, bool &isPaused);
+extern void subtractPlayerHealth(int &currentHealth, int damage,
+        bool &isPaused);
 extern void movePlayerUp(Player *p);
 extern void movePlayerDown(Player *p);
 extern void movePlayerLeft(Player *p);
@@ -383,10 +385,13 @@ extern void movePlayerRight(Player *p);
 extern void spawnEnemy(struct Node** head_ref, Enemy1 enemy);
 extern void setEnemySize(struct Node* head_ref, int i);
 extern void setEnemyHealth(struct Node* head_ref, int maxHealth);
-extern void printEnemy(struct Node* temp, int n, float w, float h, GLuint Texture);
+extern void printEnemy(struct Node* temp, int n, float w,
+        float h, GLuint Texture);
 extern void moveEnemy(struct Node* enemy);
-extern void checkEnemyLocation(struct Node* enemy, int &currentHealth, bool &isPaused);
-extern void removeEnemy(struct Node** head, struct Node* enemy, int &n, bool &enemies1Dead, int &wave);
+extern void checkEnemyLocation(struct Node* enemy, int &currentHealth,
+        bool &isPaused);
+extern void removeEnemy(struct Node** head, struct Node* enemy,
+        int &n, bool &enemies1Dead, int &wave);
 extern void checkEnemyCollision(struct Node* enemy);
 extern void subtractEnemyHealth(struct Node* enemy, int damage);
 extern void showCreditScreen();
@@ -414,19 +419,22 @@ extern void confettiMovement();
 extern void makeRain();
 extern void printRain();
 extern void rainMovement();
-extern void cubePower(GLuint topTexture, GLuint sideTexture, GLuint bottomTexture);
+extern void cubePower(GLuint topTexture, GLuint sideTexture,
+        GLuint bottomTexture);
 extern void makeCubeCoordsNull();
 extern bool getCubeCollision(int i);
 extern bool getPyramidCollision(int i);
 extern void makePyramidCoordsNull();
-extern void pyramidPower(GLuint frontTexture, GLuint backTexture, GLuint bottomTexture);
+extern void pyramidPower(GLuint frontTexture, GLuint backTexture, 
+        GLuint bottomTexture);
 extern int getPointsX();
 extern int getPointsY();
 extern bool getPrintPoints();
 extern double timeDiff(struct timespec *, struct timespec *);
 extern int authScores();
-//===========================================================================
-//===========================================================================
+//=============================================================================
+// Main
+//=============================================================================
 int main()
 {
     init_opengl();
@@ -437,15 +445,14 @@ int main()
         while (x11.getXPending()) {
             XEvent e = x11.getXNextEvent();
             x11.check_resize(&e);
-            //if(!g.isPaused)
-		check_mouse(&e);
+            check_mouse(&e);
             done = check_keys(&e);
         }
-    if(!g.isPaused)
-	    physics();
-    confettiMovement();
-    render();
-    x11.swapBuffers();
+        if(!g.isPaused)
+            physics();
+        confettiMovement();
+        render();
+        x11.swapBuffers();
     }
     return 0;
 }
@@ -491,7 +498,7 @@ void init_opengl(void)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     initialize_fonts();
-	
+
     //=========================================================================
     // Create opengl texture elements
     //=========================================================================
@@ -551,7 +558,7 @@ void init_opengl(void)
     //=========================================================================
     w = img[1].width;
     h = img[1].height;
-    
+
     glBindTexture(GL_TEXTURE_2D, g.cloudTexture);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -571,10 +578,10 @@ void init_opengl(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	unsigned char *pineData = buildAlphaData(&img[7]);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, pineData);
-	free(pineData);
+    unsigned char *pineData = buildAlphaData(&img[7]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, pineData);
+    free(pineData);
 
     //=========================================================================
     // Bullet Layer
@@ -611,7 +618,7 @@ void init_opengl(void)
     //=========================================================================
     w = img[10].width;
     h = img[10].height;
-    
+
     glBindTexture(GL_TEXTURE_2D, g.enemy1Texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -635,7 +642,7 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, enemy2Data);
     free(enemy2Data);
-    
+
     //=========================================================================
     // Enemy 3 Jet
     //=========================================================================
@@ -846,7 +853,7 @@ void init_opengl(void)
             GL_RGBA, GL_UNSIGNED_BYTE, missile1Data);
     free(missile1Data);
     g.missileTexture[0] = g.missile1;
-    
+
     //=========================================================================
     // Missile 2
     //=========================================================================
@@ -1029,7 +1036,7 @@ void init_opengl(void)
     g.tex.xc[1] = 1.0;
     g.tex.yc[0] = 0.0;
     g.tex.yc[1] = 1.0;
-    
+
     //=========================================================================
     // Cloud Image
     //=========================================================================
@@ -1109,69 +1116,73 @@ void check_mouse(XEvent *e)
     //Was a mouse button clicked?
     static int savex = 0;
     static int savey = 0;
-	
+
     //Weed out non-mouse events
     if (e->type != ButtonRelease &&
-        e->type != ButtonPress &&
-        e->type != MotionNotify) {
+            e->type != ButtonPress &&
+            e->type != MotionNotify) {
         //This is not a mouse event that we care about.
         return;
     }
     if (e->type == ButtonRelease)
         return;
     if (e->type == ButtonPress) {
-        //cout << e->xbutton.button << endl;
         if (e->xbutton.button== 1) { 
-	     int q = g.yres - e->xbutton.y;
-	     		
-		cout << "test: " << e->xbutton.x << " " << q << endl;
-            if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 748 && q < 849) {
-			    abG.showStartScreen();
-			    g.isPaused = false;
-	     		}
-            if (e->xbutton.x > 823 && e->xbutton.x < 1094 && q > 360 && q < 436) {
-			    abG.showCredits();
-	     		}
+            int q = g.yres - e->xbutton.y;
 
-            if (e->xbutton.x > 823 && e->xbutton.x < 1094 && q > 159 && q < 236) {
-			    abG.showHighScores();
-	     		}
+            if (e->xbutton.x > 813 && e->xbutton.x < 1111 &&
+                q > 748 && q < 849) {
+                abG.showStartScreen();
+                g.isPaused = false;
+            }
+            if (e->xbutton.x > 823 && e->xbutton.x < 1094 &&
+                q > 360 && q < 436) {
+                abG.showCredits();
+            }
 
-            if (e->xbutton.x > 328 && e->xbutton.x < 597 && q > 159 && q < 237) {
-			    abG.returnStart();
-			    abG.showStartScreen();
-	     		}
+            if (e->xbutton.x > 823 && e->xbutton.x < 1094 &&
+                q > 159 && q < 236) {
+                abG.showHighScores();
+            }
 
-            if (e->xbutton.x > 1325 && e->xbutton.x < 1595 && q > 159 && q < 237) {
-                            abG.showHighScores();
-	     		}
-			if (!abG.showHow) {
-				if (e->xbutton.x > 813 && e->xbutton.x < 1111 && q > 550 && q < 649) {
-			            abG.showHowTo();
-		 	           // cout << "test: " << e->xbutton.x << " " << q << endl;
-				}
-			}
-			if (abG.showHow) {    
-			    if (e->xbutton.x > 886 && e->xbutton.x < 1013 && q > 346 && q < 357) {
-			        abG.showHowTo();
-			    }
-			}
-	}
+            if (e->xbutton.x > 328 && e->xbutton.x < 597 &&
+                q > 159 && q < 237) {
+                abG.returnStart();
+                abG.showStartScreen();
+            }
+
+            if (e->xbutton.x > 1325 && e->xbutton.x < 1595 &&
+                q > 159 && q < 237) {
+                abG.showHighScores();
+            }
+            if (!abG.showHow) {
+                if (e->xbutton.x > 813 && e->xbutton.x < 1111 &&
+                    q > 550 && q < 649) {
+                    abG.showHowTo();
+                }
+            }
+            if (abG.showHow) {    
+                if (e->xbutton.x > 886 && e->xbutton.x < 1013 &&
+                    q > 346 && q < 357) {
+                    abG.showHowTo();
+                }
+            }
+        }
 
         if (e->xbutton.button== 3) {
         }
     }
     if (e->type == MotionNotify) {
         if (!g.isPaused && g.mouseMovement == true) {
-		if (savex != e->xbutton.x || savey != e->xbutton.y) {
-            		//Mouse moved
-            		savex = e->xbutton.x;
-            		savey = e->xbutton.y;
-            		int y = g.yres - e->xbutton.y;
-            		p->s.center.x = e->xbutton.x;
-            		p->s.center.y = y;
-        	}
-	}
+            if (savex != e->xbutton.x || savey != e->xbutton.y) {
+                //Mouse moved
+                savex = e->xbutton.x;
+                savey = e->xbutton.y;
+                int y = g.yres - e->xbutton.y;
+                p->s.center.x = e->xbutton.x;
+                p->s.center.y = y;
+            }
+        }
     }
 }
 
@@ -1188,53 +1199,51 @@ int check_keys(XEvent *e)
     }
     if (e->type == KeyPress) {
         g.keys[key] = 1;
-	if (key == XK_Shift_L || key == XK_Shift_R) {
-		shift = 1;
-		return 0;
-	}
-    } else {
-       return 0;
-    }    
-        if(shift) {}	
-        switch(key) {
-            case XK_t:
-                abG.incrementScore(1);
-                authScores();
-                break;
-            case XK_h:
-                //g.showHighScores ^= 1;
-                abG.showHighScores();
-                break;
-            case XK_c:
-                abG.showCredits();
-                //g.showCredits ^= 1;
-                g.showLogo ^= 1;
-                break;
-	    case XK_m:
-		if(g.mouseMovement == true)
-		    g.mouseMovement = false;
-		else
-		    g.mouseMovement = true;
-		break;
-	    case XK_p:
-                if(g.isPaused)
-                    g.isPaused = false;
-                else
-                    g.isPaused = true;
-                break;
-            case XK_r:
-                rainDrops ^= 1;
-                break;
-            case XK_s:
-                abG.showStartScreen();
-		        g.isPaused = false;
-                cube ^= 1;
-                break;
-	    case XK_Escape:
-                return 1;
+        if (key == XK_Shift_L || key == XK_Shift_R) {
+            shift = 1;
+            return 0;
         }
-        if (key == XK_Escape)
-            return 1;  
+    } else {
+        return 0;
+    }    
+    if(shift) {}	
+    switch(key) {
+        case XK_t:
+            abG.incrementScore(1);
+            authScores();
+            break;
+        case XK_h:
+            abG.showHighScores();
+            break;
+        case XK_c:
+            abG.showCredits();
+            g.showLogo ^= 1;
+            break;
+        case XK_m:
+            if(g.mouseMovement == true)
+                g.mouseMovement = false;
+            else
+                g.mouseMovement = true;
+            break;
+        case XK_p:
+            if(g.isPaused)
+                g.isPaused = false;
+            else
+                g.isPaused = true;
+            break;
+        case XK_r:
+            rainDrops ^= 1;
+            break;
+        case XK_s:
+            abG.showStartScreen();
+            g.isPaused = false;
+            cube ^= 1;
+            break;
+        case XK_Escape:
+            return 1;
+    }
+    if (key == XK_Escape)
+        return 1;  
     return 0;
 }
 
@@ -1243,7 +1252,7 @@ void physics()
     //=========================================================================
     // Background Motion
     //=========================================================================
-    
+
     //=========================================================================
     // Mountain Layer
     //=========================================================================
@@ -1265,19 +1274,19 @@ void physics()
     //=========================================================================
     // Enemy Physics
     //=========================================================================
- 
+
     struct Node* temp = g.head;
-	Player *p = &g.player;
+    Player *p = &g.player;
     for (int i = 0; i < g.n; i++) {
         if (temp != NULL) {
-	        moveEnemy(temp);
-		    checkEnemyCollision(temp);
-		    checkEnemyLocation(temp,p->currentHealth,g.isPaused);
+            moveEnemy(temp);
+            checkEnemyCollision(temp);
+            checkEnemyLocation(temp,p->currentHealth,g.isPaused);
             if (temp->data.removeEnemy) {
                 removeEnemy(&g.head, temp, g.n, g.enemies1Dead, g.wave);
             }
             temp = temp->next;
-	    }
+        }
     }
     if(g.mouseMovement == false) {
         if (g.keys[XK_Left] && p->s.center.x > 10) {
@@ -1290,21 +1299,21 @@ void physics()
             movePlayerUp(p);
         }
         if (g.keys[XK_Down] && p->s.center.y > 10) {
-	    movePlayerDown(p);
-    	}
+            movePlayerDown(p);
+        }
     }
-    
+
     //key press for bullets
     if (g.getBTime == 1) {
         clock_gettime(CLOCK_REALTIME, &g.bTimeStart);
         g.getBTime = 0;
     }
-    
+
     if (g.keys[XK_space]) {
         if (!g.isPaused) {
             clock_gettime(CLOCK_REALTIME, &g.bTimeCurr);
             g.bTime = timeDiff(&g.bTimeStart, &g.bTimeCurr);
-            if (g.bTime > 0.1) {
+            if (g.bTime > 0.08) {
                 if (getPower() == 1)
                     makeBullet(p->s.center.x - 10, p->s.center.y - 33);
                 else if (getPower() == 2) {
@@ -1332,7 +1341,6 @@ void physics()
     smokeMovement();
     bulletMovement(p->currentHealth);
     missileMovement(p->currentHealth);
-    //confettiMovement();
     rainMovement();
     eLex.testMovement(p->currentHealth, g.isPaused);
     eLex.vEnemMovement(p->currentHealth, g.isPaused);
@@ -1349,11 +1357,11 @@ void render()
     Rect pd;
 
     //All of these scrolling background layers were done by Alonso Gomez
-	
+
     //=========================================================================
     // Background Layers
     //=========================================================================
-	
+
     //=========================================================================
     // Mountain Layer
     //=========================================================================
@@ -1367,7 +1375,7 @@ void render()
         glTexCoord2f(g.tex.xc[1], g.tex.yc[1]); glVertex2i(g.xres, 0);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     //=========================================================================
     // Rain Particles
     //=========================================================================
@@ -1382,15 +1390,14 @@ void render()
         }
     }
     printRain();
+
     //=========================================================================
     // Cloud Layer
     //=========================================================================
-    // Done by Alonso Gomez
     glBindTexture(GL_TEXTURE_2D, g.cloudTexture);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
     glColor4ub(255, 255, 255, 255);
-
     glBegin(GL_QUADS);
         glTexCoord2f(g.tex.xc[2], g.tex.yc[3]); glVertex2i(0, 0);
         glTexCoord2f(g.tex.xc[2], g.tex.yc[2]); glVertex2i(0, g.yres);
@@ -1399,7 +1406,7 @@ void render()
     glEnd();
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0); 
-	
+
     //=========================================================================
     // Pine Tree Layer
     //=========================================================================
@@ -1415,27 +1422,25 @@ void render()
     glEnd();
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     //=========================================================================
     // Creating Player
     //=========================================================================
     Player *p = &g.player;
     if(!p->s.playerExists) {
         spawnPlayer(p);
-	setPlayerHealth(p, 3);
+        setPlayerHealth(p, 3);
         p->s.playerExists = true;
     }
     checkPlayerLocation(p);
-    //printPlayer(p);
-    //glColor3ub(190,140,10);
     //=========================================================================
     // Smoke Following Player
     //=========================================================================
     if(!g.isPaused) {
-	makeSmoke(p->s.center.x, p->s.center.y);
-   	makeSmoke(p->s.center.x, p->s.center.y);
-    	makeSmoke(p->s.center.x, p->s.center.y);
-    	makeSmoke(p->s.center.x, p->s.center.y);
+        makeSmoke(p->s.center.x, p->s.center.y);
+        makeSmoke(p->s.center.x, p->s.center.y);
+        makeSmoke(p->s.center.x, p->s.center.y);
+        makeSmoke(p->s.center.x, p->s.center.y);
     }
     printSmoke();
     printPlayer(p, img[9].width, img[9].height, g.playerTexture);
@@ -1451,7 +1456,7 @@ void render()
         printMissile(img[25].width, img[25].height, g.missileTexture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     //=========================================================================
     // Cube Powerup
     //=========================================================================
@@ -1526,7 +1531,7 @@ void render()
                    g.random4, g.random5, g.random6);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     if (g.wave == 2) {
         if (eLex.getVNumEnemy() < eLex.getMAXENEMIES() && eLex.vDead) {
             eLex.makeVEnem();
@@ -1542,7 +1547,7 @@ void render()
     eLex.printVEnem(img[11].width, img[11].height, g.enemy2Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
 
     if (g.wave == 3 || (g.wave > 4 && g.wave % 2 == 1)) {
         if (eLex.getCNumEnemy() < eLex.getCHECKMAXENEM() && eLex.cDead) {
@@ -1560,15 +1565,6 @@ void render()
     eLex.printCEnem(img[12].width, img[12].height, g.enemy3Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
-    
-    //=========================================================================
-    // Alexis Boss
-    //========================================================================= 
-    //eLex.makeBoss(1850, 610);
-    //eLex.printBoss();
-
-    //eLex.makeEBullet(eLex.bossX - 100, eLex.bossY);
-    //eLex.printEBullet();
 
     //=========================================================================
     // Diego Enemies
@@ -1580,17 +1576,17 @@ void render()
             spawnEnemy(&g.head, e);
             temp = g.head;
             setEnemySize(temp, g.n);
-		    setEnemyHealth(temp, 20);
+            setEnemyHealth(temp, 20);
             g.n++;
-		    if ( g.n == 5) {
-			    g.enemies1Dead = false;
-		    }
+            if ( g.n == 5) {
+                g.enemies1Dead = false;
+            }
         }
     }
     printEnemy(temp, g.n, img[10].width, img[10].height, g.enemy1Texture);
     glDisable(GL_ALPHA_TEST);
     glBindTexture(GL_TEXTURE_2D, 0);
-        
+
     //=========================================================================
     // Screens
     //=========================================================================
@@ -1602,7 +1598,7 @@ void render()
     //=========================================================================
     if (abG.showStart) {
         abG.condenseStart(g.playbutton, g.helpbutton,
-                          g.credsbutton, g.scorebutton);
+                g.credsbutton, g.scorebutton);
         glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, g.title);
         glEnable(GL_ALPHA_TEST);
@@ -1617,7 +1613,6 @@ void render()
         glDisable(GL_ALPHA_TEST);
         glBindTexture(GL_TEXTURE_2D, 0);
         glPopMatrix();
-        //glColor3f(1.0,1.0,1.0);
     }
 
     //=========================================================================
@@ -1649,8 +1644,8 @@ void render()
             glTexCoord2f(1.0, 1.0); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-	abG.drawButton(460, 200, g.playbutton);
-	abG.drawButton(1460, 200, g.scorebutton);
+        abG.drawButton(460, 200, g.playbutton);
+        abG.drawButton(1460, 200, g.scorebutton);
     }
     //=========================================================================
     // Credit Screen
@@ -1661,7 +1656,6 @@ void render()
         abG.printPicture(picture.pos[0],  picture.pos[1],  0, g.alexisTexId);
         abG.printPicture(picture2.pos[0], picture2.pos[1], 0, g.alonsoTexId);
         abG.printPicture(picture3.pos[0], picture3.pos[1], 0, g.diegoTexId);
-        //abG.printPicture(picture4.pos[0], picture4.pos[1], 0, g.andrewTexId);
         showAlonsoText(r);
     }
     //=========================================================================
@@ -1669,8 +1663,7 @@ void render()
     //=========================================================================
     if (abG.showHigh) {
         abG.condenseHigh(g.HighScore);
-        //if (!g.isPaused)
-            makeConfetti();
+        makeConfetti();
         printConfetti();
     }
     glDisable(GL_TEXTURE_2D);
@@ -1679,7 +1672,7 @@ void render()
     //=========================================================================
     // On Screen Text
     //=========================================================================
-    
+
     if (getPrintPoints()) {
         pd.bot = getPointsX();
         pd.left = getPointsY();
@@ -1699,7 +1692,7 @@ void render()
     if (g.mouseMovement)
         ggprint16(&r, 0, 0x00ffff44, "Mouse");
     else
-	    ggprint16(&r, 0, 0x00ffff44, "Keys");
+        ggprint16(&r, 0, 0x00ffff44, "Keys");
     r.bot = 1050;
     r.left = 200;
     ggprint16(&r,  0, 0x00ffff44, "SCORE: ");
